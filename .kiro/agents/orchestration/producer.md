@@ -54,9 +54,9 @@ tools: ["read", "write", "shell"]
 | 類型 | 分派到 | 目前狀態 |
 |------|--------|----------|
 | 遊戲設計 / 系統規格 | `design/game-designer` | ✅ 可用（read/write，無外部依賴） |
-| 概念圖 / 貼圖生成 | `art/comfyui-team` | ⚠️ **Agent 已建立，但 ComfyUI 尚未安裝**，實際只能規劃 prompt，不能真的產圖 |
+| 概念圖 / 貼圖生成 | `art/comfyui-team` | ⚠️ **Agent + MCP 設定已就位，但預設關閉**，需使用者完成本機 ComfyUI 安裝與 workflow 匯出才能真的產圖（見 root README「ComfyUI MCP 整合詳解」） |
 | 3D 建模 + 套貼圖 | `art/blender-team` | ✅ 可用（需 Blender + blender-mcp 已連線） |
-| Unity 場景組裝 / 遊戲邏輯 / Build | `engineering/unity-team` | ⚠️ **Agent 已建立，但無 Unity MCP**，只能寫 C# 腳本，不能自動操作 Editor |
+| Unity 場景組裝 / 遊戲邏輯 / Build | `engineering/unity-team` | ⚠️ **Agent + MCP 設定已就位，但預設關閉**，需使用者在 Unity Editor 安裝 [unity-mcp](https://github.com/CoplayDev/unity-mcp) 套件並 Start Server 才能自動操作 Editor（見 root README「Unity MCP 整合詳解」）；操作邏輯整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐 |
 | 功能測試 | `qa/functional-tester` | ✅ 可用（shell），適合測程式邏輯，不適合測 3D 美術資產 |
 
 如果需求需要用到工具未安裝的 Team（ComfyUI Team / Unity Team 的核心能力），明確告知使用者這個限制，並詢問要「先用文字/手動方式繼續」還是「先去安裝對應工具」，不要跳過或假裝完成。

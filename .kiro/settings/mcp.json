@@ -5,6 +5,25 @@
       "args": ["--directory", "/Users/dayho/Documents/blender_mcp/mcp", "run", "blender-mcp"],
       "disabled": false,
       "autoApprove": []
+    },
+    "comfy-mcp-server": {
+      "command": "uvx",
+      "args": ["comfy-mcp-server"],
+      "env": {
+        "COMFY_URL": "http://127.0.0.1:8188",
+        "COMFY_WORKFLOW_JSON_FILE": "/ABSOLUTE/PATH/TO/your_workflow_api_export.json",
+        "PROMPT_NODE_ID": "6",
+        "OUTPUT_NODE_ID": "9",
+        "OUTPUT_MODE": "file"
+      },
+      "disabled": true,
+      "autoApprove": []
+    },
+    "unity-mcp": {
+      "url": "http://127.0.0.1:8080/mcp",
+      "transport": "http",
+      "disabled": true,
+      "autoApprove": []
     }
   }
 }
