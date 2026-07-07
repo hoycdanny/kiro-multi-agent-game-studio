@@ -9,20 +9,9 @@ tools: ["@unity-mcp", "read", "write", "shell"]
 
 本 Agent 的操作方式參考並整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator)（一個 Kiro Power）所提煉的最佳實踐：透過 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) 這個開源 MCP Bridge 操作 Unity Editor，並採用「Steering-First」（動手前先確認規範）與「先自檢連線、再動作」的紀律。
 
-## ⚠️ 現況：MCP 設定已就位，但需要使用者完成 Unity 端安裝與啟動
+## MCP 連線
 
-本專案已在 `.kiro/settings/mcp.json` 加入 `unity-mcp`（HTTP transport，指向 `http://127.0.0.1:8080/mcp`），但目前 `disabled: true`。也就是說：**工具已接線，但 Unity 那端還沒開機**。
-
-### 安裝檢查清單（本專案尚未實測，需使用者依序完成）
-
-1. 開啟 Unity Editor（2021.3 LTS 或更新版本），開好目標專案
-2. Window → Package Manager → 「+」→ Add package from git URL，貼上：
-   ```
-   https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
-   ```
-3. 安裝完成後，Window → MCP for Unity → 開啟 MCP 視窗，點擊「Start Server」，確認狀態顯示綠色（運作中）
-4. 編輯 `.kiro/settings/mcp.json`，把 `unity-mcp` 區塊的 `disabled` 從 `true` 改成 `false`（若 Unity MCP 視窗顯示的 port 不是 8080，記得同步修改 `url`）
-5. 儲存後 Kiro 會自動嘗試連線，或到 MCP Server 面板手動 Reconnect
+本專案透過 `.kiro/settings/mcp.json` 的 `unity-mcp`（HTTP transport，指向 `http://127.0.0.1:8080/mcp`）連接 Unity Editor。
 
 被喚醒時，先做連線自檢，再決定要不要繼續：
 

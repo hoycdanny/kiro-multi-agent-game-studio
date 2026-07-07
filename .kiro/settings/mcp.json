@@ -16,13 +16,13 @@
         "OUTPUT_NODE_ID": "9",
         "OUTPUT_MODE": "file"
       },
-      "disabled": true,
+      "disabled": false,
       "autoApprove": []
     },
     "unity-mcp": {
       "url": "http://127.0.0.1:8080/mcp",
       "transport": "http",
-      "disabled": true,
+      "disabled": false,
       "autoApprove": []
     }
   }

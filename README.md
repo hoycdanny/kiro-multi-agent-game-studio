@@ -1,10 +1,10 @@
 # Kiro Multi-Agent Game Studio
 
-用 AI Agent 模擬一整個遊戲開發團隊。你對 Producer 說「我要一把發光的劍」，它就會拆解任務、指引對應的 Specialist Agent 接手（設計規格、3D 建模、程式邏輯、測試），最後匯入 Unity —— 目標是全程由 Agent 協作完成。
+用 AI Agent 模擬一整個遊戲開發團隊。你對 Producer 說「我要一把發光的劍」，它就會拆解任務、指引對應的 Specialist Agent 接手（設計規格、貼圖生成、3D 建模、程式邏輯、測試），最後匯入 Unity —— 目標是全程由 Agent 協作完成。
 
 **適用場景**：可作為 PM 向團隊或投資人提案的架構藍圖，也適合個人遊戲開發者 / 小型獨立工作室（1-10 人）直接拿來用。
 
-> 📌 **本文件同時包含「架構願景」與「目前實際進度」**。願景章節描述完整設計；每個章節內會用 ✅ / ⚠️ / ⬜ 標註目前哪些部分真的能跑、哪些是規劃中。想知道現在能做什麼，直接看下一節「目前專案實際狀態」。
+> 📌 **本文件同時包含「架構願景」與「目前實際進度」**。願景章節描述完整設計；每個章節內會用 ✅ / ⬜ 標註目前哪些部分已建立、哪些是規劃中。想知道現在能做什麼，直接看下一節「目前專案實際狀態」。
 
 ---
 
@@ -28,42 +28,38 @@
 
 ### 已建立的 Agent（6 個）
 
-| Agent | 路徑 | 狀態 | 依賴 |
-|-------|------|------|------|
-| Producer | `.kiro/agents/orchestration/producer.md` | ✅ 可用 | 無外部工具，能用 shell 執行 git commit |
-| Game Designer | `.kiro/agents/design/game-designer.md` | ✅ 可用 | 無外部工具 |
-| **ComfyUI Team** | `.kiro/agents/art/comfyui-team.md` | ⚠️ **Agent + MCP 設定已就位，但預設關閉** | 已在 `mcp.json` 加入 `comfy-mcp-server`（`disabled: true`），需使用者安裝本機 ComfyUI、匯出 workflow JSON、填入實際路徑後才能啟用，見「ComfyUI MCP 整合詳解」 |
-| **Blender Team** | `.kiro/agents/art/blender-team.md` | ✅ 可用 | 需 Blender 開啟 + blender-mcp 連線 |
-| **Unity Team** | `.kiro/agents/engineering/unity-team.md` | ⚠️ **Agent + MCP 設定已就位，但預設關閉** | 已在 `mcp.json` 加入 `unity-mcp`（`disabled: true`），需使用者在 Unity Editor 安裝 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) 套件並 Start Server 後才能啟用，見「Unity MCP 整合詳解」；操作邏輯整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 的最佳實踐 |
-| Functional Tester | `.kiro/agents/qa/functional-tester.md` | ✅ 可用 | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
-| 其餘 25+ 個 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立 | 依工具鏈逐步擴充 |
+| Agent | 路徑 | 依賴 |
+|-------|------|------|
+| Producer | `.kiro/agents/orchestration/producer.md` | 無外部工具，能用 shell 執行 git commit |
+| Game Designer | `.kiro/agents/design/game-designer.md` | 無外部工具 |
+| ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfy-mcp-server` 連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
+| Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender，見「Blender MCP 整合詳解」 |
+| Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor（操作邏輯整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐），見「Unity MCP 整合詳解」 |
+| Functional Tester | `.kiro/agents/qa/functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
+| 其餘 25+ 個 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立，依工具鏈逐步擴充 |
 
 ### 已串接的元件（MCP）
 
-| 元件 | 狀態 | 設定位置 |
-|------|------|----------|
-| **Blender**（透過 `blender-mcp`） | ✅ 已連線設定完成 | `.kiro/settings/mcp.json` |
-| ComfyUI（透過 `comfy-mcp-server`） | ⚠️ 設定已加入但 `disabled: true`，需使用者完成本機安裝與 workflow 匯出才能啟用 | `.kiro/settings/mcp.json` |
-| Unity（透過 `unity-mcp`） | ⚠️ 設定已加入但 `disabled: true`，需使用者在 Unity Editor 安裝套件並 Start Server 才能啟用；本專案目前也沒有 Unity 專案資料夾 | `.kiro/settings/mcp.json` |
+| 元件 | 連線方式 | 設定位置 |
+|------|---------|----------|
+| **Blender** | `blender-mcp`（stdio） | `.kiro/settings/mcp.json` |
+| **ComfyUI** | `comfy-mcp-server`（stdio，[`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)） | `.kiro/settings/mcp.json` |
+| **Unity** | `unity-mcp`（HTTP，[`CoplayDev/unity-mcp`](https://github.com/CoplayDev/unity-mcp)） | `.kiro/settings/mcp.json` |
 | Figma | ⬜ 未安裝 | — |
-| Git | ⬜ 未透過 MCP 串接（Producer 用 shell 直接操作 git commit） | — |
+| Git | 未透過 MCP 串接，Producer 用 shell 直接操作 git commit | — |
 | Linear | ⬜ 未安裝，任務暫存於本地 `.kiro/state/tasks.yaml` | `.kiro/state/tasks.yaml` |
 
-### 你現在下「做一個第三人稱射擊遊戲」這類指令，會發生什麼事
+### 端到端流程：「做一個第三人稱射擊遊戲」
 
-以你的原始需求為例：「參考這張圖，做一個第三人稱射擊遊戲，Blender Team 建模、套用 ComfyUI Team 的貼圖、交給 Unity Team 做出會動的遊戲、最後 commit」。
+以「參考這張圖，做一個第三人稱射擊遊戲，Blender Team 建模、套用 ComfyUI Team 的貼圖、交給 Unity Team 做出會動的遊戲、最後 commit」為例：
 
-**這條完整流程目前跑不完**，卡點很明確：
-
-| 步驟 | 能不能做 |
-|------|---------|
-| Producer 理解需求、看參考圖、拆解 Pipeline 計畫 | ✅ 可以 |
-| ComfyUI Team 依參考圖生成貼圖 | ⚠️ **卡在「使用者需完成本機安裝」**：MCP 設定已就位（`comfy-mcp-server`），但 `disabled: true` 且環境變數是佔位範本，需先裝好本機 ComfyUI、匯出 workflow JSON、填入路徑並啟用，才能真正產圖 |
-| Blender Team 建模 | ✅ 可以（但沒有貼圖可套，只能先做 untextured 模型） |
-| Unity Team 組裝場景、做出「會動」的遊戲 | ⚠️ **卡在「使用者需完成 Unity 端安裝」**：MCP 設定已就位（`unity-mcp`，走 HTTP 連到 `CoplayDev/unity-mcp` bridge），但 `disabled: true`，且本專案沒有 Unity 專案。需先在 Unity Editor 安裝套件、Start Server、啟用設定，才能真正操作場景 |
-| Producer 完成後 git commit | ✅ 可以（但只能 commit 到目前為止真正產出的東西，例如模型檔、C# 腳本，不是「完整可玩遊戲」） |
-
-**誠實結論**：目前可以走通「參考圖 → Blender 建模（無貼圖）→ C# 腳本 → commit」，「自動生貼圖」和「自動組裝成會動的遊戲」這兩段的 MCP 連線設定都已備妥（`comfy-mcp-server` / `unity-mcp`），但都預設關閉，需要你先完成對應的本機安裝（ComfyUI 或 Unity Editor + unity-mcp 套件）並啟用設定才能真正動起來。
+| 步驟 | 執行方 |
+|------|--------|
+| 理解需求、看參考圖、拆解 Pipeline 計畫 | Producer |
+| 依參考圖生成貼圖 | ComfyUI Team（`generate_prompt` + `generate_image`） |
+| 建模、套用貼圖、匯出 `.fbx` | Blender Team |
+| 匯入模型、組裝場景、寫遊戲邏輯、Build | Unity Team |
+| 確認完成、git commit | Producer |
 
 ### 已建立的共享規範（Steering）
 
@@ -91,12 +87,11 @@
 
 ### 現在就能測試的最小流程
 
-不需要安裝任何新工具：
-
 1. 切到 `orchestration/producer`，輸入「我要一把發光的劍」（或附上參考圖：「參考這張圖，做一把劍」）
-2. 觀察它是否正確拆成「先請 game-designer 出規格」→「comfyui-team 生貼圖（會告知目前卡住）」→「blender-team 建模」幾步，並印出對應 Contract
+2. 觀察它是否正確拆成「先請 game-designer 出規格」→「comfyui-team 生貼圖」→「blender-team 建模」幾步，並印出對應 Contract
 3. 切到 `design/game-designer`，貼上 Contract，確認它會讀取並嘗試更新 `gdd.md`
-4. 若要繼續到建模，需開啟 Blender、啟用 MCP add-on，切到 `art/blender-team` 貼上 Asset Contract（沒有貼圖時它會先做 untextured 版本並明確告知）
+4. 切到 `art/comfyui-team` 貼上 Asset Contract，確認它能生成貼圖並回報路徑
+5. 切到 `art/blender-team` 貼上 Asset Contract，確認它能建模並套用貼圖
 
 ---
 
@@ -107,7 +102,7 @@
 ```
 
 - 每個 Agent 是一個 `.kiro/agents/*.md` 檔案（Kiro IDE 的 Custom Agent 格式）
-- Agent 透過 MCP Server 操作外部工具（目前僅 Blender 已連線；ComfyUI / Figma / Unity 為規劃中）
+- Agent 透過 MCP Server 操作外部工具（Blender / ComfyUI / Unity 皆已連線；Figma 為規劃中）
 - 你可以只啟用 6 個 Agent（Solo Dev，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
 - 所有設計規範存在 `.kiro/steering/` 裡，Agent 會自動參照（`inclusion: always` 的檔案每次對話都會載入）
 
@@ -164,9 +159,9 @@ graph TD
 
     subgraph "Layer 3: 已建立的 Team / Specialist"
         GD["Game Designer ✅"]
-        CT["ComfyUI Team ⚠️"]
+        CT["ComfyUI Team ✅"]
         BT2["Blender Team ✅"]
-        UT["Unity Team ⚠️"]
+        UT["Unity Team ✅"]
         FT["Functional Tester ✅"]
     end
 
@@ -183,10 +178,10 @@ graph TD
     end
 
     subgraph "MCP Tools"
-        ComfyUI["ComfyUI ⚠️ 設定已就位，預設關閉"]
+        ComfyUI["ComfyUI ✅ 已連線"]
         Blender["Blender ✅ 已連線"]
         Figma["Figma ⬜ 未安裝"]
-        Unity["Unity ⚠️ 設定已就位，預設關閉"]
+        Unity["Unity ✅ 已連線"]
         Git["Git ⬜ 未走 MCP，用 shell"]
         Linear["Linear ⬜ 未安裝"]
     end
@@ -221,7 +216,7 @@ graph TD
     Blender -.->|.fbx| Unity
 ```
 
-> 圖中「Layer 3：已建立的 Team / Specialist」這 5 個節點（Game Designer、ComfyUI Team、Blender Team、Unity Team、Functional Tester）加上 Producer，共 **6 個**已實際建立為 Agent 檔案；僅 **Blender** 這條 MCP 連線已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
+> 圖中「Layer 3：已建立的 Team / Specialist」這 5 個節點（Game Designer、ComfyUI Team、Blender Team、Unity Team、Functional Tester）加上 Producer，共 **6 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity 三條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
 
 ### 工具資料流
 
@@ -250,7 +245,7 @@ graph LR
 
 **Linear** — 願景中是整個 Pipeline 的任務驅動中心；**目前尚未安裝**，任務改記錄在本地 `.kiro/state/tasks.yaml`。
 
-**Unity** — 願景中是所有資產的最終組裝站；MCP 設定已就位（`unity-mcp`，見「Unity MCP 整合詳解」），但**目前本專案沒有 Unity 專案資料夾**，`unity-team` 在需要 Unity 專案結構時會主動詢問，不會假設它存在。
+**Unity** — 願景中是所有資產的最終組裝站；MCP 已連線（`unity-mcp`，見「Unity MCP 整合詳解」），操作對象是你在 Unity Editor 開啟的專案。
 
 ### 運作邏輯
 
@@ -259,7 +254,7 @@ graph LR
 | Layer 0 | Creative Director / Portfolio Orchestrator | 定義願景、跨團隊仲裁 | ⬜ 未建立（Solo Dev 不需要） |
 | Layer 1 | Producer | 拆任務、串接 Pipeline 三個 Team、追蹤進度、Git commit | ✅ 已建立（分派為手動轉接） |
 | Layer 2 | Team Leads | 管理各領域品質，審核產出 | ⬜ 未建立（Solo Dev 不需要） |
-| Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 6 個已建立 / ⬜ 25+ 個規劃中 |
+| Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 6 個已建立且已連線 / ⬜ 25+ 個規劃中 |
 
 **關鍵機制（願景 vs 現況）：**
 - 願景：Producer 收到需求後，透過 **subagent** 呼叫對應的 Specialist 自動執行
@@ -274,42 +269,43 @@ graph LR
 
 ### 先決條件
 
-| 項目 | 最低需求 | 建議配置 | 本專案目前狀態 |
-|------|----------|----------|---------------|
-| GPU | GTX 1060 6GB | RTX 3060 12GB+ | 依你本機環境 |
-| RAM | 16 GB | 32 GB | — |
-| Python | 3.10+ | 3.11 | 需給 `uv` 使用 |
-| Unity | 2022.3 LTS | 2023.2+ | ⬜ 尚未建立 Unity 專案 |
-| Blender | 3.6+（blender-mcp 建議 5.1+） | 4.0+ / 5.1+ | ✅ 已設定連線 |
-| Kiro IDE | 最新版 | 最新版 | ✅ |
+| 項目 | 最低需求 | 建議配置 |
+|------|----------|----------|
+| GPU | GTX 1060 6GB | RTX 3060 12GB+ |
+| RAM | 16 GB | 32 GB |
+| Python | 3.10+ | 3.11（需給 `uv` 使用） |
+| Unity | 2022.3 LTS | 2023.2+ |
+| Blender | 3.6+（blender-mcp 建議 5.1+） | 4.0+ / 5.1+ |
+| ComfyUI | 最新版 | 最新版 |
+| Kiro IDE | 最新版 | 最新版 |
 
 ### 目前實際配置（Producer + 3 Team + 2 輔助 Agent，共 6 個）
 
 ```
 .kiro/agents/
-├── orchestration/producer.md      # ✅ 拆任務、串接 Pipeline、Git commit
-├── design/game-designer.md         # ✅ 寫設計文件、GDD 維護
-├── art/comfyui-team.md             # ⚠️ 已建立，MCP 設定已就位但預設關閉，需使用者完成本機安裝
-├── art/blender-team.md             # ✅ Blender 建模 + 套貼圖（需 blender-mcp 連線）
-├── engineering/unity-team.md       # ⚠️ 已建立，MCP 設定已就位但預設關閉，需使用者在 Unity 端安裝套件並啟動
-└── qa/functional-tester.md         # ✅ 跑測試（需測試框架存在）
+├── orchestration/producer.md      # 拆任務、串接 Pipeline、Git commit
+├── design/game-designer.md         # 寫設計文件、GDD 維護
+├── art/comfyui-team.md             # 依參考圖生成貼圖（透過 comfy-mcp-server）
+├── art/blender-team.md             # Blender 建模 + 套貼圖（透過 blender-mcp）
+├── engineering/unity-team.md       # 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
+└── qa/functional-tester.md         # 跑測試（需測試框架存在）
 ```
 
-### 安裝與啟動（依現況調整過的步驟）
+### 安裝與啟動
 
 ```bash
 # 1. Clone
 git clone <your-repo-url>
 cd kiro-multi-agent-game-studio
 
-# 2. 安裝 uv（Blender MCP Server 需要）
+# 2. 安裝 uv（Blender MCP、ComfyUI MCP 都需要）
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # 或 macOS: brew install uv
 
-# 3. MCP 設定已存在於 .kiro/settings/mcp.json（blender-mcp）
-#    若要新增其他工具（ComfyUI / Figma / Linear），照下方「工具鏈與 MCP 整合」章節的範例補上
+# 3. MCP 設定已存在於 .kiro/settings/mcp.json（blender-mcp / comfy-mcp-server / unity-mcp）
+#    各工具的連線細節見「Blender MCP 整合詳解」「ComfyUI MCP 整合詳解」「Unity MCP 整合詳解」
 
-# 4. 啟動 Blender，安裝並啟用 blender_mcp add-on（見下一節「Blender MCP 整合詳解」）
+# 4. 啟動 Blender（啟用 blender_mcp add-on）、啟動 ComfyUI、啟動 Unity Editor（Start MCP Server）
 
 # 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 6 個 Agent
 ```
@@ -467,43 +463,18 @@ Create a Text data-block with the result of analysis.
 
 ## ComfyUI MCP 整合詳解
 
-> 依 [Comfy 官方 Agent Tools / MCP 文件](https://docs.comfy.org/agent-tools) 整理。官方目前有三條路：**Comfy Cloud MCP**（一級支援、需訂閱）、**Comfy CLI**（`comfy generate`，適合腳本/CI）、**社群 local MCP server**（自架、免費）。本專案選擇社群 local MCP server，因為與現有 Blender MCP 一樣走「本機優先、成本趨近 0」路線，且不需要額外訂閱。
+> 依 [Comfy 官方 Agent Tools / MCP 文件](https://docs.comfy.org/agent-tools) 整理。官方目前有三條路：**Comfy Cloud MCP**（一級支援、需訂閱）、**Comfy CLI**（`comfy generate`，適合腳本/CI）、**社群 local MCP server**（自架、免費）。本專案選擇社群 local MCP server [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)，因為與現有 Blender MCP 一樣走「本機優先、成本趨近 0」路線，用 `uvx` 啟動讓 Kiro 能像管理 `blender-mcp` 一樣自動管理生命週期。
 
 ### 為什麼選 `lalanikarim/comfy-mcp-server`
 
-| 方案 | 需要 | 優點 | 缺點 | 是否採用 |
-|------|------|------|------|---------|
-| [Comfy Cloud MCP](https://docs.comfy.org/agent-tools/cloud) | Comfy Cloud 訂閱 + credits | 免本機 GPU、官方一級支援、工具最完整（search_templates、partner_generate 等） | 要付費、走遠端 HTTPS，資產生成會消耗 credits | ❌ 不符合本專案本地優先方向 |
-| [Comfy CLI](https://docs.comfy.org/agent-tools/comfy-cli)（`comfy generate`） | Comfy Cloud 帳號或 API key | 適合腳本/CI、批次作業 | 是終端機指令，不是 MCP tool，Agent 需透過 shell 呼叫，不是原生工具呼叫 | ❌ 非 MCP，暫不採用 |
-| [`joenorton/comfyui-mcp-server`](https://github.com/joenorton/comfyui-mcp-server) | 本機 ComfyUI + 另開一個常駐 HTTP server process | 功能完整（`regenerate`、`view_image`、`list_assets`、workflow 自動發現） | 需要手動 `python server.py` 常駐一個 process，Kiro 無法透過 stdio 直接管理生命週期 | ⚠️ 可作未來升級選項 |
-| [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server) | 本機 ComfyUI + `uv` | 用 `uvx` 啟動，Kiro 能像管理 `blender-mcp` 一樣自動管理生命週期；設定簡單 | 只有 `generate_image` / `generate_prompt` 兩個工具，且綁定單一 workflow JSON，功能較陽春 | ✅ **本專案採用** |
+| 方案 | 特性 |
+|------|------|
+| [Comfy Cloud MCP](https://docs.comfy.org/agent-tools/cloud) | 官方一級支援、免本機 GPU，但需要訂閱與 credits，走遠端 HTTPS |
+| [Comfy CLI](https://docs.comfy.org/agent-tools/comfy-cli)（`comfy generate`） | 終端機指令，不是 MCP tool，適合腳本/CI 而非對話式操作 |
+| [`joenorton/comfyui-mcp-server`](https://github.com/joenorton/comfyui-mcp-server) | 功能更完整（`regenerate`、`view_image`、`list_assets`），但需另開常駐 HTTP server process |
+| [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server) | **本專案採用**：`uvx` 啟動、Kiro 自動管理生命週期，設定簡單 |
 
-### 前置需求
-
-- 本機已安裝並可啟動 [ComfyUI](https://github.com/comfy-org/ComfyUI)
-- [uv](https://docs.astral.sh/uv/) Python 套件管理工具（若已因 Blender MCP 安裝過可跳過）
-- 已用 ComfyUI 建立至少一個 workflow，並知道如何匯出 **API 格式**的 JSON
-
-### 安裝與設定步驟
-
-#### 1. 啟動本機 ComfyUI
-
-```bash
-cd <ComfyUI_dir>
-python main.py --port 8188
-```
-
-#### 2. 匯出 workflow 的 API 格式 JSON
-
-在 ComfyUI 介面：Settings → 開啟 Dev Mode → 畫面右上角會出現 "Save (API Format)"，用它匯出目前 workflow 的 JSON 檔案（不是一般的 Save，一般格式不含 API 呼叫所需的節點對應資訊）。
-
-記下這個 workflow 裡：
-- 文字提示詞節點的 **node ID**（通常是 CLIPTextEncode，範例常見 ID 為 `6`）
-- 最終輸出圖片節點的 **node ID**（通常是 SaveImage，範例常見 ID 為 `9`）
-
-#### 3. 編輯 `.kiro/settings/mcp.json`
-
-本專案已預先加入以下區塊（`disabled: true`，需手動改成 `false` 才會啟用）：
+### 設定內容（`.kiro/settings/mcp.json`）
 
 ```json
 {
@@ -518,18 +489,17 @@ python main.py --port 8188
         "OUTPUT_NODE_ID": "9",
         "OUTPUT_MODE": "file"
       },
-      "disabled": true,
+      "disabled": false,
       "autoApprove": []
     }
   }
 }
 ```
 
-把 `COMFY_URL`、`COMFY_WORKFLOW_JSON_FILE`（絕對路徑）、`PROMPT_NODE_ID`、`OUTPUT_NODE_ID` 換成步驟 1-2 的實際值，並把 `disabled` 改成 `false`。
-
-#### 4. 讓 Kiro 重新連線
-
-儲存 `mcp.json` 後 Kiro 會自動嘗試連線，或到 MCP Server 面板手動點 Reconnect，不需要重啟 Kiro。
+- `COMFY_URL`：本機 ComfyUI 監聽位址（預設 `http://127.0.0.1:8188`，啟動方式 `python main.py --port 8188`）
+- `COMFY_WORKFLOW_JSON_FILE`：ComfyUI 匯出的 **API 格式** workflow JSON 絕對路徑（ComfyUI 介面 Settings → 開啟 Dev Mode → "Save (API Format)"）
+- `PROMPT_NODE_ID` / `OUTPUT_NODE_ID`：workflow 裡文字提示節點（通常是 CLIPTextEncode）與最終輸出節點（通常是 SaveImage）的 ID
+- 若要調整成你自己的 workflow，把上述四個值換成對應設定即可
 
 ### 可用 Tools
 
@@ -538,7 +508,7 @@ python main.py --port 8188
 | `generate_image(prompt)` | 依提示詞用綁定的 workflow 生成一張圖片，回傳圖片或路徑（依 `OUTPUT_MODE` 為 `file` 或 `url`） |
 | `generate_prompt(topic)` | 若設定了 `OLLAMA_API_BASE` + `PROMPT_LLM`，可用本地 LLM 把簡短主題擴寫成完整生成提示詞（選用功能，未設定則此工具不可用） |
 
-> 這個 server 只有這兩個工具，且**一個 server 實例只綁定一個 workflow JSON**。若需要同時支援多種輸出（例如概念圖用一個 workflow、PBR 貼圖用另一個），需要另外設定第二個 `mcp.json` 區塊（例如 `comfy-mcp-server-pbr`）指向不同的 `COMFY_WORKFLOW_JSON_FILE`，`art/comfyui-team` 會依需求告知使用者是否需要這麼做。
+> 這個 server 只有這兩個工具，且**一個 server 實例只綁定一個 workflow JSON**。若需要同時支援多種輸出（例如概念圖用一個 workflow、PBR 貼圖用另一個），可另外設定第二個 `mcp.json` 區塊（例如 `comfy-mcp-server-pbr`）指向不同的 `COMFY_WORKFLOW_JSON_FILE`。
 
 ### 安全提醒
 
@@ -565,29 +535,7 @@ python main.py --port 8188
 
 若你之後想直接用原版 Power（例如要用到它的 `templates/`、`hooks/pre-unity-tool.kiro.hook` 自動提醒機制、或多平台 Build Config），可以透過 Powers 面板另外安裝 `kiro-unity-accelerator`，兩者可以並存（Power 提供的 MCP 工具與本專案 `unity-mcp` 設定共用同一個 `CoplayDev/unity-mcp` bridge，不會衝突）。
 
-### 前置需求
-
-- [Unity Editor](https://unity.com/) 2021.3 LTS 或更新版本，已開啟一個專案
-- Kiro IDE（已具備）
-- 本專案目前**沒有 Unity 專案資料夾**，需要你自己建立或提供既有專案路徑
-
-### 安裝與設定步驟
-
-#### 1. 在 Unity 安裝 unity-mcp UPM 套件
-
-Unity Editor → Window → Package Manager → 「+」→ Add package from git URL：
-
-```
-https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
-```
-
-#### 2. 啟動 MCP Server
-
-安裝完成後：Window → MCP for Unity → 開啟 MCP 視窗 → 點擊「Start Server」。確認狀態顯示綠色（運作中），並記下視窗顯示的 port（預設 `8080`）。
-
-#### 3. 編輯 `.kiro/settings/mcp.json`
-
-本專案已預先加入以下區塊（`disabled: true`，需手動改成 `false` 才會啟用）：
+### 設定內容（`.kiro/settings/mcp.json`）
 
 ```json
 {
@@ -595,18 +543,14 @@ https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
     "unity-mcp": {
       "url": "http://127.0.0.1:8080/mcp",
       "transport": "http",
-      "disabled": true,
+      "disabled": false,
       "autoApprove": []
     }
   }
 }
 ```
 
-若 Unity MCP 視窗顯示的 port 不是 8080，記得同步修改 `url`；把 `disabled` 改成 `false` 後儲存，Kiro 會自動嘗試連線，或到 MCP Server 面板手動 Reconnect。
-
-#### 4. 驗證連線
-
-跟 `engineering/unity-team` 說「列出目前場景中的所有物件」之類的指令，若能正確回應代表連線成功。
+Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) UPM 套件（Package Manager → Add package from git URL → `https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main`），並在 Window → MCP for Unity 視窗 Start Server 後，就會在這個 port 上監聽。若視窗顯示的 port 不是 8080，同步修改 `url` 即可。
 
 ### 連線方式：HTTP（預設）vs stdio（備援）
 
@@ -689,20 +633,20 @@ https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
-| comfyui-team | `@comfy-mcp-server`, read, write | 概念圖、單一 workflow 的圖像生成 | ⚠️ Agent + MCP 設定已就位（`disabled: true`），需使用者安裝本機 ComfyUI + 匯出 workflow JSON 才能啟用，見「ComfyUI MCP 整合詳解」 |
+| comfyui-team | `@comfy-mcp-server`, read, write | 概念圖、單一 workflow 的圖像生成 | ✅ 已連線，見「ComfyUI MCP 整合詳解」 |
 | blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx | ✅ |
 | ui-artist | @figma, @comfyui | UI Layout、Design Token、互動狀態規格 | ⬜（需先裝 Figma/ComfyUI MCP） |
 | animator | @blender-mcp | 骨骼綁定、動畫片段、Shape Keys | ⬜ |
 | vfx-artist | @comfyui | 粒子特效、Shader、序列幀動畫 | ⬜ |
 | technical-artist | @blender-mcp, shell | Shader 優化、LOD 策略、Art Pipeline 工具 | ⬜ |
 
-> `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個尚未安裝的 ComfyUI 工具，拆開建立沒有實際差異。
+> `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個 ComfyUI 工具，拆開建立沒有實際差異。
 
 #### Engineering Team（4 個規劃，1 個已建立）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
-| unity-team | `@unity-mcp`, read, write, shell（願景：+@git） | 場景組裝、遊戲邏輯、狀態機、技能系統、Build | ⚠️ Agent + MCP 設定已就位（`disabled: true`），需目標專案存在 + 使用者在 Unity 端安裝 [unity-mcp](https://github.com/CoplayDev/unity-mcp) 並 Start Server，見「Unity MCP 整合詳解」 |
+| unity-team | `@unity-mcp`, read, write, shell（願景：+@git） | 場景組裝、遊戲邏輯、狀態機、技能系統、Build | ✅ 已連線（[unity-mcp](https://github.com/CoplayDev/unity-mcp)），見「Unity MCP 整合詳解」 |
 | systems-programmer | shell, @git | 存檔系統、資源管理、事件系統 | ⬜ |
 | ui-programmer | shell, @git | UI 綁定（UI Toolkit）、Localization | ⬜ |
 | devops | shell, @git | CI/CD、Build 腳本、部署流程 | ⬜ |
@@ -752,14 +696,14 @@ https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
 
 ### 工具總覽與本專案現況
 
-| 工具 | 用途 | MCP 狀態（願景） | 本專案實際狀態 | 若 MCP 不可用 |
-|------|------|----------|---------------|--------------|
-| **Blender** | 3D 建模、動畫、渲染 | 🟡 早期 | ✅ **已連線**（`blender-mcp`） | Python Script + CLI |
-| **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | 🟢 社群可用 | ⬜ 未安裝 | REST API |
-| **Figma** | UI/UX 設計、規格匯出、Design Token | 🟢 社群可用 | ⬜ 未安裝 | REST API |
-| **Unity** | 遊戲引擎（場景組裝、Build） | � 社群可用（[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)） | ⚠️ 設定已就位（`disabled: true`），本專案也還沒有 Unity 專案 | CLI Batch Mode |
-| **Git** | 版本控制 | 🟢 穩定 | ⬜ 未透過 MCP，Agent 用 shell 直接操作 | shell CLI |
-| **Linear** | 任務追蹤、Sprint 看板 | 🟢 社群可用 | ⬜ 未安裝，改用本地 `.kiro/state/tasks.yaml` | GraphQL API |
+| 工具 | 用途 | 本專案狀態 | 若 MCP 不可用 |
+|------|------|-----------|--------------|
+| **Blender** | 3D 建模、動畫、渲染 | ✅ 已連線（`blender-mcp`） | Python Script + CLI |
+| **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | ✅ 已連線（[`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)） | REST API |
+| **Figma** | UI/UX 設計、規格匯出、Design Token | ⬜ 未安裝 | REST API |
+| **Unity** | 遊戲引擎（場景組裝、Build） | ✅ 已連線（[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)） | CLI Batch Mode |
+| **Git** | 版本控制 | 未透過 MCP，Agent 用 shell 直接操作 | shell CLI |
+| **Linear** | 任務追蹤、Sprint 看板 | ⬜ 未安裝，改用本地 `.kiro/state/tasks.yaml` | GraphQL API |
 
 ### 現有 MCP 配置（`.kiro/settings/mcp.json`，本專案實際內容）
 
@@ -782,14 +726,20 @@ https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main
         "OUTPUT_NODE_ID": "9",
         "OUTPUT_MODE": "file"
       },
-      "disabled": true,
+      "disabled": false,
+      "autoApprove": []
+    },
+    "unity-mcp": {
+      "url": "http://127.0.0.1:8080/mcp",
+      "transport": "http",
+      "disabled": false,
       "autoApprove": []
     }
   }
 }
 ```
 
-> `comfy-mcp-server` 目前 `disabled: true`，且 `COMFY_WORKFLOW_JSON_FILE` / `PROMPT_NODE_ID` / `OUTPUT_NODE_ID` 都是佔位值。啟用步驟見下方「ComfyUI MCP 整合詳解」。
+> `COMFY_WORKFLOW_JSON_FILE` / `PROMPT_NODE_ID` / `OUTPUT_NODE_ID` 需換成你實際 workflow 的路徑與節點 ID，細節見下方「ComfyUI MCP 整合詳解」。
 
 ### 若要擴充其他工具（願景中的配置範例，尚未套用）
 
@@ -871,16 +821,16 @@ graph LR
     Import --> Prefab[自動生成 Prefab]
 ```
 
-> 目前 `blender-team` 已實作到「建模 → UV 展開 → 匯出 .fbx」這段。骨骼綁定/動畫（animator）與 Unity 自動匯入（AssetPostprocessor）為願景，尚未實作，因為本專案還沒有 Unity 專案。
+> 目前 `blender-team` 已實作到「建模 → UV 展開 → 匯出 .fbx」這段。骨骼綁定/動畫（animator）與 Unity 自動匯入（AssetPostprocessor）為願景，尚未實作。
 
-產出的 `.fbx` 若放入未來的 Unity 專案 `Assets/Models/` 目錄，AssetPostprocessor（願景）應會自動：
+產出的 `.fbx` 放入 Unity 專案 `Assets/Models/` 目錄，AssetPostprocessor（願景）應會自動：
 - 設定 scale（0.01）、生成 Collider、自動 Rig
 - 根據貼圖檔名自動對應材質（`_Albedo`, `_Normal`, `_Roughness`）
 - 在指定路徑生成 Prefab，掛上對應的 Component
 
-#### Unity（遊戲引擎）⚠️ MCP 設定已就位，預設關閉
+#### Unity（遊戲引擎）✅ 已連線
 
-使用者：unity-team（已建立且已整併 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐，但無 Unity 專案可操作）、ui-programmer, devops, level-designer（規劃中）
+使用者：unity-team（已建立且已整併 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐）、ui-programmer, devops, level-designer（規劃中）
 
 ```yaml
 asset_import:
@@ -900,7 +850,7 @@ build:
   build: "Unity -batchmode -executeMethod BuildScript.Build"
 ```
 
-> `unity-team.md` 已將上述 `code_standard` 寫入其職責章節，會在還沒有 Unity 專案時主動詢問，而不是憑空生成程式碼假裝有專案存在。其場景搭建、資產批次設定、Build、效能分析、架構檢查、平台相容性檢查等工作流程，已整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 這個 Kiro Power 提煉出的最佳實踐（詳見「Unity MCP 整合詳解」與 `unity-team.md` 內文）。
+> `unity-team.md` 已將上述 `code_standard` 寫入其職責章節。其場景搭建、資產批次設定、Build、效能分析、架構檢查、平台相容性檢查等工作流程，已整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 這個 Kiro Power 提煉出的最佳實踐（詳見「Unity MCP 整合詳解」與 `unity-team.md` 內文）。
 
 #### 工具之間的資料流（完整願景）
 
@@ -970,7 +920,7 @@ graph TD
 | 1: Design | 產出系統規格、Wireframe、對話腳本 | game-designer, ux-designer, narrative-designer | 僅 game-designer 可用 |
 | 2: Pre-production | 概念圖、UI Layout、核心邏輯（平行） | concept-artist, ui-artist, programmer | 僅程式部分可用（無概念圖能力） |
 | 3: Production | PBR 貼圖、3D 模型、動畫、完整 C# | texture-artist, blender-team, animator, programmer | 3D 模型 + 程式可用，貼圖/動畫不可用 |
-| 4: Integration | 匯入 Unity、生成 Prefab、組裝場景 | devops / unity import | ⚠️ MCP 設定已就位（`unity-mcp`），但未設定 Unity 專案 |
+| 4: Integration | 匯入 Unity、生成 Prefab、組裝場景 | devops / unity import | ✅ `unity-team` 可用（透過 `unity-mcp`） |
 | 5: QA | 功能/數值/效能測試、修 Bug（max 3 次） | functional-tester, balance-tester, performance-tester | 僅 functional-tester 可用 |
 | 6: Build | 打包目標平台、CI/CD | devops | ⬜ 未建立 |
 
@@ -1162,22 +1112,23 @@ sequenceDiagram
     Producer->>Producer: git add + commit，說明已完成
 ```
 
-**本專案目前能實測到哪一步（誠實對照）：**
+**本專案目前能實測到哪一步：**
 
-| Step | 願景動作 | 本專案現況 |
-|------|---------|-----------|
+| Step | 動作 | 狀態 |
+|------|------|------|
 | 1 | Producer 收到需求（含參考圖） | ✅ 可測試 |
 | 2 | Producer → game-designer 出規格 | ✅ 可測試（手動切換 Agent） |
-| 3 | Producer → comfyui-team 依參考圖生貼圖 | ⚠️ **需先完成本機安裝**，`comfyui-team` + MCP 設定已就位（`comfy-mcp-server`，預設關閉），啟用前只能規劃 prompt |
-| 4 | Producer → blender-team 建模 + 套貼圖 | ⚠️ 可測試，但因為 Step 3 卡住，實際只能做 **untextured** 模型 |
-| 5 | Producer → unity-team 組裝場景 + 寫遊戲邏輯 | ⚠️ 可測試「寫 C# 腳本」這部分，**場景組裝的 MCP 設定已就位**（`unity-mcp`，預設關閉），需先在 Unity Editor 安裝套件並 Start Server 才能自動組裝，否則你需要手動把 .fbx 和腳本拖進 Unity Editor |
-| 6 | Producer 執行 git commit | ✅ 可測試（commit 的內容會是模型檔 + C# 腳本，不是「完整可玩遊戲」） |
+| 3 | Producer → comfyui-team 依參考圖生貼圖 | ✅ 可測試（透過 `comfy-mcp-server`） |
+| 4 | Producer → blender-team 建模 + 套貼圖 | ✅ 可測試（透過 `blender-mcp`） |
+| 5 | Producer → unity-team 組裝場景 + 寫遊戲邏輯 | ✅ 可測試（透過 `unity-mcp`） |
+| 6 | Producer 執行 git commit | ✅ 可測試 |
 
-**現在就能走的實際流程（誠實版）：**
+**實際操作流程：**
 1. 附上參考圖，跟 `orchestration/producer` 說需求
-2. Producer 會告知 Step 3（貼圖生成）目前卡住，問你要「先做無貼圖模型」還是「先去裝 ComfyUI」
-3. 若選擇繼續，Producer 產出 Contract，你手動切到 `art/blender-team` 建出 untextured 模型
-4. 若已有 Unity 專案且已啟用 `unity-mcp`，切到 `engineering/unity-team` 讓它直接組裝場景、寫角色控制器等 C# 腳本；沒有 Unity 專案或尚未啟用 MCP 的話它會先問你/告知卡在哪一步
+2. Producer 拆解 Pipeline，產出 Contract，指示你切到對應 Agent
+3. 切到 `art/comfyui-team` 貼上 Asset Contract，生成貼圖後回報路徑
+4. 切到 `art/blender-team` 貼上 Asset Contract（含貼圖路徑），建模並套用貼圖
+5. 切到 `engineering/unity-team` 貼上 Task Contract（含模型路徑），組裝場景、寫遊戲邏輯
 5. 回到 `orchestration/producer`，它會列出目前變更，確認後執行 git commit
 
 ---
@@ -1186,7 +1137,7 @@ sequenceDiagram
 
 | 規模 | Agent 數 | 需要工具 | 月成本 | 啟用治理機制 | 本專案現況 |
 |------|---------|----------|--------|-------------|-----------|
-| **Solo Dev**（1 人） | 6 | ComfyUI, Unity, Git | $50-150 | ✗ | ✅ **目前配置**（Blender 已裝；ComfyUI/Unity MCP 設定已就位但預設關閉；Git 未走 MCP） |
+| **Solo Dev**（1 人） | 6 | ComfyUI, Unity, Git | $50-150 | ✗ | ✅ **目前配置**（Blender / ComfyUI / Unity 皆已連線；Git 未走 MCP） |
 | **Small Team**（2-4 人） | 12-15 | + Blender, Figma, Linear | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 25-30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 + 可選多團隊 | ⬜ 規劃中 |
 
@@ -1198,7 +1149,7 @@ art/comfyui-team, art/blender-team,
 engineering/unity-team, qa/functional-tester
 ```
 
-> 注意：與原願景清單相比，本專案多加了 `art/comfyui-team`（雖然 ComfyUI 尚未安裝，但 Agent 定義已就位，方便工具裝好後立即可用），並用 `art/blender-team`、`engineering/unity-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist`/`gameplay-programmer` 等角色，因為現有可用工具鏈決定了優先建哪個 Agent 才「真的能跑」。
+> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team`、`engineering/unity-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist`/`gameplay-programmer` 等角色，因為現有可用工具鏈決定了優先建哪個 Agent 才「真的能跑」。
 
 ### Small Team 追加（⬜ 下一步可考慮的方向）
 
@@ -1207,7 +1158,7 @@ engineering/unity-team, qa/functional-tester
   engineering/systems-programmer, engineering/devops, qa/balance-tester
 ```
 
-前提：需先完成 ComfyUI 本機安裝並啟用 `comfy-mcp-server`（設定已就位，見「ComfyUI MCP 整合詳解」）、Figma MCP、Linear MCP。
+前提：需先安裝 Figma MCP、Linear MCP。
 
 ### Studio 追加（⬜ 遠期）
 
@@ -1284,9 +1235,9 @@ graph TD
 
 | 工具掛了 | Retry（願景） | Fallback（願景） | 本專案現況 |
 |---------|-------|----------|-----------|
-| ComfyUI | 3 次（exponential backoff） | 通知用戶手動操作 WebUI | ⚠️ `comfyui-team.md` 目前做法更簡單：最多重試 2 次，連續失敗就停止並回報具體錯誤，不會自動退化成操作 WebUI |
-| Blender | 2 次 | 匯出 Python Script，用戶手動執行 | ⚠️ `blender-team.md` 目前做法更簡單：連線失敗直接回報並停止，不會自動重試或匯出腳本 |
-| Unity MCP | 1 次 | 產出 .cs，用戶在 Editor 操作 | ⚠️ `unity-team.md` 目前做法：連線失敗（`project_info` 讀不到）直接回報並停止；操作逾時（Unity 忙碌中）重試 1 次，不會自動退化成只產出 .cs |
+| ComfyUI | 3 次（exponential backoff） | 通知用戶手動操作 WebUI | `comfyui-team.md` 目前做法更簡單：最多重試 2 次，連續失敗就停止並回報具體錯誤，不會自動退化成操作 WebUI |
+| Blender | 2 次 | 匯出 Python Script，用戶手動執行 | `blender-team.md` 目前做法更簡單：連線失敗直接回報並停止，不會自動重試或匯出腳本 |
+| Unity MCP | 1 次 | 產出 .cs，用戶在 Editor 操作 | `unity-team.md` 目前做法：連線失敗（`project_info` 讀不到）直接回報並停止；操作逾時（Unity 忙碌中）重試 1 次，不會自動退化成只產出 .cs |
 | Linear | 2 次 | 記錄到本地 tasks.yaml | ✅ 已直接採用 fallback 方案作為主要方式（因為本來就沒裝 Linear） |
 
 ### 品質不達標
@@ -1347,7 +1298,7 @@ max_iterations: 3
 | Technical Spec | 技術規範（平台、效能預算） | tech-lead | ⬜ 未建立 |
 | Asset Registry | 已有資產清單 + 鎖定狀態 | producer | ⬜ 未建立（目前尚無任何實際資產產出） |
 | World Bible | 世界觀、角色設定 | narrative-designer | ⬜ 未建立 |
-| Code Architecture | 程式架構、模組關係圖 | tech-lead | ⬜ 未建立（本專案還沒有 Unity 專案） |
+| Code Architecture | 程式架構、模組關係圖 | tech-lead | ⬜ 未建立 |
 | Cost Dashboard | 即時成本追蹤 | producer | ⬜ 未建立（無自動化追蹤機制） |
 | `.kiro/state/tasks.yaml` | Linear 未安裝前的本地任務記錄 fallback | producer | ✅ 已建立，目前為空清單 |
 
@@ -1364,10 +1315,10 @@ kiro-multi-agent-game-studio/
 │   │   ├── design/
 │   │   │   └── game-designer.md                # ✅
 │   │   ├── art/
-│   │   │   ├── comfyui-team.md                 # ⚠️ 需裝 ComfyUI 才能真正產圖
+│   │   │   ├── comfyui-team.md                 # ✅ 貼圖生成（透過 comfy-mcp-server）
 │   │   │   └── blender-team.md                 # ✅
 │   │   ├── engineering/
-│   │   │   └── unity-team.md                   # ⚠️ 需裝 Unity MCP 才能自動操作 Editor
+│   │   │   └── unity-team.md                   # ✅ 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
 │   │   └── qa/
 │   │       └── functional-tester.md            # ✅
 │   ├── steering/
@@ -1381,7 +1332,7 @@ kiro-multi-agent-game-studio/
 │   ├── state/
 │   │   └── tasks.yaml                          # ✅ Linear fallback，目前為空
 │   └── settings/
-│       └── mcp.json                            # ✅ 僅 blender-mcp
+│       └── mcp.json                            # ✅ blender-mcp / comfy-mcp-server / unity-mcp
 ├── blender/
 │   └── README.md                               # 已合併進本檔案「Blender MCP 整合詳解」章節
 └── README.md                                   # 本文件
@@ -1395,14 +1346,12 @@ kiro-multi-agent-game-studio/
 
 依目前進度，建議的擴充順序（非強制，依你的實際需求調整）：
 
-1. **✅ 已完成**：Blender MCP 連線、Producer + 3 Team 架構（comfyui-team / blender-team / unity-team）、Contract 機制、Steering 骨架、Git commit 收尾流程
-2. **完成 ComfyUI 本機安裝並啟用 `comfy-mcp-server`**：MCP 設定已就位（見「ComfyUI MCP 整合詳解」），只差本機安裝 ComfyUI、匯出 workflow JSON、填入路徑並把 `disabled` 改成 `false`，即可解鎖 `art/comfyui-team`，補上「參考圖 → 貼圖」這段，這是目前 Pipeline 第一個卡住的環節
-3. **建立或取得 Unity 專案 + 完成 Unity 端 unity-mcp 安裝與啟動**：MCP 設定已就位（見「Unity MCP 整合詳解」），只差建立/取得 Unity 專案、在 Unity 安裝 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) 套件、Start Server、把 `disabled` 改成 `false`，即可解鎖 `engineering/unity-team` 的場景組裝與 Build 能力，這是第二個卡住的環節
-4. **驗證 subagent 委派**：測試 Kiro 是否支援 `producer` 自動呼叫其他 Agent，若支援則簡化 `producer.md` 移除「手動轉接」章節
-5. **填寫 GDD / Style Guide 實際內容**：目前兩份文件都是空骨架，需要先決定遊戲類型、平台、美術風格才能讓後續 Team 產出一致
-6. **視需要安裝 Linear MCP**：目前本地 `tasks.yaml` 對 Solo Dev 已足夠，多人協作時才需要
-7. **視需要擴充更多 Specialist**：例如 animator、technical-artist 等，待核心 Pipeline 跑順後再加
-8. **依 Small Team 清單擴充**：art-lead、更多 art specialist、systems-programmer、devops 等
+1. **✅ 已完成**：Blender / ComfyUI / Unity MCP 連線、Producer + 3 Team 架構（comfyui-team / blender-team / unity-team）、Contract 機制、Steering 骨架、Git commit 收尾流程
+2. **驗證 subagent 委派**：測試 Kiro 是否支援 `producer` 自動呼叫其他 Agent，若支援則簡化 `producer.md` 移除「手動轉接」章節
+3. **填寫 GDD / Style Guide 實際內容**：目前兩份文件都是空骨架，需要先決定遊戲類型、平台、美術風格才能讓後續 Team 產出一致
+4. **視需要安裝 Linear MCP**：目前本地 `tasks.yaml` 對 Solo Dev 已足夠，多人協作時才需要
+5. **視需要擴充更多 Specialist**：例如 animator、technical-artist 等，待核心 Pipeline 跑順後再加
+6. **依 Small Team 清單擴充**：art-lead、更多 art specialist、systems-programmer、devops 等
 
 ---
 
