@@ -1,0 +1,9 @@
+# 本地任務看板（Linear MCP 尚未安裝前的 fallback）
+#
+# 依 root README「錯誤處理與退化策略」：Linear 故障時記錄到本地 tasks.yaml。
+# 目前專案還沒裝 Linear，所以直接以此檔案作為預設任務追蹤方式，
+# 等未來安裝 linear-mcp-server 後，再由 producer 協助遷移。
+#
+# 格式沿用 .kiro/steering/global/contracts.md 的 Task Contract。
+
+tasks: []

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "blender-mcp": {
+      "command": "uv",
+      "args": ["--directory", "/Users/dayho/Documents/blender_mcp/mcp", "run", "blender-mcp"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
