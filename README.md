@@ -36,10 +36,10 @@
 | Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
 | ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfy-mcp-server` 連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
 | Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender，見「Blender MCP 整合詳解」 |
-| Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor（操作邏輯整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐），見「Unity MCP 整合詳解」 |
-| Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor（操作邏輯整併自 [kiro-godot-accelerator](https://github.com/hoycdanny/kiro-godot-accelerator) 最佳實踐），見「Godot MCP 整合詳解」 |
-| Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor（操作邏輯整併自 [kiro-unreal-accelerator](https://github.com/hoycdanny/kiro-unreal-accelerator) 最佳實踐），見「Unreal MCP 整合詳解」 |
-| Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor（操作邏輯整併自 [kiro-cocos-accelerator](https://github.com/hoycdanny/kiro-cocos-accelerator) 最佳實踐），見「Cocos MCP 整合詳解」 |
+| Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor，見「Unity MCP 整合詳解」 |
+| Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor，見「Godot MCP 整合詳解」 |
+| Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor，見「Unreal MCP 整合詳解」 |
+| Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor，見「Cocos MCP 整合詳解」 |
 | Functional Tester | `.kiro/agents/qa/functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
 | 其餘 20+ 個 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立，依工具鏈逐步擴充 |
 
@@ -586,13 +586,7 @@ Create a Text data-block with the result of analysis.
 
 ## Unity MCP 整合詳解
 
-> `engineering/unity-team` 的操作邏輯與最佳實踐，整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator)（一個 Kiro Power），其底層執行層是開源專案 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)。
-
-### 為什麼是「整併」而不是「安裝這個 Power」
-
-`kiro-unity-accelerator` 是一個完整的 Kiro Power（POWER.md + 14 個 steering file + 6 類 templates + hooks），設計上假設你會用 `kiro_powers` 工具動態 activate 它。但本專案的架構是「每個 Team 是一個獨立、自包含的 `.kiro/agents/*.md` custom agent」，不依賴額外安裝的 Power。因此做法是：把 `kiro-unity-accelerator` POWER.md 與 steering files 裡濃縮的**最佳實踐邏輯**（Steering-First、連線健康檢查、Play Mode 保護、批次操作摘要、依任務領域對應的具體工具呼叫順序）直接寫進 `unity-team.md`，讓這個 Agent 不需要額外安裝 Power 就能照同樣的紀律操作 Unity。
-
-若你之後想直接用原版 Power（例如要用到它的 `templates/`、`hooks/pre-unity-tool.kiro.hook` 自動提醒機制、或多平台 Build Config），可以透過 Powers 面板另外安裝 `kiro-unity-accelerator`，兩者可以並存（Power 提供的 MCP 工具與本專案 `unity-mcp` 設定共用同一個 `CoplayDev/unity-mcp` bridge，不會衝突）。
+> `engineering/unity-team` 透過開源專案 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) 操作 Unity Editor。
 
 ### 設定內容（`.kiro/settings/mcp.json`）
 
@@ -631,7 +625,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | 執行/查詢 | `run_tests`, `read_console`, `batch_execute`, `find_gameobjects` |
 | 只讀 Resource | `project_info`, `editor_state`, `gameobject`, `editor_selection` |
 
-### `unity-team` 遵循的核心紀律（來自 kiro-unity-accelerator 最佳實踐）
+### `unity-team` 遵循的核心紀律
 
 - **連線健康檢查優先**：任何操作前先讀取 `project_info`，失敗就停下回報，不猜測、不硬闖
 - **Steering-First**：場景搭建、資產批次設定、Build、效能分析、架構檢查、平台相容性檢查等任務，各有一套「先查規範再動手」的具體工具呼叫順序（完整對照表見 `unity-team.md` 的「依任務領域查對應規範」）
@@ -640,7 +634,6 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### 參考資料
 
-- [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator)（本專案 `unity-team.md` 邏輯的來源）
 - [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)（實際執行層，MIT License，12k+ stars）
 - [MCP 協議說明](https://modelcontextprotocol.io/)
 
@@ -648,7 +641,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ## Godot MCP 整合詳解
 
-> `engineering/godot-team` 的操作邏輯與最佳實踐，整併自 [kiro-godot-accelerator](https://github.com/hoycdanny/kiro-godot-accelerator)（一個 Kiro Power），其底層執行層是開源專案 [bradypp/godot-mcp](https://github.com/bradypp/godot-mcp)。
+> `engineering/godot-team` 透過開源專案 [bradypp/godot-mcp](https://github.com/bradypp/godot-mcp) 操作 Godot Editor。
 
 ### 設定內容（`.kiro/settings/mcp.json`）
 
@@ -693,7 +686,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | 除錯 | `get_debug_output` |
 | UID（4.4+） | `get_uid`, `update_project_uids` |
 
-### `godot-team` 遵循的核心紀律（來自 kiro-godot-accelerator 最佳實踐）
+### `godot-team` 遵循的核心紀律
 
 - **GDScript 一律加型別標註**：不生成未標型別的變數/參數/回傳值
 - **Composition 優先於深層 Nesting**：避免超過 10 層節點階層
@@ -703,7 +696,6 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### 參考資料
 
-- [kiro-godot-accelerator](https://github.com/hoycdanny/kiro-godot-accelerator)（本專案 `godot-team.md` 邏輯的來源）
 - [bradypp/godot-mcp](https://github.com/bradypp/godot-mcp)（實際執行層，MIT License）
 - [Godot 官方文件](https://docs.godotengine.org/)
 
@@ -711,7 +703,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ## Unreal MCP 整合詳解
 
-> `engineering/unreal-team` 的操作邏輯與最佳實踐，整併自 [kiro-unreal-accelerator](https://github.com/hoycdanny/kiro-unreal-accelerator)（一個 Kiro Power），其底層執行層是開源專案 [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp) 的**開源 local MCP**（`Python/` 資料夾 + `UnrealMCP` C++ 外掛），非付費 Hosted 版。
+> `engineering/unreal-team` 透過開源專案 [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp) 的**開源 local MCP**（`Python/` 資料夾 + `UnrealMCP` C++ 外掛）操作 Unreal Editor，非付費 Hosted 版。
 
 ### 為什麼選 local MCP 而非 Hosted Flop MCP
 
@@ -777,7 +769,6 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### 參考資料
 
-- [kiro-unreal-accelerator](https://github.com/hoycdanny/kiro-unreal-accelerator)（本專案 `unreal-team.md` 邏輯的來源）
 - [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)（實際執行層，MIT License，1.1k+ stars）
 - [Unreal Engine 官方文件](https://dev.epicgames.com/documentation/en-us/unreal-engine/)
 
@@ -785,7 +776,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ## Cocos MCP 整合詳解
 
-> `engineering/cocos-team` 的操作邏輯與最佳實踐，整併自 [kiro-cocos-accelerator](https://github.com/hoycdanny/kiro-cocos-accelerator)（一個 Kiro Power），其底層執行層是社群外掛 [DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)。特別適合輕量跨平台/H5 遊戲，包含老虎機這類需要快速多平台部署的類型。
+> `engineering/cocos-team` 透過社群外掛 [DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server) 操作 Cocos Creator Editor。特別適合輕量跨平台/H5 遊戲，包含老虎機這類需要快速多平台部署的類型。
 
 ### 設定內容（`.kiro/settings/mcp.json`）
 
@@ -823,7 +814,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | 除錯 | `debug_get_console_logs`, `debug_get_performance_stats`, `debug_validate_scene` |
 | 進階資產 | `advancedAsset_batch_import_assets`, `advancedAsset_get_unused_assets` |
 
-### `cocos-team` 遵循的核心紀律（來自 kiro-cocos-accelerator 最佳實踐）
+### `cocos-team` 遵循的核心紀律
 
 - **`node_create_node` 一定先取得 `parentUuid`**：否則節點會建到場景根節點
 - **`component_set_component_property` 一定要明確指定 `propertyType`**：省略會靜默失敗
@@ -832,7 +823,6 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### 參考資料
 
-- [kiro-cocos-accelerator](https://github.com/hoycdanny/kiro-cocos-accelerator)（本專案 `cocos-team.md` 邏輯的來源）
 - [DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)（實際執行層，1.2k+ stars）
 - [Cocos Creator 官方文件](https://docs.cocos.com/creator/manual/en/)
 
@@ -840,7 +830,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ## Slot Game Expert 詳解
 
-> `design/slot-game-expert` 的領域知識整併自 [kiro-slot-game-expert](https://github.com/hoycdanny/kiro-slot-game-expert)（一個 Kiro Power）。這不是一個操作 MCP 工具的執行 Team，而是一個**純知識型 Domain Expert**，產出數學模型/RNG/認證合規規格，交給對應的引擎 Team 實作。
+> `design/slot-game-expert` 不是一個操作 MCP 工具的執行 Team，而是一個**純知識型 Domain Expert**，產出數學模型/RNG/認證合規規格，交給對應的引擎 Team 實作。
 
 ### 為什麼獨立於 `game-designer` 之外
 
@@ -864,9 +854,8 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 > **核心規則**：CSPRNG 是唯一可接受的 RNG 類型，一般的 `Random()` / `Math.random()` / `FMath::RandRange` 都不具密碼學安全性，絕對不能用在正式上線的核心邏輯。
 
-### 參考資料
+### 參考資料（完整清單見 `slot-game-expert.md` 內文，24 條已驗證官方文獻）
 
-- [kiro-slot-game-expert](https://github.com/hoycdanny/kiro-slot-game-expert)（本專案 `slot-game-expert.md` 知識來源，24 條已驗證官方參考文獻）
 - [GLI Standards](https://gaminglabs.com/gli-standards/)
 - [NIST SP 800-90A Rev.1](https://csrc.nist.gov/pubs/sp/800/90/a/r1/final)
 
@@ -1150,7 +1139,7 @@ graph LR
 
 #### Unity（遊戲引擎）✅ 已連線
 
-使用者：unity-team（已建立且已整併 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐）、ui-programmer, devops, level-designer（規劃中）
+使用者：unity-team（已建立）、ui-programmer, devops, level-designer（規劃中）
 
 ```yaml
 asset_import:
@@ -1170,7 +1159,7 @@ build:
   build: "Unity -batchmode -executeMethod BuildScript.Build"
 ```
 
-> `unity-team.md` 已將上述 `code_standard` 寫入其職責章節。其場景搭建、資產批次設定、Build、效能分析、架構檢查、平台相容性檢查等工作流程，已整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 這個 Kiro Power 提煉出的最佳實踐（詳見「Unity MCP 整合詳解」與 `unity-team.md` 內文）。
+> `unity-team.md` 已將上述 `code_standard` 寫入其職責章節。其場景搭建、資產批次設定、Build、效能分析、架構檢查、平台相容性檢查等工作流程細節，詳見「Unity MCP 整合詳解」與 `unity-team.md` 內文。
 
 #### 工具之間的資料流（完整願景）
 
@@ -1609,11 +1598,6 @@ max_iterations: 3
 - IGDA Game Industry Standards：[igda.org](https://igda.org/resources/game-industry-standards/)
 - Blender MCP：[官方頁面](https://www.blender.org/lab/mcp-server/#llm-client) ｜ [原始碼](https://projects.blender.org/lab/blender_mcp)
 - Model Context Protocol：[modelcontextprotocol.io](https://modelcontextprotocol.io/)
-- kiro-unity-accelerator：[GitHub](https://github.com/hoycdanny/kiro-unity-accelerator)
-- kiro-godot-accelerator：[GitHub](https://github.com/hoycdanny/kiro-godot-accelerator)
-- kiro-unreal-accelerator：[GitHub](https://github.com/hoycdanny/kiro-unreal-accelerator)
-- kiro-cocos-accelerator：[GitHub](https://github.com/hoycdanny/kiro-cocos-accelerator)
-- kiro-slot-game-expert：[GitHub](https://github.com/hoycdanny/kiro-slot-game-expert)
 
 ---
 
