@@ -12,7 +12,8 @@ Agent 之間不靠隨意對話交付需求，而是透過以下兩種標準化 C
 task:
   id: "TASK-042"
   title: "任務標題"
-  assigned_to: "engineering/unity-team"
+  assigned_to: "engineering/unity-team"   # 依目標引擎填入：unity-team | godot-team | unreal-team | cocos-team
+  engine: "Unity"                          # Unity | Godot | Unreal | Cocos Creator
   input:
     - design_spec: "路徑或描述"
     - dependencies: ["依賴的其他任務或系統"]
@@ -40,7 +41,8 @@ asset_request:
     albedo: null
     normal: null
     roughness: null
-  unity_import:
+  engine_import:             # 依目標引擎調整欄位，交給對應 engineering/{engine}-team 使用
+    engine: "Unity"           # Unity | Godot | Unreal | Cocos Creator
     scale: 0.01
     generate_collider: true
   metadata:
@@ -52,15 +54,16 @@ asset_request:
 ## 核心 Pipeline 流動方式
 
 ```
-User → Producer（建立 Contract）
+User → Producer（建立 Contract，偵測引擎與遊戲類型）
       → design/game-designer（規格，若需要）
+      → design/slot-game-expert（老虎機數學模型/RNG/合規，若偵測到該類型）
       → art/comfyui-team（貼圖，若需要）
-      → art/blender-team（建模 + 套貼圖）
-      → engineering/unity-team（場景組裝 + 遊戲邏輯 + Build）
+      → art/blender-team（建模 + 套貼圖，2D 遊戲可跳過）
+      → engineering/{unity,godot,unreal,cocos}-team（依偵測到的引擎分派，場景組裝 + 遊戲邏輯 + Build）
       → Producer（確認交付 → Git commit）
 ```
 
-每一步的 Contract 由 Producer 負責串接：把前一個 Team 的交付物（例如貼圖路徑、.fbx 路徑）填進下一個 Team 的 Contract 裡再轉交。
+每一步的 Contract 由 Producer 負責串接：把前一個 Team 的交付物（例如貼圖路徑、.fbx 路徑）填進下一個 Team 的 Contract 裡再轉交。最後一步永遠分派給**使用者指定的引擎對應的 Team**，而不是固定分派給 `unity-team`。
 
 ## 現階段的限制（誠實聲明）
 

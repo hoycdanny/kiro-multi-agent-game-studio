@@ -24,6 +24,34 @@
       "transport": "http",
       "disabled": false,
       "autoApprove": []
+    },
+    "godot-mcp": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/godot-mcp/build/index.js"],
+      "env": {
+        "GODOT_PATH": "/Applications/Godot.app/Contents/MacOS/Godot",
+        "DEBUG": "false",
+        "READ_ONLY": "false"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "unreal-engine": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/unreal-engine-mcp/Python",
+        "run",
+        "unreal_mcp_server_advanced.py"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "cocos-creator": {
+      "url": "http://127.0.0.1:3000/mcp",
+      "transport": "http",
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }

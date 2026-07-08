@@ -28,6 +28,7 @@ tools: ["read", "write"]
 3. 若是新系統/新資產規格，先確認不牴觸 GDD 既有內容
 4. 產出文件，若屬於 GDD 範疇，更新 gdd.md 對應章節並記錄到「變更紀錄」表格
 5. 若此規格是給美術/建模用，額外整理成 Asset Contract 格式（`.kiro/steering/global/contracts.md`），方便使用者直接交給 `art/comfyui-team`（生貼圖）或 `art/blender-team`（建模）
+6. 若使用者需求是老虎機類型，指引改找 `design/slot-game-expert`（數學模型、RNG、認證合規屬於其專業範疇，不在你的職責內）
 
 ## Asset Spec 範例輸出
 

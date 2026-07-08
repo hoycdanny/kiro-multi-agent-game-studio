@@ -1,6 +1,6 @@
 # Kiro Multi-Agent Game Studio
 
-用 AI Agent 模擬一整個遊戲開發團隊。你對 Producer 說「我要一把發光的劍」，它就會拆解任務、指引對應的 Specialist Agent 接手（設計規格、貼圖生成、3D 建模、程式邏輯、測試），最後匯入 Unity —— 目標是全程由 Agent 協作完成。
+用 AI Agent 模擬一整個遊戲開發團隊。你對 Producer 說「請幫我用 Unity 開發一款老虎機」，它會偵測目標引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型（例如老虎機），拆解任務、指引對應的 Specialist Agent 接手（設計規格、數學模型、貼圖生成、3D 建模、引擎場景組裝與程式邏輯、測試）—— 目標是全程由 Agent 協作完成，且不綁定單一引擎。
 
 **適用場景**：可作為 PM 向團隊或投資人提案的架構藍圖，也適合個人遊戲開發者 / 小型獨立工作室（1-10 人）直接拿來用。
 
@@ -12,31 +12,36 @@
 
 這是本專案「現在打開 Kiro 就能用」的內容，不是願景，是已經寫進 `.kiro/` 的實際檔案。
 
-### 核心設計：Producer + 三個 Team 的線性 Pipeline
+### 核心設計：Producer 偵測「引擎 + 遊戲類型」，串接美術/設計 Team → 對應引擎 Team
 
-本專案不是照搬原願景的 30+ Agent 組織圖，而是採用更貼近實際工作流程的設計：**一條「參考圖 → 3D 遊戲」的線性 Pipeline，由 Producer 串接三個執行 Team**：
+本專案不是照搬原願景的 30+ Agent 組織圖，而是採用更貼近實際工作流程的設計：**一條「參考圖 → 遊戲」的線性 Pipeline，由 Producer 依使用者指定的引擎與遊戲類型動態決定分派對象**：
 
 ```
-使用者需求（可含參考圖）
-  → Producer 拆解
-  → design/game-designer     （規格，若需要）
-  → art/comfyui-team          （依參考圖生成貼圖）
-  → art/blender-team          （建模 + 套用貼圖）
-  → engineering/unity-team    （場景組裝 + 遊戲邏輯 + Build）
+使用者需求（可含參考圖、指定引擎、指定遊戲類型）
+  → Producer 拆解，偵測引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型（例如老虎機）
+  → design/game-designer          （一般系統規格，若需要）
+  → design/slot-game-expert       （老虎機數學模型/RNG/合規，若偵測到該類型）
+  → art/comfyui-team               （依參考圖生成貼圖）
+  → art/blender-team               （建模 + 套用貼圖，2D 遊戲可跳過）
+  → engineering/{engine}-team      （依偵測到的引擎分派：unity-team / godot-team / unreal-team / cocos-team）
   → Producer 確認完成 → git commit
 ```
 
-### 已建立的 Agent（6 個）
+### 已建立的 Agent（9 個）
 
 | Agent | 路徑 | 依賴 |
 |-------|------|------|
-| Producer | `.kiro/agents/orchestration/producer.md` | 無外部工具，能用 shell 執行 git commit |
+| Producer | `.kiro/agents/orchestration/producer.md` | 無外部工具，能用 shell 執行 git commit，負責引擎/遊戲類型偵測 |
 | Game Designer | `.kiro/agents/design/game-designer.md` | 無外部工具 |
+| Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
 | ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfy-mcp-server` 連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
 | Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender，見「Blender MCP 整合詳解」 |
 | Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor（操作邏輯整併自 [kiro-unity-accelerator](https://github.com/hoycdanny/kiro-unity-accelerator) 最佳實踐），見「Unity MCP 整合詳解」 |
+| Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor（操作邏輯整併自 [kiro-godot-accelerator](https://github.com/hoycdanny/kiro-godot-accelerator) 最佳實踐），見「Godot MCP 整合詳解」 |
+| Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor（操作邏輯整併自 [kiro-unreal-accelerator](https://github.com/hoycdanny/kiro-unreal-accelerator) 最佳實踐），見「Unreal MCP 整合詳解」 |
+| Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor（操作邏輯整併自 [kiro-cocos-accelerator](https://github.com/hoycdanny/kiro-cocos-accelerator) 最佳實踐），見「Cocos MCP 整合詳解」 |
 | Functional Tester | `.kiro/agents/qa/functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
-| 其餘 25+ 個 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立，依工具鏈逐步擴充 |
+| 其餘 20+ 個 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立，依工具鏈逐步擴充 |
 
 ### 已串接的元件（MCP）
 
@@ -45,21 +50,24 @@
 | **Blender** | `blender-mcp`（stdio） | `.kiro/settings/mcp.json` |
 | **ComfyUI** | `comfy-mcp-server`（stdio，[`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)） | `.kiro/settings/mcp.json` |
 | **Unity** | `unity-mcp`（HTTP，[`CoplayDev/unity-mcp`](https://github.com/CoplayDev/unity-mcp)） | `.kiro/settings/mcp.json` |
+| **Godot** | `godot-mcp`（stdio，[`bradypp/godot-mcp`](https://github.com/bradypp/godot-mcp)） | `.kiro/settings/mcp.json` |
+| **Unreal Engine** | `unreal-engine`（stdio，local MCP from [`flopperam/unreal-engine-mcp`](https://github.com/flopperam/unreal-engine-mcp)） | `.kiro/settings/mcp.json` |
+| **Cocos Creator** | `cocos-creator`（HTTP，[`DaxianLee/cocos-mcp-server`](https://github.com/DaxianLee/cocos-mcp-server)） | `.kiro/settings/mcp.json` |
 | Figma | ⬜ 未安裝 | — |
 | Git | 未透過 MCP 串接，Producer 用 shell 直接操作 git commit | — |
 | Linear | ⬜ 未安裝，任務暫存於本地 `.kiro/state/tasks.yaml` | `.kiro/state/tasks.yaml` |
 
-### 端到端流程：「做一個第三人稱射擊遊戲」
-
-以「參考這張圖，做一個第三人稱射擊遊戲，Blender Team 建模、套用 ComfyUI Team 的貼圖、交給 Unity Team 做出會動的遊戲、最後 commit」為例：
+### 端到端流程範例：「請幫我用 Unity 開發一款老虎機」
 
 | 步驟 | 執行方 |
 |------|--------|
-| 理解需求、看參考圖、拆解 Pipeline 計畫 | Producer |
-| 依參考圖生成貼圖 | ComfyUI Team（`generate_prompt` + `generate_image`） |
-| 建模、套用貼圖、匯出 `.fbx` | Blender Team |
-| 匯入模型、組裝場景、寫遊戲邏輯、Build | Unity Team |
+| 理解需求，偵測引擎（Unity）與遊戲類型（老虎機） | Producer |
+| 確認引擎/市場/專案類型，產出數學模型/RNG/合規規格 | Slot Game Expert |
+| 依主題生成符號（Symbol）美術 | ComfyUI Team |
+| 場景組裝、Spin Lifecycle 邏輯、審計日誌、Build | Unity Team（`@unity-mcp`） |
 | 確認完成、git commit | Producer |
+
+> 換成「請幫我用 Cocos Creator 開發一款老虎機」，Producer 會偵測到引擎是 Cocos Creator，改分派給 `engineering/cocos-team`；其他步驟不變。這就是「引擎無關的美術/設計階段 + 依引擎切換的實作階段」的設計核心。
 
 ### 已建立的共享規範（Steering）
 
@@ -87,23 +95,25 @@
 
 ### 現在就能測試的最小流程
 
-1. 切到 `orchestration/producer`，輸入「我要一把發光的劍」（或附上參考圖：「參考這張圖，做一把劍」）
-2. 觀察它是否正確拆成「先請 game-designer 出規格」→「comfyui-team 生貼圖」→「blender-team 建模」幾步，並印出對應 Contract
-3. 切到 `design/game-designer`，貼上 Contract，確認它會讀取並嘗試更新 `gdd.md`
+1. 切到 `orchestration/producer`，輸入「請幫我用 Godot 開發一款老虎機」這類含引擎+類型的需求（或不指定引擎，看它是否會先問你）
+2. 觀察它是否正確偵測引擎（Godot）與遊戲類型（老虎機），拆成「slot-game-expert 出數學模型」→「comfyui-team 生符號貼圖」→「godot-team 場景組裝」幾步，並印出對應 Contract
+3. 切到 `design/slot-game-expert`，貼上 Contract，確認它會問你市場/專案類型並產出規格
 4. 切到 `art/comfyui-team` 貼上 Asset Contract，確認它能生成貼圖並回報路徑
-5. 切到 `art/blender-team` 貼上 Asset Contract，確認它能建模並套用貼圖
+5. 切到對應的引擎 Team（例如 `engineering/godot-team`）貼上 Task Contract，確認它能操作對應 Editor
 
 ---
 
 ## 30 秒懶人包
 
 ```
-你說一句話 → Producer 拆任務 → 各 Specialist Agent 執行（目前為手動轉接）→ 產出遊戲資產
+你說一句話（含引擎+類型）→ Producer 偵測並拆任務 → 各 Specialist Agent 執行（目前為手動轉接）→ 產出遊戲
 ```
 
 - 每個 Agent 是一個 `.kiro/agents/*.md` 檔案（Kiro IDE 的 Custom Agent 格式）
-- Agent 透過 MCP Server 操作外部工具（Blender / ComfyUI / Unity 皆已連線；Figma 為規劃中）
-- 你可以只啟用 6 個 Agent（Solo Dev，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
+- Agent 透過 MCP Server 操作外部工具：Blender / ComfyUI / Unity / Godot / Unreal / Cocos Creator 皆已連線；Figma 為規劃中
+- 支援 4 種遊戲引擎（Unity、Godot、Unreal Engine、Cocos Creator），Producer 依你的指定自動分派給對應 Team
+- 老虎機這類特殊遊戲類型有專屬 Domain Expert（`slot-game-expert`）處理數學模型/RNG/認證合規
+- 你可以只啟用 9 個 Agent（Solo Dev，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
 - 所有設計規範存在 `.kiro/steering/` 裡，Agent 會自動參照（`inclusion: always` 的檔案每次對話都會載入）
 
 ---
@@ -116,6 +126,10 @@
 4. [Blender MCP 整合詳解](#blender-mcp-整合詳解)
 4b. [ComfyUI MCP 整合詳解](#comfyui-mcp-整合詳解)
 4c. [Unity MCP 整合詳解](#unity-mcp-整合詳解)
+4d. [Godot MCP 整合詳解](#godot-mcp-整合詳解)
+4e. [Unreal MCP 整合詳解](#unreal-mcp-整合詳解)
+4f. [Cocos MCP 整合詳解](#cocos-mcp-整合詳解)
+4g. [Slot Game Expert 詳解](#slot-game-expert-詳解)
 5. [團隊角色與職責](#團隊角色與職責)
 6. [Agent 定義格式](#agent-定義格式)
 7. [工具鏈與 MCP 整合](#工具鏈與-mcp-整合)
@@ -159,9 +173,13 @@ graph TD
 
     subgraph "Layer 3: 已建立的 Team / Specialist"
         GD["Game Designer ✅"]
+        SGE["Slot Game Expert ✅"]
         CT["ComfyUI Team ✅"]
         BT2["Blender Team ✅"]
         UT["Unity Team ✅"]
+        GT["Godot Team ✅"]
+        URT["Unreal Team ✅"]
+        COT["Cocos Team ✅"]
         FT["Functional Tester ✅"]
     end
 
@@ -182,6 +200,9 @@ graph TD
         Blender["Blender ✅ 已連線"]
         Figma["Figma ⬜ 未安裝"]
         Unity["Unity ✅ 已連線"]
+        Godot["Godot ✅ 已連線"]
+        Unreal["Unreal ✅ 已連線"]
+        Cocos["Cocos Creator ✅ 已連線"]
         Git["Git ⬜ 未走 MCP，用 shell"]
         Linear["Linear ⬜ 未安裝"]
     end
@@ -194,9 +215,13 @@ graph TD
     P --> AuL
     P --> QL
     P --> GD
+    P --> SGE
     P --> CT
     P --> BT2
     P --> UT
+    P --> GT
+    P --> URT
+    P --> COT
     P --> FT
     DL --> LD
     DL --> ND
@@ -210,13 +235,19 @@ graph TD
     CT --> ComfyUI
     BT2 --> Blender
     UT --> Unity
+    GT --> Godot
+    URT --> Unreal
+    COT --> Cocos
     P --> Linear
 
     ComfyUI -.->|貼圖| Blender
-    Blender -.->|.fbx| Unity
+    Blender -.->|模型| Unity
+    Blender -.->|模型| Godot
+    Blender -.->|模型| Unreal
+    Blender -.->|模型| Cocos
 ```
 
-> 圖中「Layer 3：已建立的 Team / Specialist」這 5 個節點（Game Designer、ComfyUI Team、Blender Team、Unity Team、Functional Tester）加上 Producer，共 **6 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity 三條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
+> 圖中「Layer 3：已建立的 Team / Specialist」這 9 個節點（Game Designer、Slot Game Expert、ComfyUI Team、Blender Team、Unity Team、Godot Team、Unreal Team、Cocos Team、Functional Tester）加上 Producer，共 **10 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity、Godot、Unreal、Cocos 六條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
 
 ### 工具資料流
 
@@ -226,6 +257,9 @@ graph LR
     Blender[Blender]
     Figma[Figma]
     Unity[Unity]
+    Godot[Godot]
+    Unreal[Unreal Engine]
+    Cocos[Cocos Creator]
     Linear[Linear]
     Git[Git + LFS]
 
@@ -233,10 +267,18 @@ graph LR
     ComfyUI -->|PBR 貼圖| Blender
     ComfyUI -->|UI 素材| Figma
     ComfyUI -->|Sprite, Icon| Unity
-    Blender -->|.fbx 模型, 動畫| Unity
+    ComfyUI -->|Sprite, Icon| Godot
+    ComfyUI -->|Sprite, Icon| Cocos
+    Blender -->|.fbx/.glb 模型, 動畫| Unity
+    Blender -->|.glb 模型| Godot
+    Blender -->|.fbx 模型| Unreal
+    Blender -->|.glb 模型| Cocos
     Figma -->|切圖 PNG/SVG| Unity
     Figma -->|Design Token| Unity
     Unity -->|程式碼, 資產| Git
+    Godot -->|程式碼, 資產| Git
+    Unreal -->|程式碼, 資產| Git
+    Cocos -->|程式碼, 資產| Git
     Linear -.->|任務驅動| ComfyUI
     Linear -.->|任務驅動| Blender
     Linear -.->|任務驅動| Figma
@@ -245,7 +287,7 @@ graph LR
 
 **Linear** — 願景中是整個 Pipeline 的任務驅動中心；**目前尚未安裝**，任務改記錄在本地 `.kiro/state/tasks.yaml`。
 
-**Unity** — 願景中是所有資產的最終組裝站；MCP 已連線（`unity-mcp`，見「Unity MCP 整合詳解」），操作對象是你在 Unity Editor 開啟的專案。
+**Unity / Godot / Unreal / Cocos Creator** — 都是資產的最終組裝站，Producer 依使用者指定的引擎決定分派給哪一個；四條 MCP 都已連線（見對應的「XX MCP 整合詳解」章節），操作對象是你在該引擎 Editor 開啟的專案。
 
 ### 運作邏輯
 
@@ -254,7 +296,7 @@ graph LR
 | Layer 0 | Creative Director / Portfolio Orchestrator | 定義願景、跨團隊仲裁 | ⬜ 未建立（Solo Dev 不需要） |
 | Layer 1 | Producer | 拆任務、串接 Pipeline 三個 Team、追蹤進度、Git commit | ✅ 已建立（分派為手動轉接） |
 | Layer 2 | Team Leads | 管理各領域品質，審核產出 | ⬜ 未建立（Solo Dev 不需要） |
-| Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 6 個已建立且已連線 / ⬜ 25+ 個規劃中 |
+| Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team / godot-team / unreal-team / cocos-team）+ Domain Expert（slot-game-expert）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 9 個已建立且已連線 / ⬜ 20+ 個規劃中 |
 
 **關鍵機制（願景 vs 現況）：**
 - 願景：Producer 收到需求後，透過 **subagent** 呼叫對應的 Specialist 自動執行
@@ -274,20 +316,30 @@ graph LR
 | GPU | GTX 1060 6GB | RTX 3060 12GB+ |
 | RAM | 16 GB | 32 GB |
 | Python | 3.10+ | 3.11（需給 `uv` 使用） |
-| Unity | 2022.3 LTS | 2023.2+ |
+| Node.js | 18+ | 最新 LTS（godot-mcp 需要） |
+| Unity（若使用） | 2022.3 LTS | 2023.2+ |
+| Godot（若使用） | 4.3+ | 4.4+（UID 工具需要） |
+| Unreal Engine（若使用） | 5.5+ | 5.6/5.7 |
+| Cocos Creator（若使用） | 3.8.6+ | 最新版 |
 | Blender | 3.6+（blender-mcp 建議 5.1+） | 4.0+ / 5.1+ |
 | ComfyUI | 最新版 | 最新版 |
 | Kiro IDE | 最新版 | 最新版 |
 
-### 目前實際配置（Producer + 3 Team + 2 輔助 Agent，共 6 個）
+> 不需要同時裝四個引擎，只需要裝你實際要用的那個。Producer 會依你的需求分派到對應引擎 Team。
+
+### 目前實際配置（Producer + 4 引擎 Team + 2 美術 Team + 2 設計 Team + 1 QA Team，共 9 個）
 
 ```
 .kiro/agents/
-├── orchestration/producer.md      # 拆任務、串接 Pipeline、Git commit
+├── orchestration/producer.md      # 拆任務、偵測引擎與遊戲類型、串接 Pipeline、Git commit
 ├── design/game-designer.md         # 寫設計文件、GDD 維護
+├── design/slot-game-expert.md      # 老虎機數學模型/RNG/認證合規顧問
 ├── art/comfyui-team.md             # 依參考圖生成貼圖（透過 comfy-mcp-server）
 ├── art/blender-team.md             # Blender 建模 + 套貼圖（透過 blender-mcp）
 ├── engineering/unity-team.md       # 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
+├── engineering/godot-team.md       # 場景組裝、GDScript、Export（透過 godot-mcp）
+├── engineering/unreal-team.md      # 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
+├── engineering/cocos-team.md       # 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
 └── qa/functional-tester.md         # 跑測試（需測試框架存在）
 ```
 
@@ -298,16 +350,23 @@ graph LR
 git clone <your-repo-url>
 cd kiro-multi-agent-game-studio
 
-# 2. 安裝 uv（Blender MCP、ComfyUI MCP 都需要）
+# 2. 安裝 uv（Blender MCP、ComfyUI MCP、Unreal MCP 都需要）
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # 或 macOS: brew install uv
 
-# 3. MCP 設定已存在於 .kiro/settings/mcp.json（blender-mcp / comfy-mcp-server / unity-mcp）
-#    各工具的連線細節見「Blender MCP 整合詳解」「ComfyUI MCP 整合詳解」「Unity MCP 整合詳解」
+# 3. MCP 設定已存在於 .kiro/settings/mcp.json
+#    （blender-mcp / comfy-mcp-server / unity-mcp / godot-mcp / unreal-engine / cocos-creator）
+#    各工具的連線細節見對應的「XX MCP 整合詳解」章節
 
-# 4. 啟動 Blender（啟用 blender_mcp add-on）、啟動 ComfyUI、啟動 Unity Editor（Start MCP Server）
+# 4. 依你要用的引擎，啟動對應軟體並完成連線：
+#    - Blender：啟用 blender_mcp add-on
+#    - ComfyUI：啟動本機服務
+#    - Unity：Window → MCP for Unity → Start Server
+#    - Godot：安裝並 build godot-mcp（npm install && npm run build）
+#    - Unreal：安裝 UnrealMCP 外掛並在 Editor 啟用
+#    - Cocos Creator：安裝 cocos-mcp-server 外掛，擴展 → Cocos MCP Server → 啟動
 
-# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 6 個 Agent
+# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 9 個 Agent
 ```
 
 ### 使用方式
@@ -319,8 +378,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 方式 B：讓 Producer 統籌整條 Pipeline（目前為手動轉接模式）
   → 切到 "orchestration/producer"
-  → 「我需要一把發光的劍」
-  → Producer 拆解任務，印出 Contract，指示你切換到對應 Agent 貼上執行
+  → 「請幫我用 Unity 開發一款老虎機」
+  → Producer 偵測引擎（Unity）與類型（老虎機），拆解任務，印出 Contract，指示你切換到對應 Agent 貼上執行
 ```
 
 ---
@@ -587,6 +646,232 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ---
 
+## Godot MCP 整合詳解
+
+> `engineering/godot-team` 的操作邏輯與最佳實踐，整併自 [kiro-godot-accelerator](https://github.com/hoycdanny/kiro-godot-accelerator)（一個 Kiro Power），其底層執行層是開源專案 [bradypp/godot-mcp](https://github.com/bradypp/godot-mcp)。
+
+### 設定內容（`.kiro/settings/mcp.json`）
+
+```json
+{
+  "mcpServers": {
+    "godot-mcp": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/godot-mcp/build/index.js"],
+      "env": {
+        "GODOT_PATH": "/Applications/Godot.app/Contents/MacOS/Godot",
+        "DEBUG": "false",
+        "READ_ONLY": "false"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+### 安裝步驟
+
+1. Clone 並 build `godot-mcp`：
+   ```bash
+   git clone https://github.com/bradypp/godot-mcp.git
+   cd godot-mcp
+   npm install
+   npm run build
+   ```
+2. 把 `args` 裡的路徑換成你本機 `godot-mcp/build/index.js` 的絕對路徑
+3. 把 `GODOT_PATH` 換成你本機 Godot 執行檔路徑（macOS 預設 `/Applications/Godot.app/Contents/MacOS/Godot`；若 Godot 在系統 PATH 裡可省略此變數，會自動偵測）
+4. 儲存後 Kiro 會自動嘗試連線
+
+### 可用 Tools
+
+| 分組 | 工具 |
+|------|------|
+| 系統 | `get_godot_version` |
+| 專案 | `launch_editor`, `run_project`, `stop_project`, `list_projects`, `get_project_info` |
+| 場景 | `create_scene`, `add_node`, `edit_node`, `remove_node`, `load_sprite`, `export_mesh_library`, `save_scene` |
+| 除錯 | `get_debug_output` |
+| UID（4.4+） | `get_uid`, `update_project_uids` |
+
+### `godot-team` 遵循的核心紀律（來自 kiro-godot-accelerator 最佳實踐）
+
+- **GDScript 一律加型別標註**：不生成未標型別的變數/參數/回傳值
+- **Composition 優先於深層 Nesting**：避免超過 10 層節點階層
+- **Signal 優先於直接呼叫**：跨節點溝通走事件驅動，全域事件用 Autoload 的 Event Bus
+- **`run_project` 會阻塞直到遊戲視窗關閉**：測試用途改用 `stop_project` 中斷，不要當成錯誤重試
+- **UID 工具只支援 4.4+**：較舊版本改用 `res://` 路徑
+
+### 參考資料
+
+- [kiro-godot-accelerator](https://github.com/hoycdanny/kiro-godot-accelerator)（本專案 `godot-team.md` 邏輯的來源）
+- [bradypp/godot-mcp](https://github.com/bradypp/godot-mcp)（實際執行層，MIT License）
+- [Godot 官方文件](https://docs.godotengine.org/)
+
+---
+
+## Unreal MCP 整合詳解
+
+> `engineering/unreal-team` 的操作邏輯與最佳實踐，整併自 [kiro-unreal-accelerator](https://github.com/hoycdanny/kiro-unreal-accelerator)（一個 Kiro Power），其底層執行層是開源專案 [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp) 的**開源 local MCP**（`Python/` 資料夾 + `UnrealMCP` C++ 外掛），非付費 Hosted 版。
+
+### 為什麼選 local MCP 而非 Hosted Flop MCP
+
+| 方案 | 特性 |
+|------|------|
+| Hosted Flop MCP（`agent.flopperam.com/mcp`） | 50+ 工具（Blueprint 全生命週期、Niagara VFX、GAS、Sequencer 等），但需付費 API Key，走遠端 |
+| **Local MCP（本專案採用）** | 免費、開源、走本機 stdio；工具集較小（場景操作、Actor 管理、基礎 Blueprint、World Building） |
+
+若後續需要 Hosted 版的進階能力，可在 `unreal-team.md` 裡明確告知使用者這個限制並詢問是否要切換。
+
+### 設定內容（`.kiro/settings/mcp.json`）
+
+```json
+{
+  "mcpServers": {
+    "unreal-engine": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/unreal-engine-mcp/Python",
+        "run",
+        "unreal_mcp_server_advanced.py"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+### 安裝步驟
+
+1. Clone 到專案外的固定位置（不要放進 Unreal 專案內）：
+   ```bash
+   cd ~/Desktop
+   git clone https://github.com/flopperam/unreal-engine-mcp.git
+   ```
+2. 把 `UnrealMCP` 外掛複製到 Unreal 專案的 `Plugins/` 資料夾（在專案根目錄，即 `.uproject` 所在位置執行）：
+   ```bash
+   cp -r ~/Desktop/unreal-engine-mcp/UnrealMCP Plugins/
+   ```
+3. 對 `.uproject` 按右鍵 → Generate Visual Studio/Xcode project files → 開啟並 Build（Development Editor）
+4. Unreal Editor → Edit → Plugins → 搜尋 `UnrealMCP` → 啟用 → 重啟 Editor
+5. 安裝 Python 3.12+ 與 [uv](https://docs.astral.sh/uv/)
+6. 把 `mcp.json` 的路徑換成你本機 `unreal-engine-mcp/Python` 的絕對路徑
+
+### 可用 Tools（local MCP 版）
+
+| 分組 | 工具 |
+|------|------|
+| Blueprint 視覺化腳本 | `add_node`, `connect_nodes`, `delete_node`, `create_variable`, `create_function` 等 |
+| Blueprint 分析 | `read_blueprint_content`, `analyze_blueprint_graph` 等 |
+| Blueprint 系統 | `create_blueprint`, `compile_blueprint`, `add_component_to_blueprint` |
+| World Building | `create_town`, `construct_house`, `create_tower`, `create_castle_fortress` 等 |
+| 物理與材質 | `spawn_physics_blueprint_actor`, `apply_material_to_actor` 等 |
+| Actor 管理 | `get_actors_in_level`, `find_actors_by_name`, `set_actor_transform` |
+
+### 已知問題（`unreal-team` 已內建規避邏輯）
+
+- **絕對不要用 `ce` console command**：透過 MCP 執行會導致 Unreal Editor 立即 crash
+- **`set_component_property` 設定 `OverrideMaterials` 不可靠**：改用已驗證的 Blueprint SCS 做法（見 `unreal-team.md` 內文）
+- **避免大量 Undo**：批次還原優先用明確重新套用，而非連續 40+ 次 undo
+
+### 參考資料
+
+- [kiro-unreal-accelerator](https://github.com/hoycdanny/kiro-unreal-accelerator)（本專案 `unreal-team.md` 邏輯的來源）
+- [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)（實際執行層，MIT License，1.1k+ stars）
+- [Unreal Engine 官方文件](https://dev.epicgames.com/documentation/en-us/unreal-engine/)
+
+---
+
+## Cocos MCP 整合詳解
+
+> `engineering/cocos-team` 的操作邏輯與最佳實踐，整併自 [kiro-cocos-accelerator](https://github.com/hoycdanny/kiro-cocos-accelerator)（一個 Kiro Power），其底層執行層是社群外掛 [DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)。特別適合輕量跨平台/H5 遊戲，包含老虎機這類需要快速多平台部署的類型。
+
+### 設定內容（`.kiro/settings/mcp.json`）
+
+```json
+{
+  "mcpServers": {
+    "cocos-creator": {
+      "url": "http://127.0.0.1:3000/mcp",
+      "transport": "http",
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+### 安裝步驟
+
+1. 下載 [`cocos-mcp-server`](https://github.com/DaxianLee/cocos-mcp-server) 或從 [Cocos Store](https://store.cocos.com/app/detail/7941) 安裝
+2. 複製整個 `cocos-mcp-server` 資料夾到 Cocos Creator 專案的 `extensions/cocos-mcp-server/`
+3. `cd extensions/cocos-mcp-server && npm install && npm run build`
+4. 重啟 Cocos Creator 或刷新擴展
+5. 擴展 → Cocos MCP Server → 開啟面板 → 設定 port（預設 3000）→ 點擊「啟動伺服器」
+6. 若 port 不是 3000，同步修改 `mcp.json` 的 `url`
+
+### 可用 Tools（依用途分組）
+
+| 分組 | 工具 |
+|------|------|
+| 場景 | `scene_get_current_scene`, `scene_create_scene`, `scene_open_scene`, `scene_save_scene` |
+| 節點 | `node_create_node`, `node_find_node_by_name`, `node_get_all_nodes`, `node_set_node_transform` |
+| 元件 | `component_add_component`, `component_set_component_property`, `component_attach_script` |
+| Prefab | `prefab_create_prefab`, `prefab_instantiate_prefab`, `prefab_get_prefab_list` |
+| 專案 | `project_get_project_info`, `project_build_project`, `project_run_project` |
+| 除錯 | `debug_get_console_logs`, `debug_get_performance_stats`, `debug_validate_scene` |
+| 進階資產 | `advancedAsset_batch_import_assets`, `advancedAsset_get_unused_assets` |
+
+### `cocos-team` 遵循的核心紀律（來自 kiro-cocos-accelerator 最佳實踐）
+
+- **`node_create_node` 一定先取得 `parentUuid`**：否則節點會建到場景根節點
+- **`component_set_component_property` 一定要明確指定 `propertyType`**：省略會靜默失敗
+- **資產路徑一律用 `db://` 前綴**：不要用檔案系統絕對路徑
+- **2D/3D 節點座標欄位不同**：2D 只用 x/y，3D 用完整 x/y/z
+
+### 參考資料
+
+- [kiro-cocos-accelerator](https://github.com/hoycdanny/kiro-cocos-accelerator)（本專案 `cocos-team.md` 邏輯的來源）
+- [DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)（實際執行層，1.2k+ stars）
+- [Cocos Creator 官方文件](https://docs.cocos.com/creator/manual/en/)
+
+---
+
+## Slot Game Expert 詳解
+
+> `design/slot-game-expert` 的領域知識整併自 [kiro-slot-game-expert](https://github.com/hoycdanny/kiro-slot-game-expert)（一個 Kiro Power）。這不是一個操作 MCP 工具的執行 Team，而是一個**純知識型 Domain Expert**，產出數學模型/RNG/認證合規規格，交給對應的引擎 Team 實作。
+
+### 為什麼獨立於 `game-designer` 之外
+
+老虎機開發涉及高度專業且風險敏感的知識（CSPRNG 選型、GLI 認證、負責任遊戲法規），這些不是一般遊戲設計師的日常知識範疇，錯誤的建議可能導致認證失敗甚至法規違規。因此獨立成一個專屬 Domain Expert，`game-designer` 遇到老虎機需求時會主動轉介，不會自己硬答。
+
+### 涵蓋領域
+
+- **數學模型設計**：Paytable、Virtual Reel 權重、RTP 計算、Volatility 調校、Hit Frequency、Bonus/Free Spin 的 RTP 貢獻
+- **RNG 與遊戲邏輯**：CSPRNG 選型（依引擎不同）、種子管理、六階段 Spin Lifecycle、審計日誌欄位設計
+- **認證合規**：GLI-11（實體機台）/ GLI-19（線上）標準、認證文件清單、市場法規、時程費用估算
+- **負責任遊戲**：存款限制、自我排除（串接 GamStop/Spelpaus 等官方系統）、會話時間提醒、Autoplay 限制
+
+### 引擎對應的 CSPRNG 選型（供快速查閱）
+
+| 引擎 | CSPRNG API | 對應 Team |
+|------|-----------|-----------|
+| Unity | `System.Security.Cryptography.RandomNumberGenerator` | `engineering/unity-team` |
+| Godot | `Crypto.generate_random_bytes()` | `engineering/godot-team` |
+| Unreal Engine | OpenSSL `RAND_bytes()` | `engineering/unreal-team` |
+| Cocos Creator | `crypto.getRandomValues()`（瀏覽器）/ `crypto.randomBytes()`（Node.js） | `engineering/cocos-team` |
+
+> **核心規則**：CSPRNG 是唯一可接受的 RNG 類型，一般的 `Random()` / `Math.random()` / `FMath::RandRange` 都不具密碼學安全性，絕對不能用在正式上線的核心邏輯。
+
+### 參考資料
+
+- [kiro-slot-game-expert](https://github.com/hoycdanny/kiro-slot-game-expert)（本專案 `slot-game-expert.md` 知識來源，24 條已驗證官方參考文獻）
+- [GLI Standards](https://gaminglabs.com/gli-standards/)
+- [NIST SP 800-90A Rev.1](https://csrc.nist.gov/pubs/sp/800/90/a/r1/final)
+
+---
+
 ## 團隊角色與職責
 
 > ✅ = 已建立 Agent 檔案　⬜ = 願景中，尚未建立
@@ -623,6 +908,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
 | game-designer | read, write | GDD、系統規格、數值平衡表、Asset Spec | ✅ |
+| slot-game-expert | read, write | 老虎機數學模型、RNG 指引、GLI 認證合規、負責任遊戲設計 | ✅（見「Slot Game Expert 詳解」） |
 | economy-designer | read, write | 經濟模型、商城定價、IAP 設計 | ⬜ |
 | combat-designer | read, write | 戰鬥系統、技能設計、敵人 AI | ⬜ |
 | level-designer | read, write, @unity | 關卡佈局、觸發器、難度曲線 | ⬜ |
@@ -642,11 +928,14 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 > `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個 ComfyUI 工具，拆開建立沒有實際差異。
 
-#### Engineering Team（4 個規劃，1 個已建立）
+#### Engineering Team（4 個規劃，4 個引擎 Team 已建立）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
 | unity-team | `@unity-mcp`, read, write, shell（願景：+@git） | 場景組裝、遊戲邏輯、狀態機、技能系統、Build | ✅ 已連線（[unity-mcp](https://github.com/CoplayDev/unity-mcp)），見「Unity MCP 整合詳解」 |
+| godot-team | `@godot-mcp`, read, write, shell | 場景組裝、GDScript、State Machine、Export | ✅ 已連線（[godot-mcp](https://github.com/bradypp/godot-mcp)），見「Godot MCP 整合詳解」 |
+| unreal-team | `@unreal-engine`, read, write, shell | 關卡組裝、Blueprint 邏輯、材質工作流程 | ✅ 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)），見「Unreal MCP 整合詳解」 |
+| cocos-team | `@cocos-creator`, read, write, shell | 場景組裝、TypeScript 元件、Prefab、Build | ✅ 已連線（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)），見「Cocos MCP 整合詳解」 |
 | systems-programmer | shell, @git | 存檔系統、資源管理、事件系統 | ⬜ |
 | ui-programmer | shell, @git | UI 綁定（UI Toolkit）、Localization | ⬜ |
 | devops | shell, @git | CI/CD、Build 腳本、部署流程 | ⬜ |
@@ -702,6 +991,9 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | ✅ 已連線（[`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)） | REST API |
 | **Figma** | UI/UX 設計、規格匯出、Design Token | ⬜ 未安裝 | REST API |
 | **Unity** | 遊戲引擎（場景組裝、Build） | ✅ 已連線（[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)） | CLI Batch Mode |
+| **Godot** | 遊戲引擎（場景組裝、Export） | ✅ 已連線（[bradypp/godot-mcp](https://github.com/bradypp/godot-mcp)） | CLI headless export |
+| **Unreal Engine** | 遊戲引擎（關卡組裝、Blueprint） | ✅ 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） | UBT/UAT CLI |
+| **Cocos Creator** | 遊戲引擎（場景組裝、跨平台/H5 Build） | ✅ 已連線（[DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)） | CLI Build |
 | **Git** | 版本控制 | 未透過 MCP，Agent 用 shell 直接操作 | shell CLI |
 | **Linear** | 任務追蹤、Sprint 看板 | ⬜ 未安裝，改用本地 `.kiro/state/tasks.yaml` | GraphQL API |
 
@@ -734,12 +1026,40 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
       "transport": "http",
       "disabled": false,
       "autoApprove": []
+    },
+    "godot-mcp": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/godot-mcp/build/index.js"],
+      "env": {
+        "GODOT_PATH": "/Applications/Godot.app/Contents/MacOS/Godot",
+        "DEBUG": "false",
+        "READ_ONLY": "false"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "unreal-engine": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/unreal-engine-mcp/Python",
+        "run",
+        "unreal_mcp_server_advanced.py"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "cocos-creator": {
+      "url": "http://127.0.0.1:3000/mcp",
+      "transport": "http",
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
 ```
 
-> `COMFY_WORKFLOW_JSON_FILE` / `PROMPT_NODE_ID` / `OUTPUT_NODE_ID` 需換成你實際 workflow 的路徑與節點 ID，細節見下方「ComfyUI MCP 整合詳解」。
+> `COMFY_WORKFLOW_JSON_FILE` / `PROMPT_NODE_ID` / `OUTPUT_NODE_ID`、`godot-mcp` 的路徑、`unreal-engine` 的路徑，都需換成你實際環境的值，細節見對應的「XX MCP 整合詳解」章節。
 
 ### 若要擴充其他工具（願景中的配置範例，尚未套用）
 
@@ -953,7 +1273,8 @@ asset_request:
     texture_size: 1024
     style: "stylized_fantasy"
     reference_images: ["ref_sword_01.png"]
-  unity_import:
+  engine_import:
+    engine: "Unity"          # Unity | Godot | Unreal | Cocos Creator
     scale: 0.01
     generate_collider: true
     prefab_path: "Assets/Prefabs/Weapons/"
@@ -967,13 +1288,14 @@ asset_request:
     max_blender_operations: 20
 ```
 
-### Task Contract（程式/設計任務用）—— ✅ 已實作，`unity-team` / `functional-tester` 會讀取此格式
+### Task Contract（程式/設計任務用）—— ✅ 已實作，`{engine}-team` / `functional-tester` 會讀取此格式
 
 ```yaml
 task:
   id: "TASK-042"
   title: "實作戰鬥傷害計算"
-  assigned_to: "engineering/unity-team"
+  assigned_to: "engineering/unity-team"   # 依目標引擎：unity-team | godot-team | unreal-team | cocos-team
+  engine: "Unity"                          # Unity | Godot | Unreal | Cocos Creator
   input:
     - design_spec: "docs/combat_system_spec.yaml"
     - dependencies: ["health_system", "buff_system"]
@@ -1084,52 +1406,52 @@ version_control:
 
 ---
 
-## 端到端 Demo：從參考圖到第三人稱射擊遊戲
+## 端到端 Demo：從「請幫我用 Unity 開發一款老虎機」到可玩原型
 
-這是本專案設計時的核心情境（對應使用者的原始需求）：「參考這張圖，做一個第三人稱射擊遊戲，Blender Team 建模、套用 ComfyUI Team 的貼圖、交給 Unity Team 做出會動的遊戲、最後 commit」。
+這是本文件開頭的核心情境：「請幫我用 Unity 開發一款老虎機」。這個範例同時展示**引擎偵測**（Unity）與**遊戲類型偵測**（老虎機 → 插入 Slot Game Expert）兩個機制。
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Producer as producer
-    participant GD as game-designer
+    participant SGE as slot-game-expert
     participant CT as comfyui-team
-    participant BT as blender-team
     participant UT as unity-team
 
-    User->>Producer: 參考這張圖，做一個第三人稱射擊遊戲
-    Producer->>GD: Task Contract → 產出角色/武器 Asset Spec
-    GD-->>Producer: character_spec.yaml ✓
-    Producer->>CT: Asset Contract → 依參考圖生成貼圖
-    CT->>CT: ComfyUI 生成 Albedo/Normal/Roughness
+    User->>Producer: 請幫我用 Unity 開發一款老虎機
+    Producer->>Producer: 偵測引擎=Unity，類型=老虎機
+    Producer->>SGE: Task Contract → 確認市場/專案類型 → 產出數學模型/RNG/合規規格
+    SGE-->>Producer: paytable.yaml + rng_guide.md + compliance_checklist.md ✓
+    Producer->>CT: Asset Contract → 依主題生成符號美術
+    CT->>CT: ComfyUI 生成符號 Sprite
     CT-->>Producer: 貼圖檔案路徑 ✓
-    Producer->>BT: Asset Contract（含貼圖路徑）→ 建模
-    BT->>BT: Blender 建模 + 套貼圖 + 匯出 .fbx
-    BT-->>Producer: character_hero_01.fbx ✓
-    Producer->>UT: Task Contract（含模型路徑）→ 組裝 + 遊戲邏輯
-    UT->>UT: 匯入模型、寫角色控制器/射擊系統、Build
+    Producer->>UT: Task Contract（含數學模型規格 + 貼圖路徑）→ 實作
+    UT->>UT: 場景組裝、Spin Lifecycle、CSPRNG（RandomNumberGenerator）、審計日誌、Build
     UT-->>Producer: 可玩場景 + C# 腳本 ✓
     Producer->>Producer: git add + commit，說明已完成
 ```
+
+**若換成「請幫我用 Cocos Creator 開發一款老虎機」**，流程完全相同，唯一差異是最後一步 Producer 會分派給 `engineering/cocos-team`（透過 `cocos-creator` MCP），且 Slot Game Expert 建議的 CSPRNG 會是 `crypto.getRandomValues()` 而非 C# 的 `RandomNumberGenerator`。這就是引擎偵測機制的核心價值：**同一套 Pipeline 邏輯，換一個關鍵字就能切換到完全不同的引擎與程式語言**。
 
 **本專案目前能實測到哪一步：**
 
 | Step | 動作 | 狀態 |
 |------|------|------|
-| 1 | Producer 收到需求（含參考圖） | ✅ 可測試 |
-| 2 | Producer → game-designer 出規格 | ✅ 可測試（手動切換 Agent） |
-| 3 | Producer → comfyui-team 依參考圖生貼圖 | ✅ 可測試（透過 `comfy-mcp-server`） |
-| 4 | Producer → blender-team 建模 + 套貼圖 | ✅ 可測試（透過 `blender-mcp`） |
-| 5 | Producer → unity-team 組裝場景 + 寫遊戲邏輯 | ✅ 可測試（透過 `unity-mcp`） |
-| 6 | Producer 執行 git commit | ✅ 可測試 |
+| 1 | Producer 收到需求，偵測引擎與遊戲類型 | ✅ 可測試 |
+| 2 | Producer → slot-game-expert 出數學模型/RNG/合規規格 | ✅ 可測試（手動切換 Agent） |
+| 3 | Producer → comfyui-team 生成符號美術 | ✅ 可測試（透過 `comfy-mcp-server`） |
+| 4 | Producer → unity-team（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | ✅ 可測試（依引擎透過對應 MCP） |
+| 5 | Producer 執行 git commit | ✅ 可測試 |
 
 **實際操作流程：**
-1. 附上參考圖，跟 `orchestration/producer` 說需求
-2. Producer 拆解 Pipeline，產出 Contract，指示你切到對應 Agent
-3. 切到 `art/comfyui-team` 貼上 Asset Contract，生成貼圖後回報路徑
-4. 切到 `art/blender-team` 貼上 Asset Contract（含貼圖路徑），建模並套用貼圖
-5. 切到 `engineering/unity-team` 貼上 Task Contract（含模型路徑），組裝場景、寫遊戲邏輯
-5. 回到 `orchestration/producer`，它會列出目前變更，確認後執行 git commit
+1. 跟 `orchestration/producer` 說「請幫我用 XX 開發一款老虎機」（或先不指定引擎，看它是否會問你）
+2. Producer 偵測引擎與類型，拆解 Pipeline，產出 Contract，指示你切到對應 Agent
+3. 切到 `design/slot-game-expert` 貼上 Contract，確認引擎/市場/專案類型，拿到數學模型規格
+4. 切到 `art/comfyui-team` 貼上 Asset Contract，生成符號美術後回報路徑
+5. 切到對應的引擎 Team（`engineering/unity-team` / `godot-team` / `unreal-team` / `cocos-team`）貼上 Task Contract，組裝場景、寫遊戲邏輯
+6. 回到 `orchestration/producer`，它會列出目前變更，確認後執行 git commit
+
+> 一般（非老虎機）需求的流程範例，見上方「目前專案實際狀態 → 端到端流程範例」。
 
 ---
 
@@ -1137,19 +1459,21 @@ sequenceDiagram
 
 | 規模 | Agent 數 | 需要工具 | 月成本 | 啟用治理機制 | 本專案現況 |
 |------|---------|----------|--------|-------------|-----------|
-| **Solo Dev**（1 人） | 6 | ComfyUI, Unity, Git | $50-150 | ✗ | ✅ **目前配置**（Blender / ComfyUI / Unity 皆已連線；Git 未走 MCP） |
-| **Small Team**（2-4 人） | 12-15 | + Blender, Figma, Linear | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
+| **Solo Dev**（1 人） | 9 | ComfyUI, 引擎（任一）, Git | $50-150 | ✗ | ✅ **目前配置**（Blender / ComfyUI / Unity / Godot / Unreal / Cocos 皆已連線；Git 未走 MCP） |
+| **Small Team**（2-4 人） | 15-18 | + Figma, Linear | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 25-30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 + 可選多團隊 | ⬜ 規劃中 |
 
-### Solo Dev 啟用清單（✅ 已完成，共 6 個）
+### Solo Dev 啟用清單（✅ 已完成，共 9 個）
 
 ```
-orchestration/producer, design/game-designer,
+orchestration/producer, design/game-designer, design/slot-game-expert,
 art/comfyui-team, art/blender-team,
-engineering/unity-team, qa/functional-tester
+engineering/unity-team, engineering/godot-team,
+engineering/unreal-team, engineering/cocos-team,
+qa/functional-tester
 ```
 
-> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team`、`engineering/unity-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist`/`gameplay-programmer` 等角色，因為現有可用工具鏈決定了優先建哪個 Agent 才「真的能跑」。
+> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert。
 
 ### Small Team 追加（⬜ 下一步可考慮的方向）
 
@@ -1238,6 +1562,9 @@ graph TD
 | ComfyUI | 3 次（exponential backoff） | 通知用戶手動操作 WebUI | `comfyui-team.md` 目前做法更簡單：最多重試 2 次，連續失敗就停止並回報具體錯誤，不會自動退化成操作 WebUI |
 | Blender | 2 次 | 匯出 Python Script，用戶手動執行 | `blender-team.md` 目前做法更簡單：連線失敗直接回報並停止，不會自動重試或匯出腳本 |
 | Unity MCP | 1 次 | 產出 .cs，用戶在 Editor 操作 | `unity-team.md` 目前做法：連線失敗（`project_info` 讀不到）直接回報並停止；操作逾時（Unity 忙碌中）重試 1 次，不會自動退化成只產出 .cs |
+| Godot MCP | 1 次 | 產出 .gd，用戶在 Editor 操作 | `godot-team.md` 目前做法：連線失敗（`get_project_info` 失敗）直接回報並停止 |
+| Unreal MCP | 1 次 | 產出說明文件，用戶手動操作 | `unreal-team.md` 目前做法：連線失敗直接回報並停止；已知會 crash 的 `ce` command 絕不作為 fallback 使用 |
+| Cocos MCP | 1 次 | 產出 .ts，用戶在 Editor 操作 | `cocos-team.md` 目前做法：連線失敗（fetch failed）直接回報並停止 |
 | Linear | 2 次 | 記錄到本地 tasks.yaml | ✅ 已直接採用 fallback 方案作為主要方式（因為本來就沒裝 Linear） |
 
 ### 品質不達標
@@ -1282,6 +1609,11 @@ max_iterations: 3
 - IGDA Game Industry Standards：[igda.org](https://igda.org/resources/game-industry-standards/)
 - Blender MCP：[官方頁面](https://www.blender.org/lab/mcp-server/#llm-client) ｜ [原始碼](https://projects.blender.org/lab/blender_mcp)
 - Model Context Protocol：[modelcontextprotocol.io](https://modelcontextprotocol.io/)
+- kiro-unity-accelerator：[GitHub](https://github.com/hoycdanny/kiro-unity-accelerator)
+- kiro-godot-accelerator：[GitHub](https://github.com/hoycdanny/kiro-godot-accelerator)
+- kiro-unreal-accelerator：[GitHub](https://github.com/hoycdanny/kiro-unreal-accelerator)
+- kiro-cocos-accelerator：[GitHub](https://github.com/hoycdanny/kiro-cocos-accelerator)
+- kiro-slot-game-expert：[GitHub](https://github.com/hoycdanny/kiro-slot-game-expert)
 
 ---
 
@@ -1311,14 +1643,18 @@ kiro-multi-agent-game-studio/
 ├── .kiro/
 │   ├── agents/
 │   │   ├── orchestration/
-│   │   │   └── producer.md                    # ✅ 拆任務、串接 Pipeline、Git commit
+│   │   │   └── producer.md                    # ✅ 拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
 │   │   ├── design/
-│   │   │   └── game-designer.md                # ✅
+│   │   │   ├── game-designer.md                # ✅
+│   │   │   └── slot-game-expert.md              # ✅ 老虎機數學模型/RNG/認證合規顧問
 │   │   ├── art/
 │   │   │   ├── comfyui-team.md                 # ✅ 貼圖生成（透過 comfy-mcp-server）
 │   │   │   └── blender-team.md                 # ✅
 │   │   ├── engineering/
-│   │   │   └── unity-team.md                   # ✅ 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
+│   │   │   ├── unity-team.md                   # ✅ 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
+│   │   │   ├── godot-team.md                   # ✅ 場景組裝、GDScript、Export（透過 godot-mcp）
+│   │   │   ├── unreal-team.md                  # ✅ 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
+│   │   │   └── cocos-team.md                   # ✅ 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
 │   │   └── qa/
 │   │       └── functional-tester.md            # ✅
 │   ├── steering/
@@ -1332,7 +1668,7 @@ kiro-multi-agent-game-studio/
 │   ├── state/
 │   │   └── tasks.yaml                          # ✅ Linear fallback，目前為空
 │   └── settings/
-│       └── mcp.json                            # ✅ blender-mcp / comfy-mcp-server / unity-mcp
+│       └── mcp.json                            # ✅ blender-mcp / comfy-mcp-server / unity-mcp / godot-mcp / unreal-engine / cocos-creator
 ├── blender/
 │   └── README.md                               # 已合併進本檔案「Blender MCP 整合詳解」章節
 └── README.md                                   # 本文件
@@ -1346,12 +1682,13 @@ kiro-multi-agent-game-studio/
 
 依目前進度，建議的擴充順序（非強制，依你的實際需求調整）：
 
-1. **✅ 已完成**：Blender / ComfyUI / Unity MCP 連線、Producer + 3 Team 架構（comfyui-team / blender-team / unity-team）、Contract 機制、Steering 骨架、Git commit 收尾流程
+1. **✅ 已完成**：Blender / ComfyUI / Unity / Godot / Unreal / Cocos MCP 連線、Producer 引擎+類型偵測機制、4 引擎 Team + Slot Game Expert、Contract 機制、Steering 骨架、Git commit 收尾流程
 2. **驗證 subagent 委派**：測試 Kiro 是否支援 `producer` 自動呼叫其他 Agent，若支援則簡化 `producer.md` 移除「手動轉接」章節
 3. **填寫 GDD / Style Guide 實際內容**：目前兩份文件都是空骨架，需要先決定遊戲類型、平台、美術風格才能讓後續 Team 產出一致
 4. **視需要安裝 Linear MCP**：目前本地 `tasks.yaml` 對 Solo Dev 已足夠，多人協作時才需要
 5. **視需要擴充更多 Specialist**：例如 animator、technical-artist 等，待核心 Pipeline 跑順後再加
 6. **依 Small Team 清單擴充**：art-lead、更多 art specialist、systems-programmer、devops 等
+7. **視需要擴充更多 Domain Expert**：目前只有老虎機（`slot-game-expert`），未來可依需求加入其他高專業度遊戲類型（例如撲克/卡牌對戰、體育博彩）
 
 ---
 
@@ -1367,7 +1704,8 @@ kiro-multi-agent-game-studio/
 - [ ] 團隊規模 → 決定啟用哪些 Agent
 - [ ] 是否需要 LiveOps
 - [ ] LLM 偏好（雲端 API / 本地模型 / 混合）
-- [ ] 是否已有 Unity 專案，或需要從零建立
+- [ ] 使用哪個遊戲引擎（Unity / Godot / Unreal Engine / Cocos Creator）→ 決定分派到哪個引擎 Team
+- [ ] 是否已有對應引擎的專案，或需要從零建立
 - [ ] 是否要驗證 Kiro subagent 跨 Agent 自動委派能力（影響 Producer 的設計走向）
 
 ---
