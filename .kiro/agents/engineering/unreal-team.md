@@ -73,7 +73,7 @@ tools: ["@unreal-engine", "read", "write", "shell"]
 
 1. 連線自檢：呼叫任一輕量工具（如 `get_actors_in_level`）確認可用，失敗就停在這一步回報
 2. 確認 Blender Team / ComfyUI Team 是否已交付模型/貼圖
-3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/vt_001/gdd.md`）
+3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/<team_id>/gdd.md`，`<team_id>` 由 Producer 委派傳入，預設 `vt_001`）
 4. 建立/修改 Blueprint 或關卡結構，優先用已驗證做法（見上方「已知問題」），避開已知會失敗的 API 呼叫
 5. 若涉及材質，套用後用 `get_actor_material_info` 驗證是否真的套用成功，不要只信任 `success: true`
 6. 完成後回報產出、acceptance criteria 對應狀況、以及「這個關卡/功能距離『能玩』還缺什麼」

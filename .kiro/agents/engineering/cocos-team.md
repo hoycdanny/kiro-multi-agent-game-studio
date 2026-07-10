@@ -77,7 +77,7 @@ tools: ["@cocos-creator", "read", "write", "shell"]
 
 1. 連線自檢：呼叫 `scene_get_current_scene` 確認可用，失敗就停在這一步回報
 2. 確認 Blender Team / ComfyUI Team 是否已交付模型/貼圖
-3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/vt_001/gdd.md`）
+3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/<team_id>/gdd.md`，`<team_id>` 由 Producer 委派傳入，預設 `vt_001`）
 4. 場景/節點/元件依「依任務領域查對應規範」的順序操作，記得先拿 `parentUuid` 再建節點
 5. 撰寫 TypeScript 元件，符合 Cocos 慣例：`@ccclass`/`@property` decorator，生命週期方法（`onLoad`/`start`/`update`）分工清楚
 6. 若場景需要重複使用的結構（老虎機符號、捲軸），存成 Prefab

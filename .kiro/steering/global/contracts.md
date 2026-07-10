@@ -66,13 +66,31 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 
 每一步的 Contract 由 Producer 負責串接：把前一個 Team 的交付物（例如貼圖路徑、.fbx 路徑）填進下一個 Team 的 Contract 裡再轉交。最後一步永遠分派給**使用者指定的引擎對應的 Team**，而不是固定分派給 `unity-team`。
 
-## 現階段的限制（誠實聲明）
+## Agent 委派命名規範（所有 Agent 必讀）
 
-本專案目前**尚未驗證** Kiro 的 Custom Agent 之間是否能透過 subagent 機制自動互相呼叫。
-在驗證之前，Producer 的「分派」動作實際上是：
+委派 / 呼叫其他 Agent 時，**一律使用該 Agent frontmatter 的扁平 `name`**，不要加資料夾前綴：
 
-1. 產生上述格式的 Contract
-2. 明確告知使用者「請切換到 XX Agent 並貼上這份 Contract」
-3. 使用者手動切換 Agent Selector 完成交接
+- ✅ 正確：`Use the "blender-team" subagent to …`、`Use the "unity-team" subagent to …`
+- ❌ 錯誤：`Use the "art/blender-team" agent …`、`Use the "engineering/unity-team" agent …`
 
-一旦確認 Kiro 支援自動跨 Agent 委派，再回來更新 `orchestration/producer.md` 移除手動交接步驟。
+資料夾（`art/`、`design/`、`engineering/`、`qa/`、`orchestration/`）只是 `.kiro/agents/` 底下的檔案組織，**不是呼叫名稱的一部分**。Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識。
+
+目前已註冊的扁平名稱：`producer`、`portfolio-orchestrator`、`game-designer`、`slot-game-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`functional-tester`、`balance-tester`、`compliance-release`。
+
+## 團隊隔離（team_id）
+
+Agent 讀寫團隊專屬檔案時，路徑一律用 `<team_id>` 佔位，實際值由 Producer 於委派時傳入（預設 `vt_001`）：
+
+- 設計 / 風格：`.kiro/steering/teams/<team_id>/gdd.md`、`.kiro/steering/teams/<team_id>/style-guide.md`
+- 任務看板：`.kiro/state/teams/<team_id>/tasks.yaml`
+
+**不要把 `vt_001` 寫死**——文件中的 `vt_001` 僅為範例。這樣才能讓多個 V-Team（`vt_001`、`vt_002`…）並行而不互相污染上下文。
+
+## Subagent 委派機制（Kiro 原生，取代舊的手動轉接）
+
+Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to …` 語法即可觸發，**不需要特別的 `subagent` 工具權限**，Specialist 執行完會自動把結果回傳給主 Agent。因此 Producer 應**主動自動委派**，不再要求使用者手動切換 Agent Selector 貼上 Contract。
+
+**尚待實測的邊界（誠實聲明）**：
+- subagent 執行環境是隔離的獨立 context window，因此**委派時必須把完整 Contract 與所有檔案路徑寫進 Prompt**，否則 Specialist 會缺上下文。
+- subagent 內**不會觸發 Hooks、也拿不到 Specs**（見 Kiro 官方 Subagents 文件）。
+- **多層巢狀委派**（`portfolio-orchestrator` → `producer` → Specialist，共三層）尚未在本專案完整驗證。若巢狀委派失敗，退化策略是由 `producer` 作為主 Agent 逐一委派各 Specialist，不強求三層自動串接。

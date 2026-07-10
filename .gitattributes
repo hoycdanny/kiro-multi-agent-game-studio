@@ -1,0 +1,49 @@
+# === Git LFS：遊戲二進位資產一律走 LFS，避免 repo 膨脹 ===
+# 啟用一次即可（每台機器）：  git lfs install
+# 之後 commit 這些副檔名會自動走 LFS。
+
+# 3D 模型 / 動畫
+*.fbx   filter=lfs diff=lfs merge=lfs -text
+*.glb   filter=lfs diff=lfs merge=lfs -text
+*.gltf  filter=lfs diff=lfs merge=lfs -text
+*.obj   filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.blend1 filter=lfs diff=lfs merge=lfs -text
+
+# 貼圖 / 圖像
+*.png   filter=lfs diff=lfs merge=lfs -text
+*.jpg   filter=lfs diff=lfs merge=lfs -text
+*.jpeg  filter=lfs diff=lfs merge=lfs -text
+*.tga   filter=lfs diff=lfs merge=lfs -text
+*.psd   filter=lfs diff=lfs merge=lfs -text
+*.exr   filter=lfs diff=lfs merge=lfs -text
+*.hdr   filter=lfs diff=lfs merge=lfs -text
+*.tiff  filter=lfs diff=lfs merge=lfs -text
+
+# 音訊
+*.wav   filter=lfs diff=lfs merge=lfs -text
+*.mp3   filter=lfs diff=lfs merge=lfs -text
+*.ogg   filter=lfs diff=lfs merge=lfs -text
+*.flac  filter=lfs diff=lfs merge=lfs -text
+*.aiff  filter=lfs diff=lfs merge=lfs -text
+
+# 影片 / 大型資產
+*.mp4   filter=lfs diff=lfs merge=lfs -text
+*.mov   filter=lfs diff=lfs merge=lfs -text
+*.webm  filter=lfs diff=lfs merge=lfs -text
+
+# 字型（在地化 CJK 字型檔通常很大）
+*.ttf   filter=lfs diff=lfs merge=lfs -text
+*.otf   filter=lfs diff=lfs merge=lfs -text
+
+# 打包產物 / 壓縮檔
+*.zip   filter=lfs diff=lfs merge=lfs -text
+*.apk   filter=lfs diff=lfs merge=lfs -text
+*.aab   filter=lfs diff=lfs merge=lfs -text
+
+# === 文字檔明確標記，避免被誤判成二進位 ===
+*.md    text
+*.yaml  text
+*.yml   text
+*.json  text
+*.gitattributes text

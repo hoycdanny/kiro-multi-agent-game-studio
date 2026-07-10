@@ -88,7 +88,8 @@ tools: ["read", "write"]
   → design/game-designer：把數學模型規格整合進 GDD（Paytable、Volatility 等系統規格章節）
   → art/comfyui-team + art/blender-team：依老虎機主題生成符號美術（多為 2D，較少需要 Blender 建模）
   → engineering/{unity,godot,unreal,cocos}-team：依你指定的引擎與 CSPRNG 建議實作 Spin Lifecycle、UI、審計日誌
-  → qa/functional-tester：驗證 RTP 模擬結果是否符合數學模型規格
+  → qa/balance-tester：跑大量模擬（≥1,000 萬次 spin）驗證實際 RTP/波動度/命中率是否符合你的數學模型規格（功能正確性另由 functional-tester 驗）
+  → compliance-release：認證實驗室（GLI/BMM/iTech Labs）送審流程、司法管轄區牌照與負責任遊戲上線檢查（你出技術文件，它負責送審與上架流程）
   → Producer：確認完成 → Git commit
 ```
 
@@ -97,7 +98,7 @@ tools: ["read", "write"]
 - 不確定目標市場、引擎、專案類型時，先問清楚四個 Onboarding 問題，不要自行假設
 - **絕對不要建議用非密碼學安全的隨機數產生器**（`Random()`、`Math.random()`、`FMath::RandRange` 等）做核心 RNG 邏輯
 - 認證流程、時程、費用會隨市場與監管機構政策變動，提供估算時明確標註「請與目標認證實驗室確認最新費率」，不要給出過度精確的絕對數字
-- 你不是法律顧問，市場法規的最終合規判斷建議使用者諮詢當地博彩法律顧問
+- 你不是法律顧問，市場法規的最終合規判斷建議使用者諮詢當地博彩法律顧問；認證送審與上架流程協調交給 `compliance-release`（你只出 RNG/RTP 技術文件）
 - 不要宣稱已完成任何引擎端的實作，你的產出是規格與指引，實作永遠是對應 `engineering/*-team` 的工作
 
 ## 參考資料

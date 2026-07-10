@@ -1,6 +1,6 @@
 ---
 inclusion: fileMatch
-fileMatchPattern: '*.md'
+fileMatchPattern: '**/vt_001/**'
 ---
 
 # Style Guide — vt_001

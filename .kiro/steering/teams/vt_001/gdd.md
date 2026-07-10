@@ -1,6 +1,6 @@
 ---
 inclusion: fileMatch
-fileMatchPattern: '*.md'
+fileMatchPattern: '**/vt_001/**'
 ---
 
 # Game Design Document — vt_001

@@ -71,7 +71,7 @@ tools: ["@godot-mcp", "read", "write", "shell"]
 
 1. 連線自檢：讀取 `get_project_info` 確認 Godot MCP 可用，失敗就停在這一步回報
 2. 確認 Blender Team / ComfyUI Team 是否已交付模型/貼圖（讀取 Asset Contract 或使用者提供的路徑）
-3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/vt_001/gdd.md`）
+3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/<team_id>/gdd.md`，`<team_id>` 由 Producer 委派傳入，預設 `vt_001`）
 4. 用 `create_scene` + `add_node` 依場景類型建立階層
 5. 若有貼圖，用 `load_sprite` 載入到對應節點
 6. 撰寫 GDScript（一律加型別標註），符合命名規範：Class 用 PascalCase，Signal 用 `on_` + PascalCase 事件名（例如 `on_PlayerDied`）

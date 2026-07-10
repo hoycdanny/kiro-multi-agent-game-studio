@@ -1,0 +1,53 @@
+# === 祕密 / 憑證（切勿提交）===
+# README 與各 Agent 皆要求 API Token 走環境變數、不寫死進版本控制。
+.env
+.env.*
+*.local
+secrets.*
+*.pem
+*.key
+# 若未來把 token 填進 mcp.json，改用未追蹤的覆寫檔，避免誤提交：
+.kiro/settings/mcp.local.json
+
+# === 作業系統 / 編輯器 ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*~
+.idea/
+*.iml
+
+# === 工具 / 執行期產物 ===
+# ComfyUI / Blender 大型輸出、暫存
+*.tmp
+*.log
+# Node（godot-mcp 等工具若在本 repo 內 build 時）
+node_modules/
+# Python（uv / MCP server 暫存）
+__pycache__/
+*.pyc
+.venv/
+
+# === 引擎輸出（若有人把引擎專案放進本 repo）===
+# 這些通常是各引擎專案自己的 .gitignore 負責，此處僅作保險
+Library/
+Temp/
+Build/
+Builds/
+Logs/
+.godot/
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+temp/
+
+# === 保留追蹤（明確不忽略）===
+# .kiro/ 底下的 agents / steering / settings / state 皆需版本控制
+!.kiro/
+!.kiro/settings/mcp.json

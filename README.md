@@ -28,22 +28,32 @@
   → Producer 確認完成 → git commit
 ```
 
-### 已建立的 Agent（10 個）
+### 已建立的 Agent（19 個）
+
+> 委派 / 呼叫 Agent 時用 frontmatter 的**扁平 `name`**（例如 `blender-team`），不是路徑（不是 `art/blender-team`）；下表「路徑」欄只是檔案位置。詳見 `.kiro/steering/global/contracts.md`「Agent 委派命名規範」。
 
 | Agent | 路徑 | 依賴 |
 |-------|------|------|
+| Portfolio Orchestrator | `.kiro/agents/orchestration/portfolio-orchestrator.md` | 無外部工具，Layer 0 戰略層：多 V-Team 管理、預算分配、初始化新團隊、調度 producer |
 | Producer | `.kiro/agents/orchestration/producer.md` | 無外部工具，能用 shell 執行 git commit，負責引擎/遊戲類型偵測 |
 | Game Designer | `.kiro/agents/design/game-designer.md` | 無外部工具 |
 | Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
+| Economy Designer | `.kiro/agents/design/economy-designer.md` | 無外部工具，F2P 數值/IAP/貨幣/獎勵曲線設計 |
 | UI/UX Team | `.kiro/agents/design/ui-ux-team.md` | 透過 `figma` MCP（官方 Remote Server）產出 UI/UX 版面、Design Token、切圖規格，見「Figma MCP 整合詳解」 |
+| Localization Team | `.kiro/agents/design/localization-team.md` | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） |
 | ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfyui`（`artokun/comfyui-mcp`）連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
-| Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender，見「Blender MCP 整合詳解」 |
+| Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender（靜態建模+貼圖），見「Blender MCP 整合詳解」 |
+| Animator | `.kiro/agents/art/animator.md` | 透過 `blender-mcp` 做 rig/綁定/動畫 clip |
+| Audio Team | `.kiro/agents/art/audio-team.md` | 透過 `comfyui` 的 `generate_audio` 產出 SFX/BGM/voice |
 | Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor，見「Unity MCP 整合詳解」 |
 | Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor，見「Godot MCP 整合詳解」 |
 | Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor，見「Unreal MCP 整合詳解」 |
 | Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor，見「Cocos MCP 整合詳解」 |
+| DevOps Team | `.kiro/agents/engineering/devops-team.md` | headless build、CI pipeline、產物與版本管理（能用 shell 跑 build 腳本） |
 | Functional Tester | `.kiro/agents/qa/functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
-| 其餘 20+ 個 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立，依工具鏈逐步擴充 |
+| Balance Tester | `.kiro/agents/qa/balance-tester.md` | Monte Carlo 模擬驗證數值（老虎機 RTP、F2P 經濟平衡），能用 shell 跑模擬 |
+| Compliance / Release | `.kiro/agents/publishing/compliance-release.md` | 分級、隱私合規、商店素材、送審清單、老虎機認證/牌照流程（能用 web 查現行政策） |
+| 其餘 Specialist / Lead | 見下方「團隊角色與職責」 | ⬜ 尚未建立（Creative Director、各 Team Lead、concept-artist 等），依工具鏈逐步擴充 |
 
 ### 已串接的元件（MCP）
 
@@ -80,20 +90,22 @@
 | `.kiro/steering/teams/vt_001/gdd.md` | 遊戲設計文件骨架（章節皆為空，待填寫） | `fileMatch`（讀取 .md 檔時載入） |
 | `.kiro/steering/teams/vt_001/style-guide.md` | 美術風格骨架（章節皆為空，待填寫） | `fileMatch` |
 
-### 誠實聲明：現階段最大的技術未知數
+### 誠實聲明：subagent 委派的現況與邊界
 
-**本專案尚未實測驗證 Kiro 的 Custom Agent 之間是否支援 subagent 自動互相呼叫。**這是整套「Producer 自動分派給 Specialist」願景能否成立的關鍵。
-
-在驗證之前，`producer.md` 採用的是保守設計：
+Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://kiro.dev/docs/chat/subagents/)）：主 Agent 用 `Use the "<name>" subagent to …` 語法即可自動調度，Specialist 執行完會把結果回傳，**不需要特別的工具權限**。因此 `producer.md` 已改為**主動自動委派**，不再要求使用者手動切換 Agent Selector 貼上 Contract。
 
 ```
 使用者 → Producer（拆解需求、產出 Contract）
-       → 明確指示使用者「請切換到 XX Agent，貼上這份 Contract」
-       → 使用者手動切換 Agent Selector
-       → Specialist Agent 接手執行
+       → Use the "<name>" subagent to <task + contract>   ← Kiro 自動啟動 Specialist
+       → Specialist 執行並自動回傳結果
+       → Producer 串接下一站 → … → Git commit
 ```
 
-也就是說，目前的「多 Agent 協作」實際上是**由人在中間手動轉接**，Producer 負責的是「正確拆解任務 + 產出格式化 Contract」，不是「自動調度」。等驗證 Kiro 是否支援自動跨 Agent 委派後，會回頭簡化這個流程。
+仍需注意的邊界（誠實聲明）：
+
+- subagent 的執行環境是隔離的獨立 context window，委派時**必須把完整 Contract 與檔案路徑寫進 Prompt**，否則 Specialist 會缺上下文。
+- subagent 內**不會觸發 Hooks、也拿不到 Specs**。
+- **多層巢狀委派**（`portfolio-orchestrator` → `producer` → Specialist，共三層）尚未在本專案完整驗證。若三層自動串接失敗，退化策略：由 `producer` 作為主 Agent 逐一委派各 Specialist（仍是自動委派，只是不強求三層一次到底）。
 
 ### 現在就能測試的最小流程
 
@@ -108,14 +120,14 @@
 ## 30 秒懶人包
 
 ```
-你說一句話（含引擎+類型）→ Producer 偵測並拆任務 → 各 Specialist Agent 執行（目前為手動轉接）→ 產出遊戲
+你說一句話（含引擎+類型）→ Producer 偵測並拆任務 → 用 subagent 自動委派各 Specialist Agent 執行 → 產出遊戲
 ```
 
 - 每個 Agent 是一個 `.kiro/agents/*.md` 檔案（Kiro IDE 的 Custom Agent 格式）
 - Agent 透過 MCP Server 操作外部工具：Blender / ComfyUI / Unity / Godot / Unreal / Cocos Creator / Figma 皆已連線
 - 支援 4 種遊戲引擎（Unity、Godot、Unreal Engine、Cocos Creator），Producer 依你的指定自動分派給對應 Team
 - 老虎機這類特殊遊戲類型有專屬 Domain Expert（`slot-game-expert`）處理數學模型/RNG/認證合規
-- 你可以只啟用 10 個 Agent（Solo Dev，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
+- 你可以只啟用這 19 個 Agent（Solo Dev + 美術動畫音訊 + 商業化/上線，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
 - 所有設計規範存在 `.kiro/steering/` 裡，Agent 會自動參照（`inclusion: always` 的檔案每次對話都會載入）
 
 ---
@@ -157,9 +169,9 @@
 
 ```mermaid
 graph TD
-    subgraph "Layer 0: Strategic ⬜ 願景，未建立"
-        PO[Portfolio Orchestrator]
-        CD[Creative Director]
+    subgraph "Layer 0: Strategic（PO ✅ 已建立 / CD ⬜ 願景）"
+        PO["Portfolio Orchestrator ✅"]
+        CD["Creative Director ⬜"]
     end
 
     subgraph "Layer 1: Orchestration ✅"
@@ -255,7 +267,7 @@ graph TD
     Blender -.->|模型| Cocos
 ```
 
-> 圖中「Layer 3：已建立的 Team / Specialist」這 10 個節點（Game Designer、Slot Game Expert、UI/UX Team、ComfyUI Team、Blender Team、Unity Team、Godot Team、Unreal Team、Cocos Team、Functional Tester）加上 Producer，共 **11 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
+> 圖中「Layer 3：已建立的 Team / Specialist」這 10 個節點（Game Designer、Slot Game Expert、UI/UX Team、ComfyUI Team、Blender Team、Unity Team、Godot Team、Unreal Team、Cocos Team、Functional Tester）加上 Producer、Portfolio Orchestrator，以及延伸的 Economy Designer、Localization Team、Animator、Audio Team、DevOps Team、Balance Tester、Compliance / Release，共 **19 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
 
 ### 工具資料流
 
@@ -301,14 +313,14 @@ graph LR
 
 | 層級 | 角色 | 做什麼 | 目前狀態 |
 |------|------|--------|----------|
-| Layer 0 | Creative Director / Portfolio Orchestrator | 定義願景、跨團隊仲裁 | ⬜ 未建立（Solo Dev 不需要） |
-| Layer 1 | Producer | 拆任務、串接 Pipeline 三個 Team、追蹤進度、Git commit | ✅ 已建立（分派為手動轉接） |
+| Layer 0 | Portfolio Orchestrator ✅ / Creative Director ⬜ | 多 V-Team 管理、預算分配、初始化新團隊、調度 producer（PO）；願景守護（CD） | ✅ Portfolio Orchestrator 已建立 / ⬜ Creative Director 規劃中 |
+| Layer 1 | Producer | 拆任務、串接 Pipeline、追蹤進度、Git commit | ✅ 已建立（用 subagent 自動委派） |
 | Layer 2 | Team Leads | 管理各領域品質，審核產出 | ⬜ 未建立（Solo Dev 不需要） |
 | Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team / godot-team / unreal-team / cocos-team / ui-ux-team）+ Domain Expert（slot-game-expert）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 10 個已建立且已連線 / ⬜ 20+ 個規劃中 |
 
 **關鍵機制（願景 vs 現況）：**
-- 願景：Producer 收到需求後，透過 **subagent** 呼叫對應的 Specialist 自動執行
-- 現況：Producer 產出 Contract，**由使用者手動**切換到對應 Specialist Agent 貼上執行（因為 subagent 跨 Agent 自動呼叫尚未驗證）
+- Producer 收到需求後，透過 Kiro 原生 **subagent** 委派（`Use the "<name>" subagent to …`）自動呼叫對應 Specialist 執行，不需人工轉接
+- ⚠️ 尚待實測：三層巢狀委派（PO → Producer → Specialist）；若失敗則退化為由 Producer 作為主 Agent 逐一委派
 - 每個階段都有 **Review Gate** 品質關卡的設計（願景），Solo Dev 規模下目前簡化為使用者自行確認
 - Agent 之間用 **Contract**（YAML 格式，定義於 `.kiro/steering/global/contracts.md`）傳遞需求和規格 —— ✅ 已實作
 - 成本控管（token budget）—— ⬜ 目前只在 Agent 對話中提醒，沒有實際自動化監控機制
@@ -335,21 +347,29 @@ graph LR
 
 > 不需要同時裝四個引擎，只需要裝你實際要用的那個。Producer 會依你的需求分派到對應引擎 Team。
 
-### 目前實際配置（Producer + 4 引擎 Team + 2 美術 Team + 3 設計 Team（含 UI/UX） + 1 QA Team，共 10 個）
+### 目前實際配置（Portfolio Orchestrator + Producer + 5 設計 Team + 4 美術 Team（含 rig/動畫、音訊） + 4 引擎 Team + DevOps + 2 QA（功能/數值） + 法遵上架，共 19 個）
 
 ```
 .kiro/agents/
+├── orchestration/portfolio-orchestrator.md  # Layer 0：多 V-Team 管理、預算分配、初始化新團隊、調度 producer
 ├── orchestration/producer.md      # 拆任務、偵測引擎與遊戲類型、串接 Pipeline、Git commit
 ├── design/game-designer.md         # 寫設計文件、GDD 維護
 ├── design/slot-game-expert.md      # 老虎機數學模型/RNG/認證合規顧問
 ├── design/ui-ux-team.md            # UI/UX 版面、畫面流程、Design Token、切圖規格（透過 figma MCP）
+├── design/economy-designer.md      # F2P 數值、IAP、貨幣、獎勵曲線、變現模型
+├── design/localization-team.md     # 多語系字串、locale 檔、i18n 落地規格
 ├── art/comfyui-team.md             # 依參考圖生成貼圖（透過 comfyui / artokun/comfyui-mcp）
-├── art/blender-team.md             # Blender 建模 + 套貼圖（透過 blender-mcp）
+├── art/blender-team.md             # Blender 靜態建模 + 套貼圖（透過 blender-mcp）
+├── art/animator.md                 # rig/綁定/動畫 clip（透過 blender-mcp）
+├── art/audio-team.md               # SFX/BGM/voice（透過 comfyui generate_audio）
 ├── engineering/unity-team.md       # 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
 ├── engineering/godot-team.md       # 場景組裝、GDScript、Export（透過 godot-mcp）
 ├── engineering/unreal-team.md      # 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
 ├── engineering/cocos-team.md       # 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
-└── qa/functional-tester.md         # 跑測試（需測試框架存在）
+├── engineering/devops-team.md      # headless build、CI pipeline、產物驗證
+├── qa/functional-tester.md         # 跑功能測試（需測試框架存在）
+├── qa/balance-tester.md            # RTP/經濟數值 Monte Carlo 模擬驗證
+└── publishing/compliance-release.md # 分級、隱私合規、商店素材、送審/認證流程
 ```
 
 ### 安裝與啟動
@@ -358,6 +378,10 @@ graph LR
 # 1. Clone
 git clone <your-repo-url>
 cd kiro-multi-agent-game-studio
+
+# 1b. 啟用 Git LFS（資產走 LFS，見 .gitattributes；每台機器做一次）
+git lfs install
+#     若尚未安裝 git-lfs：macOS 用 brew install git-lfs
 
 # 2. 安裝 uv（Blender MCP、ComfyUI MCP、Unreal MCP 都需要）
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -376,7 +400,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #    - Cocos Creator：安裝 cocos-mcp-server 外掛，擴展 → Cocos MCP Server → 啟動
 
 #    - Figma：預設用官方 Remote MCP Server（首次於 Kiro 完成 OAuth 授權即可，見「Figma MCP 整合詳解」）
-# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 10 個 Agent
+# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 19 個 Agent
 ```
 
 ### 使用方式
@@ -386,7 +410,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
   → Agent Selector 選 "art/blender-team"
   → 對話：「幫我建一把測試用的短劍，1公尺長」
 
-方式 B：讓 Producer 統籌整條 Pipeline（目前為手動轉接模式）
+方式 B：讓 Producer 統籌整條 Pipeline（Producer 用 subagent 自動委派）
   → 切到 "orchestration/producer"
   → 「請幫我用 Unity 開發一款老虎機」
   → Producer 偵測引擎（Unity）與類型（老虎機），拆解任務，印出 Contract，指示你切換到對應 Agent 貼上執行
@@ -966,12 +990,12 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 > ✅ = 已建立 Agent 檔案　⬜ = 願景中，尚未建立
 
-### Layer 0：Strategic（戰略層）⬜
+### Layer 0：Strategic（戰略層）
 
-| Agent | 檔案 | 職責 |
-|-------|------|------|
-| Creative Director | `orchestration/creative-director.md` | 守護遊戲願景、創意方向最終仲裁、美術風格決定權 |
-| Portfolio Orchestrator | `orchestration/portfolio-orchestrator.md` | 多團隊資源仲裁、團隊優先級調整（多專案時才需要） |
+| Agent | 檔案 | 職責 | 狀態 |
+|-------|------|------|------|
+| Portfolio Orchestrator | `orchestration/portfolio-orchestrator.md` | 多 V-Team 管理、初始化新團隊（state+steering）、預算分配、調度 producer | ✅ |
+| Creative Director | `orchestration/creative-director.md` | 守護遊戲願景、創意方向最終仲裁、美術風格決定權 | ⬜ |
 
 ### Layer 1：Orchestration（指揮層）
 
@@ -993,26 +1017,27 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### Layer 3：Specialist Agents
 
-#### Design Team（4 個規劃，3 個已建立）
+#### Design Team（5 個已建立，3 個規劃中）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
 | game-designer | read, write | GDD、系統規格、數值平衡表、Asset Spec | ✅ |
 | slot-game-expert | read, write | 老虎機數學模型、RNG 指引、GLI 認證合規、負責任遊戲設計 | ✅（見「Slot Game Expert 詳解」） |
-| economy-designer | read, write | 經濟模型、商城定價、IAP 設計 | ⬜ |
+| economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass | ✅ |
 | combat-designer | read, write | 戰鬥系統、技能設計、敵人 AI | ⬜ |
 | level-designer | read, write, @unity | 關卡佈局、觸發器、難度曲線 | ⬜ |
 | narrative-designer | read, write | 世界觀、劇情、對話樹（Yarn/Ink） | ⬜ |
 | ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
+| localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） | ✅ |
 
-#### Art Team（2 個已建立，6 個規劃）
+#### Art Team（3 個已建立，3 個規劃）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
 | comfyui-team | `@comfyui`, read, write | 概念圖、PBR 貼圖、Sprite、Workflow 組裝 | ✅ 已連線，見「ComfyUI MCP 整合詳解」 |
 | blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx | ✅ |
 | ui-artist | @figma, @comfyui | UI Layout、Design Token、互動狀態規格 | ✅ 已合併進 `design/ui-ux-team`（版面/Token 由 ui-ux-team 出，裝飾素材由 comfyui-team 生成） |
-| animator | @blender-mcp | 骨骼綁定、動畫片段、Shape Keys | ⬜ |
+| animator | @blender-mcp, read, write | 骨骼綁定、蒙皮權重、動畫 clip、含動畫匯出（接 blender-team 的靜態 mesh） | ✅ |
 | vfx-artist | @comfyui | 粒子特效、Shader、序列幀動畫 | ⬜ |
 | technical-artist | @blender-mcp, shell | Shader 優化、LOD 策略、Art Pipeline 工具 | ⬜ |
 
@@ -1020,7 +1045,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 >
 > 同理，原願景中 `ux-designer`（Design Team）與 `ui-artist`（Art Team）已合併成 `design/ui-ux-team`，因為兩者都圍繞 Figma 運作、共同負責 UI/UX 層。分工上：`ui-ux-team` 出版面與 Design Token（介面「怎麼排、怎麼流動」），`comfyui-team` 生成要放進版面的像素素材（icon/按鈕/背景），引擎 Team 負責在原生 UI 系統實作。
 
-#### Engineering Team（4 個規劃，4 個引擎 Team 已建立）
+#### Engineering Team（4 引擎 Team + DevOps 已建立，2 個規劃）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
@@ -1030,23 +1055,30 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | cocos-team | `@cocos-creator`, read, write, shell | 場景組裝、TypeScript 元件、Prefab、Build | ✅ 已連線（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)），見「Cocos MCP 整合詳解」 |
 | systems-programmer | shell, @git | 存檔系統、資源管理、事件系統 | ⬜ |
 | ui-programmer | shell, @git | UI 綁定（UI Toolkit）、Localization | ⬜ |
-| devops | shell, @git | CI/CD、Build 腳本、部署流程 | ⬜ |
+| devops-team | read, write, shell | headless build、CI pipeline、版本/產物管理、build 健康驗證 | ✅ |
 
-#### Audio Team（2 個規劃，0 個已建立）
-
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| sound-designer | read, write | 音效、Audio Event、空間音效 | ⬜ |
-| composer | read, write | 背景音樂、戰鬥音樂、動態音樂 | ⬜ |
-
-#### QA Team（4 個規劃，1 個已建立）
+#### Audio Team（1 個已建立）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
-| functional-tester | read, shell | Unit/Integration Test、Bug 報告 | ✅（需目標專案已有測試框架） |
-| balance-tester | read, write | 數值模擬、平衡性報告 | ⬜ |
+| audio-team | `@comfyui`, read, write | SFX、BGM、配音（voice）；透過 ComfyUI `generate_audio` 生成 | ✅ |
+
+> 原願景的 `sound-designer` + `composer` 已合併成單一 `audio-team`（兩者都用同一個 comfyui MCP 的音訊生成能力，拆開沒有實際差異，比照 comfyui-team 的合併邏輯）。
+
+#### QA Team（2 個已建立，2 個規劃）
+
+| Agent | 工具 | 產出 | 狀態 |
+|-------|------|------|------|
+| functional-tester | read, shell | Unit/Integration Test、Bug 報告（驗「功能對不對」） | ✅（需目標專案已有測試框架） |
+| balance-tester | read, write, shell | RTP/經濟 Monte Carlo 模擬、平衡性報告（驗「數值對不對」） | ✅ |
 | performance-tester | shell | FPS/Memory 報告、瓶頸分析 | ⬜ |
 | usability-tester | read, write | 新手引導評估、卡關點分析 | ⬜ |
+
+#### Publishing Team（1 個已建立）
+
+| Agent | 工具 | 產出 | 狀態 |
+|-------|------|------|------|
+| compliance-release | read, write, web | 分級（IARC/ESRB/PEGI）、隱私合規（GDPR/COPPA）、商店素材規格、送審清單、老虎機認證/牌照流程 | ✅ |
 
 ---
 
@@ -1066,7 +1098,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### `.kiro/agents/orchestration/producer.md`
 
-核心設計：Producer 不直接畫圖、不直接建模、不直接寫程式碼，只負責拆解需求、建立 Contract、指引使用者交接給正確的 Team，並在流程尾端負責 Git commit（先 `git status` 給使用者確認，再 commit，不自動 push）。因為 subagent 跨 Agent 自動委派尚未驗證，目前的「分派」是產出 Contract 並指示使用者手動切換 Agent，不會假裝已經呼叫了其他 Team 或已完成它們的工作。
+核心設計：Producer 不直接畫圖、不直接建模、不直接寫程式碼，只負責拆解需求、建立 Contract、用 Kiro 原生 subagent 委派給正確的 Team，並在流程尾端負責 Git commit（先 `git status` 給使用者確認，再 commit，不自動 push）。委派用扁平 `name`（`Use the "<name>" subagent to …`），並把完整 Contract 寫進 Prompt；即便如此，它不會虛構其他 Team 的執行結果或進度，只回報 subagent 真正回傳的內容。
 
 > 寧可誠實承認限制，也不讓 Agent 表演出它做不到的能力。這條規則貫穿本專案所有已建立的 Agent（見各 Agent 檔案中的「⚠️ 現況」或「限制」章節）。
 
@@ -1408,9 +1440,9 @@ task:
 User → Producer（建立 Contract）→ Specialist（執行）→ Lead（Review）→ Producer（確認交付）
 ```
 
-**本專案現況**（因 subagent 跨 Agent 自動呼叫尚未驗證）：
+**本專案現況**（Kiro 原生 subagent 委派）：
 ```
-User → Producer（建立 Contract，印出內容）→ 使用者手動切換 Agent → Specialist（執行）→ 使用者確認交付
+User → Producer（建立 Contract）→ Use the "<name>" subagent（Kiro 自動啟動 Specialist）→ Specialist 執行並自動回傳 → 使用者確認交付
 ```
 
 ---
@@ -1476,7 +1508,7 @@ budget:
 | 2 | Agent 執行 → 自動 Review → 人看例外 | 概念圖生成、Build |
 | 3 | 全自動 | Unit Test、Icon 批量生成 |
 
-> 本專案目前所有已建立的 Agent 實際運作在 **Level 1**：Agent 執行，人工（你）Review 每一步輸出，因為連「Producer 自動分派」都還沒驗證，Level 2/3 的全自動情境更未觸及。
+> 本專案目前所有已建立的 Agent 實際運作在 **Level 1**：Agent 執行，人工（你）Review 每一步輸出。Producer 已採用 Kiro 原生 subagent 自動委派串接各 Specialist，但每一步產出仍由你把關；Level 2/3 的全自動情境尚未觸及。
 
 ### 版本控制
 
@@ -1528,7 +1560,7 @@ sequenceDiagram
 | Step | 動作 | 狀態 |
 |------|------|------|
 | 1 | Producer 收到需求，偵測引擎與遊戲類型 | ✅ 可測試 |
-| 2 | Producer → slot-game-expert 出數學模型/RNG/合規規格 | ✅ 可測試（手動切換 Agent） |
+| 2 | Producer → slot-game-expert 出數學模型/RNG/合規規格 | ✅ 可測試（Producer 用 subagent 自動委派） |
 | 3 | Producer → comfyui-team 生成符號美術 | ✅ 可測試（透過 `comfyui` / `artokun/comfyui-mcp`） |
 | 4 | Producer → unity-team（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | ✅ 可測試（依引擎透過對應 MCP） |
 | 5 | Producer 執行 git commit | ✅ 可測試 |
@@ -1553,15 +1585,19 @@ sequenceDiagram
 | **Small Team**（2-4 人） | 15-18 | + Linear | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 25-30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 + 可選多團隊 | ⬜ 規劃中 |
 
-### Solo Dev 啟用清單（✅ 已完成，共 10 個）
+### 啟用清單（✅ 已完成，共 19 個）
+
+> 下方以「資料夾/檔名」列出檔案位置；實際委派 / 呼叫時用扁平 `name`（例如 `producer`、`blender-team`），不加資料夾前綴。
 
 ```
-orchestration/producer, design/game-designer, design/slot-game-expert,
-design/ui-ux-team,
-art/comfyui-team, art/blender-team,
+orchestration/portfolio-orchestrator, orchestration/producer,
+design/game-designer, design/slot-game-expert, design/ui-ux-team,
+design/economy-designer, design/localization-team,
+art/comfyui-team, art/blender-team, art/animator, art/audio-team,
 engineering/unity-team, engineering/godot-team,
-engineering/unreal-team, engineering/cocos-team,
-qa/functional-tester
+engineering/unreal-team, engineering/cocos-team, engineering/devops-team,
+qa/functional-tester, qa/balance-tester,
+publishing/compliance-release
 ```
 
 > 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert。
@@ -1569,17 +1605,17 @@ qa/functional-tester
 ### Small Team 追加（⬜ 下一步可考慮的方向）
 
 ```
-+ art/art-lead, art/concept-artist, art/animator,
-  engineering/systems-programmer, engineering/devops, qa/balance-tester
++ art/art-lead, art/concept-artist,
+  engineering/systems-programmer
 ```
 
-前提：需先安裝 Linear MCP（Figma MCP 已在 Solo Dev 階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`）。
+前提：需先安裝 Linear MCP（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；`art/animator`、`art/audio-team`、`qa/balance-tester`、`engineering/devops-team`、`design/economy-designer`、`design/localization-team`、`publishing/compliance-release` 已於本階段建立）。
 
 ### Studio 追加（⬜ 遠期）
 
 ```
 + orchestration/creative-director, 所有 Team Leads,
-  design/economy-designer, design/combat-designer, design/narrative-designer,
+  design/combat-designer, design/narrative-designer,
   art/technical-artist, qa/performance-tester
 ```
 
@@ -1709,8 +1745,9 @@ max_iterations: 3
 
 | 文件 | 用途 | 維護者（願景） | 本專案現況 |
 |------|------|--------|-----------|
-| `.kiro/steering/global/asset-standards.md` | 命名規範、3D 模型技術規範（poly budget 等） | art-lead | ✅ 已建立，內容完整 |
-| `.kiro/steering/global/contracts.md` | Task Contract / Asset Contract 格式 + 現階段限制聲明 | producer | ✅ 已建立，內容完整 |
+| `.kiro/steering/global/asset-standards.md` | 命名規範、3D/音訊/動畫技術規範、資產落地目錄（`assets/`） | art-lead | ✅ 已建立，內容完整 |
+| `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + 委派命名規範 + team_id 隔離 + subagent 機制 | producer | ✅ 已建立，內容完整 |
+| `assets/README.md` + `.gitattributes` | 交付物落地目錄結構 + Git LFS 規則 | producer / devops-team | ✅ 已建立 |
 | `.kiro/steering/teams/vt_001/gdd.md` | 遊戲設計的單一真相來源 | game-designer | ⚠️ 已建立骨架，章節內容待填寫 |
 | `.kiro/steering/teams/vt_001/style-guide.md` | 美術風格指南 | art-lead | ⚠️ 已建立骨架，章節內容待填寫 |
 | Technical Spec | 技術規範（平台、效能預算） | tech-lead | ⬜ 未建立 |
@@ -1727,41 +1764,59 @@ max_iterations: 3
 ```
 kiro-multi-agent-game-studio/
 ├── .kiro/
-│   ├── agents/
+│   ├── agents/                                 # 19 個 Agent（委派用扁平 name，資料夾僅為組織）
 │   │   ├── orchestration/
-│   │   │   └── producer.md                    # ✅ 拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
+│   │   │   ├── portfolio-orchestrator.md       # ✅ Layer 0：多 V-Team 管理、初始化團隊、預算、調度 producer
+│   │   │   └── producer.md                     # ✅ 拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
 │   │   ├── design/
-│   │   │   ├── game-designer.md                # ✅
-│   │   │   ├── slot-game-expert.md              # ✅ 老虎機數學模型/RNG/認證合規顧問
-│   │   │   └── ui-ux-team.md                   # ✅ UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
+│   │   │   ├── game-designer.md                # ✅ GDD、系統規格、數值平衡
+│   │   │   ├── slot-game-expert.md             # ✅ 老虎機數學模型/RNG/認證合規顧問
+│   │   │   ├── ui-ux-team.md                   # ✅ UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
+│   │   │   ├── economy-designer.md             # ✅ F2P 數值、IAP、貨幣、獎勵曲線、變現模型
+│   │   │   └── localization-team.md            # ✅ 多語系字串、locale 檔、i18n 落地規格
 │   │   ├── art/
-│   │   │   ├── comfyui-team.md                 # ✅ 貼圖生成（透過 comfyui / artokun/comfyui-mcp）
-│   │   │   └── blender-team.md                 # ✅
+│   │   │   ├── comfyui-team.md                 # ✅ 影像：貼圖/sprite/UI 切圖（透過 comfyui）
+│   │   │   ├── blender-team.md                 # ✅ 靜態 3D 建模 + 套貼圖（透過 blender-mcp）
+│   │   │   ├── animator.md                     # ✅ rig/綁定/動畫 clip（透過 blender-mcp）
+│   │   │   └── audio-team.md                   # ✅ SFX/BGM/voice（透過 comfyui generate_audio）
 │   │   ├── engineering/
 │   │   │   ├── unity-team.md                   # ✅ 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
 │   │   │   ├── godot-team.md                   # ✅ 場景組裝、GDScript、Export（透過 godot-mcp）
 │   │   │   ├── unreal-team.md                  # ✅ 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
-│   │   │   └── cocos-team.md                   # ✅ 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
-│   │   └── qa/
-│   │       └── functional-tester.md            # ✅
+│   │   │   ├── cocos-team.md                   # ✅ 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
+│   │   │   └── devops-team.md                  # ✅ headless build、CI pipeline、產物驗證
+│   │   ├── qa/
+│   │   │   ├── functional-tester.md            # ✅ 功能測試
+│   │   │   └── balance-tester.md               # ✅ RTP/經濟數值 Monte Carlo 模擬
+│   │   └── publishing/
+│   │       └── compliance-release.md           # ✅ 分級、隱私合規、商店素材、送審/認證流程
 │   ├── steering/
 │   │   ├── global/
-│   │   │   ├── asset-standards.md              # ✅ inclusion: always
-│   │   │   └── contracts.md                    # ✅ inclusion: always
+│   │   │   ├── asset-standards.md              # ✅ inclusion: always（命名+落地目錄+音訊/動畫規範）
+│   │   │   └── contracts.md                    # ✅ inclusion: always（Contract+委派命名+team_id+subagent）
 │   │   └── teams/
 │   │       └── vt_001/
-│   │           ├── gdd.md                      # ⚠️ 骨架
-│   │           └── style-guide.md               # ⚠️ 骨架
+│   │           ├── gdd.md                      # ⚠️ 骨架（fileMatch: **/vt_001/**）
+│   │           └── style-guide.md              # ⚠️ 骨架（fileMatch: **/vt_001/**）
 │   ├── state/
-│   │   └── tasks.yaml                          # ✅ Linear fallback，目前為空
+│   │   └── teams/vt_001/tasks.yaml             # ✅ Linear fallback，目前為空
 │   └── settings/
 │       └── mcp.json                            # ✅ blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator / figma
+├── assets/                                     # ✅ 各 Team 交付物落地目錄（見 assets/README.md）
+│   ├── concept/ textures/ sprites/ ui/         #    ComfyUI Team
+│   ├── models/                                 #    Blender Team
+│   ├── rigs/ animations/                       #    Animator
+│   ├── audio/{sfx,music,voice}/                #    Audio Team
+│   ├── locales/                                #    Localization Team
+│   └── sim/                                    #    Balance Tester（RTP/經濟模擬報告）
+├── .gitattributes                              # ✅ Git LFS 規則（模型/貼圖/音訊/字型/產物）
+├── .gitignore                                  # ✅ 排除祕密/OS/工具產物，保留 .kiro 與 mcp.json
 ├── blender/
 │   └── README.md                               # 已合併進本檔案「Blender MCP 整合詳解」章節
 └── README.md                                   # 本文件
 ```
 
-願景中的完整結構（尚未擴充部分）另包含 `workflows/`（ComfyUI Workflow Templates）、`audio/`、`qa/` 下更多 Agent 分類、以及多團隊的 `teams/vt_002/` 等，待實際需求出現再建立。
+願景中的完整結構（尚未擴充部分）另包含 `workflows/`（ComfyUI Workflow Templates）、更多 QA/設計 Specialist、Team Leads、Creative Director，以及多團隊的 `teams/vt_002/` 等，待實際需求出現再建立。
 
 ---
 
@@ -1769,8 +1824,8 @@ kiro-multi-agent-game-studio/
 
 依目前進度，建議的擴充順序（非強制，依你的實際需求調整）：
 
-1. **✅ 已完成**：Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma MCP 連線、Producer 引擎+類型+UI 偵測機制、4 引擎 Team + Slot Game Expert + UI/UX Team、Contract 機制、Steering 骨架、Git commit 收尾流程
-2. **驗證 subagent 委派**：測試 Kiro 是否支援 `producer` 自動呼叫其他 Agent，若支援則簡化 `producer.md` 移除「手動轉接」章節
+1. **✅ 已完成**：Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma MCP 連線、Producer 引擎+類型+UI 偵測機制、Portfolio Orchestrator（多 V-Team 初始化/預算）、4 引擎 Team + Slot Game Expert + UI/UX Team、Contract 機制（含委派命名/team_id 隔離規範）、Steering 骨架、Git commit 收尾流程、Producer 改用 Kiro 原生 subagent 自動委派
+2. **驗證多層巢狀 subagent 委派**：單層委派（Producer → Specialist）已依 Kiro 原生機制改為自動；待驗證三層串接（`portfolio-orchestrator` → `producer` → Specialist）是否可行，若不行則維持由 Producer 作為主 Agent 逐一委派
 3. **填寫 GDD / Style Guide 實際內容**：目前兩份文件都是空骨架，需要先決定遊戲類型、平台、美術風格才能讓後續 Team 產出一致
 4. **視需要安裝 Linear MCP**：目前本地 `tasks.yaml` 對 Solo Dev 已足夠，多人協作時才需要
 5. **視需要擴充更多 Specialist**：例如 animator、technical-artist 等，待核心 Pipeline 跑順後再加
@@ -1793,7 +1848,7 @@ kiro-multi-agent-game-studio/
 - [ ] LLM 偏好（雲端 API / 本地模型 / 混合）
 - [ ] 使用哪個遊戲引擎（Unity / Godot / Unreal Engine / Cocos Creator）→ 決定分派到哪個引擎 Team
 - [ ] 是否已有對應引擎的專案，或需要從零建立
-- [ ] 是否要驗證 Kiro subagent 跨 Agent 自動委派能力（影響 Producer 的設計走向）
+- [ ] 驗證多層巢狀 subagent 委派（`portfolio-orchestrator` → `producer` → Specialist）是否可行（影響 Layer 0 的設計走向）
 
 ---
 

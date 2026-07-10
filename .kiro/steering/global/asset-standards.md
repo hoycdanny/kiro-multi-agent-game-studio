@@ -15,7 +15,7 @@ inclusion: always
 範例：`vt_001.weapon_sword_01`
 
 - `team_id`：專案代號，單專案可用 `vt_001`
-- `asset_type`：`weapon` / `character` / `prop` / `environment`
+- `asset_type`：`weapon` / `character` / `prop` / `environment` / `texture` / `sprite` / `symbol`（老虎機符號）/ `ui` / `rig` / `anim` / `sfx` / `music` / `voice` / `locale`
 - `version`：整數，從 `01` 開始
 
 ## 3D 模型規範（Blender Team）
@@ -35,3 +35,38 @@ inclusion: always
 - 實際 poly 數
 - 是否有 UV 展開
 - 匯出格式（`.fbx` / `.glb`）與檔案路徑
+
+## 資產落地目錄（所有 Team 交付物的存放位置）
+
+各 Team 產出的中介資產一律落在 repo 根目錄的 `assets/`，讓上下游有明確交接路徑（完整說明見 `assets/README.md`）：
+
+| 產出 Team | 落地目錄 | 內容 |
+|-----------|----------|------|
+| `comfyui-team` | `assets/concept/` `assets/textures/` `assets/sprites/` `assets/ui/` | 概念圖、PBR 貼圖、sprite/符號、UI 切圖 |
+| `blender-team` | `assets/models/` | 靜態 3D 模型（.fbx/.glb） |
+| `animator` | `assets/rigs/` `assets/animations/` | 骨架、動畫 clip |
+| `audio-team` | `assets/audio/sfx/` `assets/audio/music/` `assets/audio/voice/` | 音效、音樂、配音 |
+| `localization-team` | `assets/locales/` | 多語 locale 檔 |
+| `balance-tester` | `assets/sim/` | 模擬腳本與 RTP/經濟平衡報告 |
+
+規則：
+- 檔名一律用命名規範前綴 `{team_id}.{asset_type}_{name}_{version}`，多團隊靠前綴區分，不另開 per-team 子資料夾。
+- 所有二進位資產走 Git LFS（見根目錄 `.gitattributes`），首次使用先 `git lfs install`。
+- `assets/` 放中介來源資產；匯入引擎後的引擎專屬檔（.meta/.import/.uasset）由各引擎專案自行管理，不放這裡。
+
+## 音訊規範（Audio Team）
+
+| 項目 | 規則 |
+|------|------|
+| 格式 | 母帶用 `.wav`（無損）交付；壓縮版（.ogg/.mp3）依引擎需求另出 |
+| 取樣率 | SFX/語音 48kHz、音樂 44.1kHz 起，交付時標注 |
+| 響度 | 標注 LUFS 或峰值，避免各音效音量落差過大 |
+| 迴圈 | BGM 若需無縫循環，標注 loop point |
+
+## 動畫規範（Animator）
+
+| 項目 | 規則 |
+|------|------|
+| 骨架 | 命名一致、階層乾淨；人形建議相容 Humanoid retarget |
+| 動畫 | 每個 clip 標注 frame range、fps、是否 loop、root motion 與否 |
+| 匯出 | Unity/Unreal 常用 `.fbx`；Godot/Cocos 常用 `.glb`，依目標引擎 |
