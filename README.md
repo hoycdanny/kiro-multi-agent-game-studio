@@ -21,20 +21,22 @@
   → Producer 拆解，偵測引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型（例如老虎機）
   → design/game-designer          （一般系統規格，若需要）
   → design/slot-game-expert       （老虎機數學模型/RNG/合規，若偵測到該類型）
-  → art/comfyui-team               （依參考圖生成貼圖）
+  → design/ui-ux-team              （UI/介面需求時：Figma 版面/流程/Design Token + 切圖規格，若需要）
+  → art/comfyui-team               （依參考圖生成貼圖 / UI 切圖素材）
   → art/blender-team               （建模 + 套用貼圖，2D 遊戲可跳過）
   → engineering/{engine}-team      （依偵測到的引擎分派：unity-team / godot-team / unreal-team / cocos-team）
   → Producer 確認完成 → git commit
 ```
 
-### 已建立的 Agent（9 個）
+### 已建立的 Agent（10 個）
 
 | Agent | 路徑 | 依賴 |
 |-------|------|------|
 | Producer | `.kiro/agents/orchestration/producer.md` | 無外部工具，能用 shell 執行 git commit，負責引擎/遊戲類型偵測 |
 | Game Designer | `.kiro/agents/design/game-designer.md` | 無外部工具 |
 | Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
-| ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfy-mcp-server` 連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
+| UI/UX Team | `.kiro/agents/design/ui-ux-team.md` | 透過 `figma` MCP（官方 Remote Server）產出 UI/UX 版面、Design Token、切圖規格，見「Figma MCP 整合詳解」 |
+| ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfyui`（`artokun/comfyui-mcp`）連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
 | Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender，見「Blender MCP 整合詳解」 |
 | Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor，見「Unity MCP 整合詳解」 |
 | Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor，見「Godot MCP 整合詳解」 |
@@ -48,12 +50,12 @@
 | 元件 | 連線方式 | 設定位置 |
 |------|---------|----------|
 | **Blender** | `blender-mcp`（stdio） | `.kiro/settings/mcp.json` |
-| **ComfyUI** | `comfy-mcp-server`（stdio，[`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)） | `.kiro/settings/mcp.json` |
+| **ComfyUI** | `comfyui`（stdio，[`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp) | `.kiro/settings/mcp.json` |
 | **Unity** | `unity-mcp`（HTTP，[`CoplayDev/unity-mcp`](https://github.com/CoplayDev/unity-mcp)） | `.kiro/settings/mcp.json` |
 | **Godot** | `godot-mcp`（stdio，[`bradypp/godot-mcp`](https://github.com/bradypp/godot-mcp)） | `.kiro/settings/mcp.json` |
 | **Unreal Engine** | `unreal-engine`（stdio，local MCP from [`flopperam/unreal-engine-mcp`](https://github.com/flopperam/unreal-engine-mcp)） | `.kiro/settings/mcp.json` |
 | **Cocos Creator** | `cocos-creator`（HTTP，[`DaxianLee/cocos-mcp-server`](https://github.com/DaxianLee/cocos-mcp-server)） | `.kiro/settings/mcp.json` |
-| Figma | ⬜ 未安裝 | — |
+| **Figma** | `figma`（HTTP，[官方 Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/) Remote，`https://mcp.figma.com/mcp`） | `.kiro/settings/mcp.json` |
 | Git | 未透過 MCP 串接，Producer 用 shell 直接操作 git commit | — |
 | Linear | ⬜ 未安裝，任務暫存於本地 `.kiro/state/tasks.yaml` | `.kiro/state/tasks.yaml` |
 
@@ -110,10 +112,10 @@
 ```
 
 - 每個 Agent 是一個 `.kiro/agents/*.md` 檔案（Kiro IDE 的 Custom Agent 格式）
-- Agent 透過 MCP Server 操作外部工具：Blender / ComfyUI / Unity / Godot / Unreal / Cocos Creator 皆已連線；Figma 為規劃中
+- Agent 透過 MCP Server 操作外部工具：Blender / ComfyUI / Unity / Godot / Unreal / Cocos Creator / Figma 皆已連線
 - 支援 4 種遊戲引擎（Unity、Godot、Unreal Engine、Cocos Creator），Producer 依你的指定自動分派給對應 Team
 - 老虎機這類特殊遊戲類型有專屬 Domain Expert（`slot-game-expert`）處理數學模型/RNG/認證合規
-- 你可以只啟用 9 個 Agent（Solo Dev，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
+- 你可以只啟用 10 個 Agent（Solo Dev，✅ 已完成），也可以依願景擴充到 30+ 個（完整團隊，⬜ 規劃中）
 - 所有設計規範存在 `.kiro/steering/` 裡，Agent 會自動參照（`inclusion: always` 的檔案每次對話都會載入）
 
 ---
@@ -129,7 +131,8 @@
 4d. [Godot MCP 整合詳解](#godot-mcp-整合詳解)
 4e. [Unreal MCP 整合詳解](#unreal-mcp-整合詳解)
 4f. [Cocos MCP 整合詳解](#cocos-mcp-整合詳解)
-4g. [Slot Game Expert 詳解](#slot-game-expert-詳解)
+4g. [Figma MCP 整合詳解](#figma-mcp-整合詳解)
+4h. [Slot Game Expert 詳解](#slot-game-expert-詳解)
 5. [團隊角色與職責](#團隊角色與職責)
 6. [Agent 定義格式](#agent-定義格式)
 7. [工具鏈與 MCP 整合](#工具鏈與-mcp-整合)
@@ -174,6 +177,7 @@ graph TD
     subgraph "Layer 3: 已建立的 Team / Specialist"
         GD["Game Designer ✅"]
         SGE["Slot Game Expert ✅"]
+        UIUX["UI/UX Team ✅"]
         CT["ComfyUI Team ✅"]
         BT2["Blender Team ✅"]
         UT["Unity Team ✅"]
@@ -198,7 +202,7 @@ graph TD
     subgraph "MCP Tools"
         ComfyUI["ComfyUI ✅ 已連線"]
         Blender["Blender ✅ 已連線"]
-        Figma["Figma ⬜ 未安裝"]
+        Figma["Figma ✅ 已連線"]
         Unity["Unity ✅ 已連線"]
         Godot["Godot ✅ 已連線"]
         Unreal["Unreal ✅ 已連線"]
@@ -216,6 +220,7 @@ graph TD
     P --> QL
     P --> GD
     P --> SGE
+    P --> UIUX
     P --> CT
     P --> BT2
     P --> UT
@@ -232,6 +237,7 @@ graph TD
     TL --> UIP
     TL --> DO
     QL --> BAL
+    UIUX --> Figma
     CT --> ComfyUI
     BT2 --> Blender
     UT --> Unity
@@ -241,13 +247,15 @@ graph TD
     P --> Linear
 
     ComfyUI -.->|貼圖| Blender
+    Figma -.->|版面/Token/切圖| Unity
+    ComfyUI -.->|UI 切圖素材| Figma
     Blender -.->|模型| Unity
     Blender -.->|模型| Godot
     Blender -.->|模型| Unreal
     Blender -.->|模型| Cocos
 ```
 
-> 圖中「Layer 3：已建立的 Team / Specialist」這 9 個節點（Game Designer、Slot Game Expert、ComfyUI Team、Blender Team、Unity Team、Godot Team、Unreal Team、Cocos Team、Functional Tester）加上 Producer，共 **10 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity、Godot、Unreal、Cocos 六條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
+> 圖中「Layer 3：已建立的 Team / Specialist」這 10 個節點（Game Designer、Slot Game Expert、UI/UX Team、ComfyUI Team、Blender Team、Unity Team、Godot Team、Unreal Team、Cocos Team、Functional Tester）加上 Producer，共 **11 個**已實際建立為 Agent 檔案；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。其餘節點（Layer 0、Layer 2、Layer 3 的「願景中」子圖）為完整願景，尚未建立。
 
 ### 工具資料流
 
@@ -296,7 +304,7 @@ graph LR
 | Layer 0 | Creative Director / Portfolio Orchestrator | 定義願景、跨團隊仲裁 | ⬜ 未建立（Solo Dev 不需要） |
 | Layer 1 | Producer | 拆任務、串接 Pipeline 三個 Team、追蹤進度、Git commit | ✅ 已建立（分派為手動轉接） |
 | Layer 2 | Team Leads | 管理各領域品質，審核產出 | ⬜ 未建立（Solo Dev 不需要） |
-| Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team / godot-team / unreal-team / cocos-team）+ Domain Expert（slot-game-expert）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 9 個已建立且已連線 / ⬜ 20+ 個規劃中 |
+| Layer 3 | 執行 Team（comfyui-team / blender-team / unity-team / godot-team / unreal-team / cocos-team / ui-ux-team）+ Domain Expert（slot-game-expert）+ 其他 Specialist | 實際執行工作，呼叫 MCP 工具 | ✅ 10 個已建立且已連線 / ⬜ 20+ 個規劃中 |
 
 **關鍵機制（願景 vs 現況）：**
 - 願景：Producer 收到需求後，透過 **subagent** 呼叫對應的 Specialist 自動執行
@@ -327,14 +335,15 @@ graph LR
 
 > 不需要同時裝四個引擎，只需要裝你實際要用的那個。Producer 會依你的需求分派到對應引擎 Team。
 
-### 目前實際配置（Producer + 4 引擎 Team + 2 美術 Team + 2 設計 Team + 1 QA Team，共 9 個）
+### 目前實際配置（Producer + 4 引擎 Team + 2 美術 Team + 3 設計 Team（含 UI/UX） + 1 QA Team，共 10 個）
 
 ```
 .kiro/agents/
 ├── orchestration/producer.md      # 拆任務、偵測引擎與遊戲類型、串接 Pipeline、Git commit
 ├── design/game-designer.md         # 寫設計文件、GDD 維護
 ├── design/slot-game-expert.md      # 老虎機數學模型/RNG/認證合規顧問
-├── art/comfyui-team.md             # 依參考圖生成貼圖（透過 comfy-mcp-server）
+├── design/ui-ux-team.md            # UI/UX 版面、畫面流程、Design Token、切圖規格（透過 figma MCP）
+├── art/comfyui-team.md             # 依參考圖生成貼圖（透過 comfyui / artokun/comfyui-mcp）
 ├── art/blender-team.md             # Blender 建模 + 套貼圖（透過 blender-mcp）
 ├── engineering/unity-team.md       # 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
 ├── engineering/godot-team.md       # 場景組裝、GDScript、Export（透過 godot-mcp）
@@ -355,7 +364,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # 或 macOS: brew install uv
 
 # 3. MCP 設定已存在於 .kiro/settings/mcp.json
-#    （blender-mcp / comfy-mcp-server / unity-mcp / godot-mcp / unreal-engine / cocos-creator）
+#    （blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator）
 #    各工具的連線細節見對應的「XX MCP 整合詳解」章節
 
 # 4. 依你要用的引擎，啟動對應軟體並完成連線：
@@ -366,7 +375,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #    - Unreal：安裝 UnrealMCP 外掛並在 Editor 啟用
 #    - Cocos Creator：安裝 cocos-mcp-server 外掛，擴展 → Cocos MCP Server → 啟動
 
-# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 9 個 Agent
+#    - Figma：預設用官方 Remote MCP Server（首次於 Kiro 完成 OAuth 授權即可，見「Figma MCP 整合詳解」）
+# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 10 個 Agent
 ```
 
 ### 使用方式
@@ -522,31 +532,30 @@ Create a Text data-block with the result of analysis.
 
 ## ComfyUI MCP 整合詳解
 
-> 依 [Comfy 官方 Agent Tools / MCP 文件](https://docs.comfy.org/agent-tools) 整理。官方目前有三條路：**Comfy Cloud MCP**（一級支援、需訂閱）、**Comfy CLI**（`comfy generate`，適合腳本/CI）、**社群 local MCP server**（自架、免費）。本專案選擇社群 local MCP server [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)，因為與現有 Blender MCP 一樣走「本機優先、成本趨近 0」路線，用 `uvx` 啟動讓 Kiro 能像管理 `blender-mcp` 一樣自動管理生命週期。
+> 依 [Comfy 官方 Agent Tools / MCP 文件](https://docs.comfy.org/agent-tools) 整理。官方目前有四條路：**Comfy Cloud MCP**（一級支援、需訂閱）、**Comfy Local MCP**（官方第一方 local server，**目前私測中，尚未公開**）、**Comfy Partner MCP**（呼叫 30+ 夥伴模型 API，非本機 workflow）、**社群 local MCP server**（自架、免費）。因為官方第一方 local server 還申請不到，本專案選擇社群方案中功能最完整、維護最活躍的 [`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp)。
 
-### 為什麼選 `lalanikarim/comfy-mcp-server`
+### 為什麼選 `artokun/comfyui-mcp`
 
 | 方案 | 特性 |
 |------|------|
 | [Comfy Cloud MCP](https://docs.comfy.org/agent-tools/cloud) | 官方一級支援、免本機 GPU，但需要訂閱與 credits，走遠端 HTTPS |
+| [Comfy Local MCP](https://docs.comfy.org/agent-tools/local)（`comfy-local-mcp`） | 官方第一方，但**私測中，一般人目前申請不到** |
 | [Comfy CLI](https://docs.comfy.org/agent-tools/comfy-cli)（`comfy generate`） | 終端機指令，不是 MCP tool，適合腳本/CI 而非對話式操作 |
-| [`joenorton/comfyui-mcp-server`](https://github.com/joenorton/comfyui-mcp-server) | 功能更完整（`regenerate`、`view_image`、`list_assets`），但需另開常駐 HTTP server process |
-| [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server) | **本專案採用**：`uvx` 啟動、Kiro 自動管理生命週期，設定簡單 |
+| [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server) | 本專案先前採用，僅 2 個工具且綁定單一 workflow JSON，功能過於陽春 |
+| [`joenorton/comfyui-mcp-server`](https://github.com/joenorton/comfyui-mcp-server) | 功能較完整，但需另開常駐 HTTP server process |
+| [`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp) | **本專案採用**：108 個工具、持續維護中（近期仍有更新）、`npx` 一鍵啟動並自動偵測本機 ComfyUI 路徑與 port，不需手動指定 workflow JSON |
 
 ### 設定內容（`.kiro/settings/mcp.json`）
 
 ```json
 {
   "mcpServers": {
-    "comfy-mcp-server": {
-      "command": "uvx",
-      "args": ["comfy-mcp-server"],
+    "comfyui": {
+      "command": "npx",
+      "args": ["-y", "comfyui-mcp"],
       "env": {
-        "COMFY_URL": "http://127.0.0.1:8188",
-        "COMFY_WORKFLOW_JSON_FILE": "/ABSOLUTE/PATH/TO/your_workflow_api_export.json",
-        "PROMPT_NODE_ID": "6",
-        "OUTPUT_NODE_ID": "9",
-        "OUTPUT_MODE": "file"
+        "CIVITAI_API_TOKEN": "",
+        "HUGGINGFACE_TOKEN": ""
       },
       "disabled": false,
       "autoApprove": []
@@ -555,32 +564,34 @@ Create a Text data-block with the result of analysis.
 }
 ```
 
-- `COMFY_URL`：本機 ComfyUI 監聽位址（預設 `http://127.0.0.1:8188`，啟動方式 `python main.py --port 8188`）
-- `COMFY_WORKFLOW_JSON_FILE`：ComfyUI 匯出的 **API 格式** workflow JSON 絕對路徑（ComfyUI 介面 Settings → 開啟 Dev Mode → "Save (API Format)"）
-- `PROMPT_NODE_ID` / `OUTPUT_NODE_ID`：workflow 裡文字提示節點（通常是 CLIPTextEncode）與最終輸出節點（通常是 SaveImage）的 ID
-- 若要調整成你自己的 workflow，把上述四個值換成對應設定即可
+- 不需要手動填 `COMFY_URL`：server 會自動偵測本機 ComfyUI（先試 port 8188，CLI 預設；再試 8000，Desktop App 預設）
+- 不需要手動填 workflow JSON 路徑或 node ID：`generate_image` 等高階工具會自動建構 workflow
+- `CIVITAI_API_TOKEN` / `HUGGINGFACE_TOKEN` 為選用，只有在需要從這兩個平台下載模型時才需要填
+- 若你的 ComfyUI 裝在非標準路徑，可額外設定 `COMFYUI_PATH` 環境變數指向資料目錄
 
-### 可用 Tools
+### 可用 Tools（108 個，依用途分組，詳見「團隊角色與職責」章節的完整表）
 
-| 工具名稱 | 說明 |
-|---------|------|
-| `generate_image(prompt)` | 依提示詞用綁定的 workflow 生成一張圖片，回傳圖片或路徑（依 `OUTPUT_MODE` 為 `file` 或 `url`） |
-| `generate_prompt(topic)` | 若設定了 `OLLAMA_API_BASE` + `PROMPT_LLM`，可用本地 LLM 把簡短主題擴寫成完整生成提示詞（選用功能，未設定則此工具不可用） |
+| 分組 | 代表工具 |
+|------|---------|
+| 高階生成 | `generate_image`, `generate_with_controlnet`, `generate_with_ip_adapter`, `generate_audio` |
+| 資產與迭代 | `view_image`, `regenerate`, `list_assets`, `analyze_color` |
+| Workflow 組裝 | `create_workflow`, `modify_workflow`, `validate_workflow` |
+| 模型管理 | `search_models`, `download_model`, `list_local_models` |
+| 診斷 | `get_logs`, `get_history`, `clear_vram` |
 
-> 這個 server 只有這兩個工具，且**一個 server 實例只綁定一個 workflow JSON**。若需要同時支援多種輸出（例如概念圖用一個 workflow、PBR 貼圖用另一個），可另外設定第二個 `mcp.json` 區塊（例如 `comfy-mcp-server-pbr`）指向不同的 `COMFY_WORKFLOW_JSON_FILE`。
+> 完整清單見 [artokun/comfyui-mcp 文件](https://comfyui-mcp.artokun.io/docs)。
 
 ### 安全提醒
 
-- Server 預設綁定 `localhost`，不要在沒有額外驗證的情況下對外公開
-- `mcp.json` 中若填入任何 API Key（例如未來改用 Comfy Cloud），應改用環境變數而非寫死在檔案中，並確認該檔案已被 `.gitignore` 排除
+- Server 預設綁定本機，不要在沒有額外驗證的情況下對外公開（若要遠端存取，該專案有 `--tunnel` 模式會自動產生 auth token，見其文件）
+- `mcp.json` 中若填入任何 API Key（`CIVITAI_API_TOKEN`、`HUGGINGFACE_TOKEN` 等），應改用環境變數而非寫死在檔案中，並確認該檔案已被 `.gitignore` 排除
 
 ### 參考資料
 
 - [Comfy 官方 Agent Tools / MCP 文件](https://docs.comfy.org/agent-tools)
+- [Comfy Local MCP](https://docs.comfy.org/agent-tools/local)（官方第一方，私測中）
 - [Comfy Cloud MCP](https://docs.comfy.org/agent-tools/cloud)
-- [Comfy CLI](https://docs.comfy.org/agent-tools/comfy-cli)
-- [`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)（本專案採用）
-- [`joenorton/comfyui-mcp-server`](https://github.com/joenorton/comfyui-mcp-server)（功能更完整的替代方案）
+- [`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp)（本專案採用，MIT License，331+ stars）
 
 ---
 
@@ -828,6 +839,96 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ---
 
+## Figma MCP 整合詳解
+
+> `design/ui-ux-team` 透過 [官方 Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/) 讀取設計檔的版面與 Design Token，產出 handoff 規格交給對應引擎 Team。Kiro 是 Figma 官方文件明列支援的 MCP client（支援 Desktop / Remote / write-to-canvas / Kiro Powers）。
+
+### Figma 在遊戲開發負責哪個層面
+
+以遊戲開發者的角度，Figma 不碰 3D 資產、不碰遊戲邏輯，它負責的是**介面與使用者體驗（UI/UX）層**：
+
+| Figma 負責 | 具體產出 |
+|-----------|---------|
+| UX 流程 | 資訊架構、畫面流程（主選單 → 遊戲 → 設定 → 商店）、導覽、新手引導、互動原型 |
+| UI 版面 | HUD（血條/彈藥/分數）、選單、彈窗、設定頁、商店；老虎機的 reel frame / spin 按鈕 / paytable / 中獎表演 UI 的排版 |
+| Design System | 色彩、字型階層、間距、圓角、按鈕狀態（normal/hover/pressed/disabled） |
+| Handoff | 版面座標、尺寸、間距、顏色、切圖清單，交接給引擎 Team 在原生 UI 系統重建 |
+
+**分工界線**：3D 模型 / PBR 貼圖交 `art/blender-team`、`art/comfyui-team`；遊戲邏輯交對應引擎 Team；像素素材（icon/按鈕/背景）由 `art/comfyui-team` 生成——Figma 只負責「怎麼排、怎麼流動、用什麼 Token」，`ui-ux-team` 出規格，引擎 Team 在遊戲引擎的 UI 系統（Unity UI Toolkit / Godot Theme / Unreal UMG / Cocos UI）實作。
+
+### 三種接法（本專案預設官方 Remote）
+
+| 接法 | endpoint / 指令 | 需求 | 適用 |
+|------|----------------|------|------|
+| **官方 Remote（本專案採用）** | `https://mcp.figma.com/mcp`（HTTP，OAuth） | 任何 Figma 方案/席次；首次於 Kiro 完成 OAuth 授權 | 首選，支援 write-to-canvas |
+| 官方 Desktop | `http://127.0.0.1:3845/mcp`（HTTP） | Figma 桌面 App + 付費方案的 **Dev/Full 席次** | 企業/組織特定情境 |
+| 社群 Framelink | `npx -y figma-developer-mcp --figma-api-key=<TOKEN> --stdio` | Figma Personal Access Token（MIT，走 REST API 讀取） | 不想走 OAuth、只需讀版面時 |
+
+### 設定內容（`.kiro/settings/mcp.json`）
+
+```json
+{
+  "mcpServers": {
+    "figma": {
+      "url": "https://mcp.figma.com/mcp",
+      "transport": "http",
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+若改用社群 Framelink（需自備 token，建議走環境變數）：
+
+```json
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--figma-api-key=${FIGMA_TOKEN}", "--stdio"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+### 使用方式
+
+1. 在 Figma Design 選取要實作的 frame / layer → 右鍵 **Copy link to selection**
+2. 切到 `design/ui-ux-team`，貼上連結並描述需求（MCP 會從 URL 解析 node ID）
+3. `ui-ux-team` 讀取版面與 Design Token，整理成 handoff 規格（版面座標、尺寸、Token、切圖清單）
+4. 需要裝飾性 UI 素材時，把切圖清單交給 `art/comfyui-team` 生成，再回填版面
+5. 把 handoff 規格交給對應引擎 Team，在其原生 UI 系統重建
+
+### 可用 Tools（官方 Server，依用途分組）
+
+| 分組 | 能力 |
+|------|------|
+| 讀取設計 context | 取得選取 frame/node 的尺寸、間距、階層、auto-layout |
+| 萃取 Design Token | 取得 variables / styles（色彩/字型/間距，handoff 核心） |
+| 產生程式碼 | 從選取 frame 產生 UI 程式碼（供引擎 Team 參考，非最終產物） |
+| 取得圖片 | 匯出 frame/node 為圖片（供標注與切圖） |
+| Code Connect | 對應設計元件 ↔ 程式元件，讓產出與 codebase 一致 |
+| 寫回畫布（Remote） | 依 design system 建立 frame / component / variable |
+
+> 實際工具名稱依接法（Remote / Desktop / Framelink）與版本而定，呼叫前先確認精確名稱。完整清單見 [Tools and prompts](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/)。
+
+### 安全提醒
+
+- 官方 Remote 走 OAuth，不需在 `mcp.json` 寫 token；若改用 Framelink，`FIGMA_TOKEN` 屬敏感資訊，應走環境變數而非寫死，並確認存放金鑰的檔案已被 `.gitignore` 排除
+- Desktop Server 只監聽本機 loopback（`127.0.0.1:3845`），不要對外公開
+
+### 參考資料
+
+- [Figma MCP Server 開發者文件](https://developers.figma.com/docs/figma-mcp-server/)
+- [Guide to the Figma MCP server（含支援的 client 列表，Kiro 在列）](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server)
+- [Remote Server 安裝](https://help.figma.com/hc/en-us/articles/35281350665623) / [Desktop Server 安裝](https://help.figma.com/hc/en-us/articles/35281186390679)
+- [GLips/Figma-Context-MCP（社群 Framelink，MIT）](https://github.com/GLips/Figma-Context-MCP)
+
+---
+
 ## Slot Game Expert 詳解
 
 > `design/slot-game-expert` 不是一個操作 MCP 工具的執行 Team，而是一個**純知識型 Domain Expert**，產出數學模型/RNG/認證合規規格，交給對應的引擎 Team 實作。
@@ -892,7 +993,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 ### Layer 3：Specialist Agents
 
-#### Design Team（6 個規劃，1 個已建立）
+#### Design Team（4 個規劃，3 個已建立）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
@@ -902,20 +1003,22 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | combat-designer | read, write | 戰鬥系統、技能設計、敵人 AI | ⬜ |
 | level-designer | read, write, @unity | 關卡佈局、觸發器、難度曲線 | ⬜ |
 | narrative-designer | read, write | 世界觀、劇情、對話樹（Yarn/Ink） | ⬜ |
-| ux-designer | read, write, @figma | Wireframe、操作流程、新手引導 | ⬜ |
+| ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
 
 #### Art Team（2 個已建立，6 個規劃）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
-| comfyui-team | `@comfy-mcp-server`, read, write | 概念圖、單一 workflow 的圖像生成 | ✅ 已連線，見「ComfyUI MCP 整合詳解」 |
+| comfyui-team | `@comfyui`, read, write | 概念圖、PBR 貼圖、Sprite、Workflow 組裝 | ✅ 已連線，見「ComfyUI MCP 整合詳解」 |
 | blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx | ✅ |
-| ui-artist | @figma, @comfyui | UI Layout、Design Token、互動狀態規格 | ⬜（需先裝 Figma/ComfyUI MCP） |
+| ui-artist | @figma, @comfyui | UI Layout、Design Token、互動狀態規格 | ✅ 已合併進 `design/ui-ux-team`（版面/Token 由 ui-ux-team 出，裝飾素材由 comfyui-team 生成） |
 | animator | @blender-mcp | 骨骼綁定、動畫片段、Shape Keys | ⬜ |
 | vfx-artist | @comfyui | 粒子特效、Shader、序列幀動畫 | ⬜ |
 | technical-artist | @blender-mcp, shell | Shader 優化、LOD 策略、Art Pipeline 工具 | ⬜ |
 
 > `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個 ComfyUI 工具，拆開建立沒有實際差異。
+>
+> 同理，原願景中 `ux-designer`（Design Team）與 `ui-artist`（Art Team）已合併成 `design/ui-ux-team`，因為兩者都圍繞 Figma 運作、共同負責 UI/UX 層。分工上：`ui-ux-team` 出版面與 Design Token（介面「怎麼排、怎麼流動」），`comfyui-team` 生成要放進版面的像素素材（icon/按鈕/背景），引擎 Team 負責在原生 UI 系統實作。
 
 #### Engineering Team（4 個規劃，4 個引擎 Team 已建立）
 
@@ -977,8 +1080,8 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 | 工具 | 用途 | 本專案狀態 | 若 MCP 不可用 |
 |------|------|-----------|--------------|
 | **Blender** | 3D 建模、動畫、渲染 | ✅ 已連線（`blender-mcp`） | Python Script + CLI |
-| **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | ✅ 已連線（[`lalanikarim/comfy-mcp-server`](https://github.com/lalanikarim/comfy-mcp-server)） | REST API |
-| **Figma** | UI/UX 設計、規格匯出、Design Token | ⬜ 未安裝 | REST API |
+| **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | ✅ 已連線（[`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp)） | REST API |
+| **Figma** | UI/UX 設計、版面、規格匯出、Design Token | ✅ 已連線（[官方 Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)） | REST API |
 | **Unity** | 遊戲引擎（場景組裝、Build） | ✅ 已連線（[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)） | CLI Batch Mode |
 | **Godot** | 遊戲引擎（場景組裝、Export） | ✅ 已連線（[bradypp/godot-mcp](https://github.com/bradypp/godot-mcp)） | CLI headless export |
 | **Unreal Engine** | 遊戲引擎（關卡組裝、Blueprint） | ✅ 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） | UBT/UAT CLI |
@@ -997,15 +1100,12 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
       "disabled": false,
       "autoApprove": []
     },
-    "comfy-mcp-server": {
-      "command": "uvx",
-      "args": ["comfy-mcp-server"],
+    "comfyui": {
+      "command": "npx",
+      "args": ["-y", "comfyui-mcp"],
       "env": {
-        "COMFY_URL": "http://127.0.0.1:8188",
-        "COMFY_WORKFLOW_JSON_FILE": "/ABSOLUTE/PATH/TO/your_workflow_api_export.json",
-        "PROMPT_NODE_ID": "6",
-        "OUTPUT_NODE_ID": "9",
-        "OUTPUT_MODE": "file"
+        "CIVITAI_API_TOKEN": "",
+        "HUGGINGFACE_TOKEN": ""
       },
       "disabled": false,
       "autoApprove": []
@@ -1043,12 +1143,18 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
       "transport": "http",
       "disabled": false,
       "autoApprove": []
+    },
+    "figma": {
+      "url": "https://mcp.figma.com/mcp",
+      "transport": "http",
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
 ```
 
-> `COMFY_WORKFLOW_JSON_FILE` / `PROMPT_NODE_ID` / `OUTPUT_NODE_ID`、`godot-mcp` 的路徑、`unreal-engine` 的路徑，都需換成你實際環境的值，細節見對應的「XX MCP 整合詳解」章節。
+> `COMFY_WORKFLOW_JSON_FILE` / `PROMPT_NODE_ID` / `OUTPUT_NODE_ID`、`godot-mcp` 的路徑、`unreal-engine` 的路徑，都需換成你實際環境的值，細節見對應的「XX MCP 整合詳解」章節。`figma` 用官方 Remote Server，首次使用需在 Kiro 完成 OAuth 授權，詳見「Figma MCP 整合詳解」。
 
 ### 若要擴充其他工具（願景中的配置範例，尚未套用）
 
@@ -1057,11 +1163,6 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 ```json
 {
   "mcpServers": {
-    "figma": {
-      "command": "uvx",
-      "args": ["figma-mcp-server@latest"],
-      "env": { "FIGMA_ACCESS_TOKEN": "${FIGMA_TOKEN}" }
-    },
     "git": {
       "command": "uvx",
       "args": ["mcp-server-git@latest"]
@@ -1099,20 +1200,20 @@ comfyui_workflows:
     output: 一批 UI Icon
 ```
 
-#### Figma（UI/UX 設計）⬜ 未安裝
+#### Figma（UI/UX 設計）✅ 已連線
 
-使用者（規劃）：ux-designer, ui-artist → 產出給 ui-programmer 實作
+使用者：`design/ui-ux-team`（合併原願景 ux-designer + ui-artist）→ 產出 handoff 規格給對應引擎 Team 實作。完整說明見「Figma MCP 整合詳解」。
 
 ```mermaid
 graph LR
-    UX[ux-designer] -->|Wireframe / Flow Map| Figma
-    UI[ui-artist] -->|高保真 Mockup / Design Token| Figma
-    Figma -->|切圖 + 標注規格| UIP[ui-programmer]
-    UIP -->|UI Toolkit| Unity
+    UIUX[design/ui-ux-team] -->|Wireframe / Flow / Layout| Figma
+    UIUX -->|Design Token| Figma
+    ComfyUI[comfyui-team] -->|UI 切圖素材| Figma
+    Figma -->|版面 + Token + 切圖清單| ENG["engineering/{engine}-team"]
+    ENG -->|引擎原生 UI 系統| Game[遊戲內 UI]
 ```
 
-分工：Figma 管結構與精確控制，ComfyUI 管風格化素材生成。
-ui-artist 兩者都用：Figma 做 Layout，ComfyUI 生成裝飾元素。
+分工：`ui-ux-team` 用 Figma 管結構與精確控制（版面、流程、Design Token），`comfyui-team` 生成風格化像素素材（icon/按鈕/背景），引擎 Team 依 handoff 規格在原生 UI 系統（Unity UI Toolkit / Godot Theme / Unreal UMG / Cocos UI）實作。
 
 #### Blender（3D）✅ 已連線
 
@@ -1428,7 +1529,7 @@ sequenceDiagram
 |------|------|------|
 | 1 | Producer 收到需求，偵測引擎與遊戲類型 | ✅ 可測試 |
 | 2 | Producer → slot-game-expert 出數學模型/RNG/合規規格 | ✅ 可測試（手動切換 Agent） |
-| 3 | Producer → comfyui-team 生成符號美術 | ✅ 可測試（透過 `comfy-mcp-server`） |
+| 3 | Producer → comfyui-team 生成符號美術 | ✅ 可測試（透過 `comfyui` / `artokun/comfyui-mcp`） |
 | 4 | Producer → unity-team（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | ✅ 可測試（依引擎透過對應 MCP） |
 | 5 | Producer 執行 git commit | ✅ 可測試 |
 
@@ -1448,14 +1549,15 @@ sequenceDiagram
 
 | 規模 | Agent 數 | 需要工具 | 月成本 | 啟用治理機制 | 本專案現況 |
 |------|---------|----------|--------|-------------|-----------|
-| **Solo Dev**（1 人） | 9 | ComfyUI, 引擎（任一）, Git | $50-150 | ✗ | ✅ **目前配置**（Blender / ComfyUI / Unity / Godot / Unreal / Cocos 皆已連線；Git 未走 MCP） |
-| **Small Team**（2-4 人） | 15-18 | + Figma, Linear | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
+| **Solo Dev**（1 人） | 10 | ComfyUI, Figma, 引擎（任一）, Git | $50-150 | ✗ | ✅ **目前配置**（Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma 皆已連線；Git 未走 MCP） |
+| **Small Team**（2-4 人） | 15-18 | + Linear | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 25-30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 + 可選多團隊 | ⬜ 規劃中 |
 
-### Solo Dev 啟用清單（✅ 已完成，共 9 個）
+### Solo Dev 啟用清單（✅ 已完成，共 10 個）
 
 ```
 orchestration/producer, design/game-designer, design/slot-game-expert,
+design/ui-ux-team,
 art/comfyui-team, art/blender-team,
 engineering/unity-team, engineering/godot-team,
 engineering/unreal-team, engineering/cocos-team,
@@ -1467,11 +1569,11 @@ qa/functional-tester
 ### Small Team 追加（⬜ 下一步可考慮的方向）
 
 ```
-+ art/art-lead, art/concept-artist, art/animator, art/ui-artist,
++ art/art-lead, art/concept-artist, art/animator,
   engineering/systems-programmer, engineering/devops, qa/balance-tester
 ```
 
-前提：需先安裝 Figma MCP、Linear MCP。
+前提：需先安裝 Linear MCP（Figma MCP 已在 Solo Dev 階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`）。
 
 ### Studio 追加（⬜ 遠期）
 
@@ -1630,9 +1732,10 @@ kiro-multi-agent-game-studio/
 │   │   │   └── producer.md                    # ✅ 拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
 │   │   ├── design/
 │   │   │   ├── game-designer.md                # ✅
-│   │   │   └── slot-game-expert.md              # ✅ 老虎機數學模型/RNG/認證合規顧問
+│   │   │   ├── slot-game-expert.md              # ✅ 老虎機數學模型/RNG/認證合規顧問
+│   │   │   └── ui-ux-team.md                   # ✅ UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
 │   │   ├── art/
-│   │   │   ├── comfyui-team.md                 # ✅ 貼圖生成（透過 comfy-mcp-server）
+│   │   │   ├── comfyui-team.md                 # ✅ 貼圖生成（透過 comfyui / artokun/comfyui-mcp）
 │   │   │   └── blender-team.md                 # ✅
 │   │   ├── engineering/
 │   │   │   ├── unity-team.md                   # ✅ 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
@@ -1652,7 +1755,7 @@ kiro-multi-agent-game-studio/
 │   ├── state/
 │   │   └── tasks.yaml                          # ✅ Linear fallback，目前為空
 │   └── settings/
-│       └── mcp.json                            # ✅ blender-mcp / comfy-mcp-server / unity-mcp / godot-mcp / unreal-engine / cocos-creator
+│       └── mcp.json                            # ✅ blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator / figma
 ├── blender/
 │   └── README.md                               # 已合併進本檔案「Blender MCP 整合詳解」章節
 └── README.md                                   # 本文件
@@ -1666,7 +1769,7 @@ kiro-multi-agent-game-studio/
 
 依目前進度，建議的擴充順序（非強制，依你的實際需求調整）：
 
-1. **✅ 已完成**：Blender / ComfyUI / Unity / Godot / Unreal / Cocos MCP 連線、Producer 引擎+類型偵測機制、4 引擎 Team + Slot Game Expert、Contract 機制、Steering 骨架、Git commit 收尾流程
+1. **✅ 已完成**：Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma MCP 連線、Producer 引擎+類型+UI 偵測機制、4 引擎 Team + Slot Game Expert + UI/UX Team、Contract 機制、Steering 骨架、Git commit 收尾流程
 2. **驗證 subagent 委派**：測試 Kiro 是否支援 `producer` 自動呼叫其他 Agent，若支援則簡化 `producer.md` 移除「手動轉接」章節
 3. **填寫 GDD / Style Guide 實際內容**：目前兩份文件都是空骨架，需要先決定遊戲類型、平台、美術風格才能讓後續 Team 產出一致
 4. **視需要安裝 Linear MCP**：目前本地 `tasks.yaml` 對 Solo Dev 已足夠，多人協作時才需要

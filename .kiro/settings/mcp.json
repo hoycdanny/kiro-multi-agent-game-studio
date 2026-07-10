@@ -6,15 +6,12 @@
       "disabled": false,
       "autoApprove": []
     },
-    "comfy-mcp-server": {
-      "command": "uvx",
-      "args": ["comfy-mcp-server"],
+    "comfyui": {
+      "command": "npx",
+      "args": ["-y", "comfyui-mcp"],
       "env": {
-        "COMFY_URL": "http://127.0.0.1:8188",
-        "COMFY_WORKFLOW_JSON_FILE": "/ABSOLUTE/PATH/TO/your_workflow_api_export.json",
-        "PROMPT_NODE_ID": "6",
-        "OUTPUT_NODE_ID": "9",
-        "OUTPUT_MODE": "file"
+        "CIVITAI_API_TOKEN": "",
+        "HUGGINGFACE_TOKEN": ""
       },
       "disabled": false,
       "autoApprove": []
@@ -49,6 +46,12 @@
     },
     "cocos-creator": {
       "url": "http://127.0.0.1:3000/mcp",
+      "transport": "http",
+      "disabled": false,
+      "autoApprove": []
+    },
+    "figma": {
+      "url": "https://mcp.figma.com/mcp",
       "transport": "http",
       "disabled": false,
       "autoApprove": []

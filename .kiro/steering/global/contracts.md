@@ -57,7 +57,8 @@ asset_request:
 User → Producer（建立 Contract，偵測引擎與遊戲類型）
       → design/game-designer（規格，若需要）
       → design/slot-game-expert（老虎機數學模型/RNG/合規，若偵測到該類型）
-      → art/comfyui-team（貼圖，若需要）
+      → design/ui-ux-team（Figma UI/UX 版面 + Design Token + 切圖規格，若含介面需求）
+      → art/comfyui-team（貼圖 / UI 切圖素材，若需要）
       → art/blender-team（建模 + 套貼圖，2D 遊戲可跳過）
       → engineering/{unity,godot,unreal,cocos}-team（依偵測到的引擎分派，場景組裝 + 遊戲邏輯 + Build）
       → Producer（確認交付 → Git commit）
