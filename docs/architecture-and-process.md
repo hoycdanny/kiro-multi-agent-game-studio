@@ -451,15 +451,16 @@ task:
 
 ### Contract 的流動方式
 
-**願景**：
+**本專案現況**（Kiro 原生 subagent 委派，兩層）：
 ```
-User → Producer（建立 Contract）→ Specialist（執行）→ Lead（Review）→ Producer（確認交付）
+User → Producer（建立 Contract，標明轉發對象）
+      → Use the "<lead-name>" subagent（Kiro 啟動 Team Lead）
+      → Lead 用 Use the "<specialist-name>" subagent 轉發給 Specialist
+      → Specialist 執行並回傳 → Lead 做 review → 回傳給 Producer
+      → 使用者確認交付
 ```
 
-**本專案現況**（Kiro 原生 subagent 委派）：
-```
-User → Producer（建立 Contract）→ Use the "<name>" subagent（Kiro 自動啟動 Specialist）→ Specialist 執行並自動回傳 → 使用者確認交付
-```
+跟原本設想的「Specialist 先執行、Lead 事後補審查」略有不同：現在 Lead 是**委派路徑上的中介**（先轉發、收回產出、當場審查），而不是事後才介入。**⚠️ 此兩層委派模型尚未在真實 Kiro 環境完整驗證**（見 `contracts.md`「已知邊界」），若巢狀委派失敗，退化為 Producer 直接委派 Specialist（跳過 Lead 這一層 review）。
 
 ---
 
@@ -525,7 +526,7 @@ budget:
 | 2 | Agent 執行 → 自動 Review → 人看例外 | 概念圖生成、Build |
 | 3 | 全自動 | Unit Test、Icon 批量生成 |
 
-> 本專案目前所有已建立的 Agent 實際運作在 **Level 1**：Agent 執行，人工（你）Review 每一步輸出。Producer 已採用 Kiro 原生 subagent 自動委派串接各 Specialist，但每一步產出仍由你把關；Level 2/3 的全自動情境尚未觸及。
+> 本專案目前所有已建立的 Agent 實際運作在 **Level 1**：Agent 執行，人工（你）Review 每一步輸出。Producer 已採用 Kiro 原生 subagent 委派 Team Lead（Lead 再轉發給對應 Specialist）串接整條 Pipeline，但每一步產出仍由你把關；Level 2/3 的全自動情境尚未觸及。
 
 ### 版本控制
 
@@ -578,9 +579,9 @@ sequenceDiagram
 | Step | 動作 | 狀態 |
 |------|------|------|
 | 1 | Producer 收到需求，偵測引擎與遊戲類型 | ✅ 可測試 |
-| 2 | Producer → slot-game-expert 出數學模型/RNG/合規規格 | ✅ 可測試（Producer 用 subagent 自動委派） |
-| 3 | Producer → comfyui-team 生成符號美術 | ✅ 可測試（透過 `comfyui` / `artokun/comfyui-mcp`） |
-| 4 | Producer → unity-team（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | ✅ 可測試（依引擎透過對應 MCP） |
+| 2 | Producer → `design-lead` → 轉發 `slot-game-expert` 出數學模型/RNG/合規規格 | ⚠️ 兩層委派尚待實測；退化時 Producer 直接委派 `slot-game-expert` |
+| 3 | Producer → `art-lead` → 轉發 `comfyui-team` 生成符號美術 | ⚠️ 兩層委派尚待實測；退化時 Producer 直接委派 `comfyui-team`（透過 `comfyui` / `artokun/comfyui-mcp`） |
+| 4 | Producer → `tech-lead` → 轉發 `unity-team`（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | ⚠️ 兩層委派尚待實測；退化時 Producer 直接委派對應引擎 Team（依引擎透過對應 MCP） |
 | 5 | Producer 執行 git commit | ✅ 可測試 |
 
 **實際操作流程：**

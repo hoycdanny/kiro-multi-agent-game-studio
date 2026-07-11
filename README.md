@@ -202,28 +202,32 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 
 ### 誠實聲明：subagent 委派的現況與邊界
 
-Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://kiro.dev/docs/chat/subagents/)）：主 Agent 用 `Use the "<name>" subagent to …` 語法即可自動調度，Specialist 執行完會把結果回傳。**要能委派，主 Agent 必須在 frontmatter 的 `tools` 陣列中包含 `subagent`**——`producer.md` 已具備此權限，因此改為**主動自動委派**，不再要求使用者手動切換 Agent Selector 貼上 Contract。
+Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://kiro.dev/docs/chat/subagents/)）：主 Agent 用 `Use the "<name>" subagent to …` 語法即可自動調度，被委派的 Agent 執行完會把結果回傳。**要能委派，主 Agent 必須在 frontmatter 的 `tools` 陣列中包含 `subagent`**——`producer.md` 與 4 個 Team Lead（`design-lead`/`art-lead`/`tech-lead`/`qa-lead`）都已具備此權限。
+
+**委派模型：Producer → Team Lead → Specialist（兩層）**。Producer 不再直接委派 26 個 Specialist，而是委派給對應的 Team Lead，由 Lead 轉發給它管理範圍內的 Specialist、做該領域的 review，再彙整結果回報：
 
 ```
-使用者 → Producer（拆解需求、產出 Contract）
-       → Use the "<name>" subagent to <task + contract>   ← Kiro 自動啟動 Specialist
-       → Specialist 執行並自動回傳結果
+使用者 → Producer（拆解需求、產出 Contract，標明轉發對象）
+       → Use the "<lead-name>" subagent to <task + contract>   ← Kiro 啟動 Team Lead
+       → Lead 用 Use the "<specialist-name>" subagent to … 轉發給 Specialist
+       → Specialist 執行並回傳結果給 Lead → Lead 審查後回傳給 Producer
        → Producer 串接下一站 → … → Git commit
 ```
 
 仍需注意的邊界（誠實聲明）：
 
-- subagent 的執行環境是隔離的獨立 context window，委派時**必須把完整 Contract 與檔案路徑寫進 Prompt**，否則 Specialist 會缺上下文。
+- subagent 的執行環境是隔離的獨立 context window，委派時**必須把完整 Contract 與檔案路徑寫進 Prompt**，否則下游會缺上下文；兩層委派時，Lead 也必須把完整 Contract 原文轉發給 Specialist。
 - subagent 內**不會觸發 Hooks、也拿不到 Specs**。
-- **多層巢狀委派不支援**：能委派的前提是該 agent 自身的 `tools` 含 `subagent`，各 Specialist 都沒有此權限，因此只支援單層「Producer → Specialist」——這正是本專案採用的模式。
+- **這個兩層委派模型尚未在真實 Kiro 環境完整驗證**：官方文件沒有明確保證支援巢狀 subagent 委派。若某次委派失敗，退化策略是 Producer 直接委派對應 Specialist（見 `producer.md`「分派規則」），不強求整條 Pipeline 都走兩層——實際使用時請留意 Lead 是否有回報「巢狀委派失敗」。
 
 ### 現在就能測試的最小流程
 
 1. 切到 `orchestration/producer`，輸入「請幫我用 Godot 開發一款老虎機」這類含引擎+類型的需求（或不指定引擎，看它是否會先問你）
-2. 觀察它是否正確偵測引擎（Godot）與遊戲類型（老虎機），拆成「slot-game-expert 出數學模型」→「comfyui-team 生符號貼圖」→「godot-team 場景組裝」幾步，並印出對應 Contract
-3. 切到 `design/slot-game-expert`，貼上 Contract，確認它會問你市場/專案類型並產出規格
-4. 切到 `art/comfyui-team` 貼上 Asset Contract，確認它能生成貼圖並回報路徑
-5. 切到對應的引擎 Team（例如 `engineering/godot-team`）貼上 Task Contract，確認它能操作對應 Editor
+2. 觀察它是否正確偵測引擎（Godot）與遊戲類型（老虎機），拆成「design-lead 轉發 slot-game-expert 出數學模型」→「art-lead 轉發 comfyui-team 生符號貼圖」→「tech-lead 轉發 godot-team 場景組裝」幾步，並印出對應 Contract
+3. **關鍵驗證點**：觀察 Lead 是否真的成功轉發給 Specialist、拿到回應——這是本專案目前尚待實測的巢狀委派機制；若失敗，Producer 應退化為直接委派該 Specialist
+4. 切到 `design/slot-game-expert`，貼上 Contract，確認它會問你市場/專案類型並產出規格
+5. 切到 `art/comfyui-team` 貼上 Asset Contract，確認它能生成貼圖並回報路徑
+6. 切到對應的引擎 Team（例如 `engineering/godot-team`）貼上 Task Contract，確認它能操作對應 Editor
 
 ---
 

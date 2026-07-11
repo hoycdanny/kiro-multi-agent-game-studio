@@ -83,7 +83,7 @@ Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to 
 **已知邊界（誠實聲明）**：
 - subagent 執行環境是隔離的獨立 context window，因此**委派時必須把完整 Contract 與所有檔案路徑寫進 Prompt**，否則 Specialist 會缺上下文。
 - subagent 內**不會觸發 Hooks、也拿不到 Specs**（見 Kiro 官方 Subagents 文件）。
-- **多層巢狀委派不支援**：要委派的 agent 必須自身在 `tools` 含 `subagent`，各 Specialist 都沒有此權限，因此只支援單層「Producer → Specialist」；由 `producer` 逐一委派各 Specialist（Producer 已具備 `subagent` 權限）。
+- **多層巢狀委派（Producer → Team Lead → Specialist）尚待在真實 Kiro 環境完整驗證**：本專案目前採用 Producer 委派給 4 個 Team Lead（`design-lead`/`art-lead`/`tech-lead`/`qa-lead`，皆已具備 `subagent` 權限），由 Lead 轉發給對應 Specialist 的兩層委派模型（見各 Lead 檔案的「委派與轉發流程」）。官方文件對此沒有明確保證，若某次巢狀委派失敗，退化策略是 Producer 直接委派該 Specialist（見 `producer.md`「分派規則」表），不強求整條 Pipeline 都走兩層。
 
 ## 檔案共享與交接（精簡協作規範）
 
