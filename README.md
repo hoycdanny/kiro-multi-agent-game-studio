@@ -249,8 +249,6 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 5. [架構總覽](#架構總覽)
 6. [快速開始](#快速開始)
 7. [深入文件（Reference）](#深入文件reference)
-8. [下一步 Roadmap](#下一步-roadmap)
-9. [待確認事項](#待確認事項)
 
 ### 深入文件（`docs/`）
 
@@ -543,39 +541,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 | [docs/architecture-and-process.md](docs/architecture-and-process.md) | 工具鏈與資料流、開發流程、Agent 間通訊協定、治理機制、端到端 Demo、漸進式擴展指南 |
 | [docs/reference.md](docs/reference.md) | 成本估算、錯誤處理與退化策略、設計依據、共享知識庫、專案檔案結構 |
 
-## 下一步 Roadmap
-
-
-依目前進度，建議的擴充順序（非強制，依你的實際需求調整）：
-
-1. **✅ 已完成**：Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma MCP 連線、Producer 引擎+類型+UI 偵測機制、4 引擎 Team + Slot Game Expert + UI/UX Team、Contract 機制（含委派命名規範 + 檔案共享/交接規範）、Steering 骨架（`project/gdd.md`、`project/style-guide.md`）、Git commit 收尾流程、Producer 改用 Kiro 原生 subagent 自動委派
-2. **subagent 委派（已釐清）**：單層委派（Producer → Specialist）已依 Kiro 原生機制自動化並可運作；多層巢狀委派則**已知不支援**（能委派的 agent 其 `tools` 必須含 `subagent`，各 Specialist 未給），維持由 Producer 逐一委派各 Specialist
-3. **填寫 GDD / Style Guide 實際內容**：目前兩份文件都是空骨架，需要先決定遊戲類型、平台、美術風格才能讓後續 Team 產出一致
-4. **啟用 GitHub Projects**：`github` MCP 已寫進 `.kiro/settings/mcp.json`（原生 binary、免 Docker），下載 `github-mcp-server` 放進 PATH + 填 PAT 即可用 issues / Projects 看板；Solo Dev 用本地 `tasks.yaml` 也夠，多人協作或想用看板時再啟用
-5. **視需要擴充更多 Specialist**：例如 animator、technical-artist 等，待核心 Pipeline 跑順後再加
-6. **依 Small Team 清單擴充**：art-lead、更多 art specialist、systems-programmer、devops 等
-7. **視需要擴充更多 Domain Expert**：目前已涵蓋 13 類（老虎機/魚機/射擊/MMO/RPG/卡牌/三消/平台/roguelike/策略/模擬/節奏/敘事），未來可依需求再加更細分的類型（例如競速車輛物理、格鬥 frame data/rollback、運動投注類 casino）
-
----
-
-## 待確認事項
-
-
-使用本框架前，建議先決定：
-
-- [ ] 遊戲類型（2D / 3D / 混合）
-- [ ] 目標平台（PC / Mobile / Console / WebGL）
-- [ ] 音訊需求（是否整合 AI 音樂生成）
-- [ ] 多人連線需求
-- [ ] Monetization 模型（買斷 / F2P+IAP / 訂閱）
-- [ ] 團隊規模 → 決定啟用哪些 Agent
-- [ ] 是否需要 LiveOps
-- [ ] LLM 偏好（雲端 API / 本地模型 / 混合）
-- [ ] 使用哪個遊戲引擎（Unity / Godot / Unreal Engine / Cocos Creator）→ 決定分派到哪個引擎 Team
-- [ ] 是否已有對應引擎的專案，或需要從零建立
-- [x] 多層巢狀 subagent 委派：已釐清為**不支援**（需委派方自身具 `subagent` 權限，各 Specialist 未給）；採單層 Producer → Specialist 逐一委派
-
----
 
 ## License
 
