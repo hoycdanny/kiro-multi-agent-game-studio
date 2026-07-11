@@ -70,47 +70,47 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 
 > 委派 / 呼叫 Agent 時用 frontmatter 的**扁平 `name`**（例如 `blender-team`），不是路徑（不是 `art/blender-team`）；下表「路徑」欄只是檔案位置。詳見 `.kiro/steering/global/contracts.md`「Agent 委派命名規範」。
 >
-> 💡 **Agent 出現在哪**：chat 輸入框的 **Agent Selector**（模式 / agent 下拉），不是左側「Agent Steering & Skills」面板——那個面板顯示的是 steering 檔（asset-standards / contracts / gdd / style-guide），跟 agent 是兩回事。若 Agent Selector 沒列出全部 37 個，先確認第一次開啟 workspace 時已點「信任」（workspace agent 需信任後才載入）。本專案的 agent 檔已攤平在 `.kiro/agents/` 底下、以各檔 frontmatter 的 `name` 註冊（例如 `blender-team`）；官方其實支援巢狀子目錄（見 [Custom agents](https://kiro.dev/docs/custom-agents/)），只是巢狀時名稱會變成路徑（如 `art/blender-team`），攤平是為了讓委派名稱維持乾淨的扁平 `name`。
+> 💡 **Agent 出現在哪**：chat 輸入框的 **Agent Selector**（模式 / agent 下拉），不是左側「Agent Steering & Skills」面板——那個面板顯示的是 steering 檔（asset-standards / contracts / gdd / style-guide），跟 agent 是兩回事。若 Agent Selector 沒列出全部 37 個，先確認第一次開啟 workspace 時已點「信任」（workspace agent 需信任後才載入）。本專案的 agent 檔依 layer 分放在 `.kiro/agents/` 的子目錄（`orchestration/`、`design/`、`art/`、`engineering/`、`qa/`、`publishing/`），委派名稱取自各檔 frontmatter 的 `name`（例如 `blender-team`）。**實測確認：即使檔案放在子目錄，frontmatter `name` 仍勝過路徑**（見 [Custom agents](https://kiro.dev/docs/custom-agents/)），所以委派名維持乾淨的扁平 `name`，不會變成 `art/blender-team`。
 
 | Agent | 路徑 | 依賴 |
 |-------|------|------|
-| Creative Director | `.kiro/agents/orchestration_creative-director.md` | 無外部工具，Layer 0：守護願景/pillars、創意方向最終仲裁 |
-| Producer | `.kiro/agents/orchestration_producer.md` | 無外部工具，能用 shell 執行 git commit，負責引擎/遊戲類型偵測，是整條 Pipeline 的唯一調度中樞 |
-| Game Designer | `.kiro/agents/design_game-designer.md` | 無外部工具 |
-| Design Lead | `.kiro/agents/design_design-lead.md` | 無外部工具，Layer 2：整合 GDD、消矛盾、design-review gate |
-| Slot Game Expert | `.kiro/agents/design_slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
-| Fish Game Expert | `.kiro/agents/design_fish-game-expert.md` | 無外部工具，魚機/捕魚：命中機率/賠付經濟/RTP/合規 |
-| Shooter Expert | `.kiro/agents/design_shooter-expert.md` | 無外部工具，FPS/TPS：武器/彈道/命中判定/手感/AI |
-| MMO Expert | `.kiro/agents/design_mmo-expert.md` | 無外部工具，多人/MMORPG：netcode/伺服器權威/持久化 |
-| RPG Systems Expert | `.kiro/agents/design_rpg-systems-expert.md` | 無外部工具，RPG/ARPG：屬性/技能/掉落/傷害公式 |
-| Card Game Expert | `.kiro/agents/design_card-game-expert.md` | 無外部工具，卡牌/Deckbuilder：卡牌數值/combo/平衡 |
-| Puzzle / Match-3 Expert | `.kiro/agents/design_puzzle-match3-expert.md` | 無外部工具，三消/解謎：board 可解性/難度曲線/步數經濟 |
-| Platformer Expert | `.kiro/agents/design_platformer-expert.md` | 無外部工具，平台/metroidvania：跳躍手感/關卡節奏/能力 gating |
-| Roguelike Expert | `.kiro/agents/design_roguelike-expert.md` | 無外部工具，roguelike/lite：程序生成/build synergy/meta 進度 |
-| Strategy Expert | `.kiro/agents/design_strategy-expert.md` | 無外部工具，RTS/4X/塔防：兵種相剋/資源經濟/AI/波次曲線 |
-| Simulation Expert | `.kiro/agents/design_simulation-expert.md` | 無外部工具，模擬經營/生存/沙盒：生產鏈/供需經濟/自動化 |
-| Rhythm Expert | `.kiro/agents/design_rhythm-expert.md` | 無外部工具，音樂節奏：譜面/判定窗/延遲校正 |
-| Narrative / Adventure Expert | `.kiro/agents/design_narrative-adventure-expert.md` | 無外部工具，敘事/視覺小說/冒險：分支敘事/旗標/對話樹 |
-| Economy Designer | `.kiro/agents/design_economy-designer.md` | 無外部工具，F2P 數值/IAP/貨幣/獎勵曲線設計 |
-| UI/UX Team | `.kiro/agents/design_ui-ux-team.md` | 透過 `figma` MCP（官方 Remote Server）產出 UI/UX 版面、Design Token、切圖規格，見「Figma MCP 整合詳解」 |
-| Localization Team | `.kiro/agents/design_localization-team.md` | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） |
-| Art Lead | `.kiro/agents/art_art-lead.md` | 無外部工具，Layer 2：維護 style-guide、美術一致性 review |
-| ComfyUI Team | `.kiro/agents/art_comfyui-team.md` | 透過 `comfyui`（`artokun/comfyui-mcp`）連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
-| Blender Team | `.kiro/agents/art_blender-team.md` | 透過 `blender-mcp` 連接 Blender（靜態建模+貼圖），見「Blender MCP 整合詳解」 |
-| Animator | `.kiro/agents/art_animator.md` | 透過 `blender-mcp` 做 rig/綁定/動畫 clip |
-| Audio Team | `.kiro/agents/art_audio-team.md` | 透過 `comfyui` 的 `generate_audio` 產出 SFX/BGM/voice |
-| Technical Artist | `.kiro/agents/art_technical-artist.md` | 透過 `blender-mcp`＋shell 做 shader/優化/LOD/美術-引擎管線 |
-| Tech Lead | `.kiro/agents/engineering_tech-lead.md` | read/write/shell，Layer 2：技術架構、效能預算、跨引擎 code-review gate |
-| Unity Team | `.kiro/agents/engineering_unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor，見「Unity MCP 整合詳解」 |
-| Godot Team | `.kiro/agents/engineering_godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor，見「Godot MCP 整合詳解」 |
-| Unreal Team | `.kiro/agents/engineering_unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor，見「Unreal MCP 整合詳解」 |
-| Cocos Team | `.kiro/agents/engineering_cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor，見「Cocos MCP 整合詳解」 |
-| DevOps Team | `.kiro/agents/engineering_devops-team.md` | headless build、CI pipeline、產物與版本管理（能用 shell 跑 build 腳本） |
-| QA Lead | `.kiro/agents/qa_qa-lead.md` | 無外部工具，Layer 2：測試策略、協調三 tester、go/no-go |
-| Functional Tester | `.kiro/agents/qa_functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
-| Balance Tester | `.kiro/agents/qa_balance-tester.md` | Monte Carlo 模擬驗證數值（老虎機 RTP、F2P 經濟平衡），能用 shell 跑模擬 |
-| Performance Tester | `.kiro/agents/qa_performance-tester.md` | 能用 shell 跑 profiling；FPS/記憶體/draw call/瓶頸分析 |
-| Compliance / Release | `.kiro/agents/publishing_compliance-release.md` | 分級、隱私合規、商店素材、送審清單、老虎機認證/牌照流程（能用 web 查現行政策） |
+| Creative Director | `.kiro/agents/orchestration/creative-director.md` | 無外部工具，Layer 0：守護願景/pillars、創意方向最終仲裁 |
+| Producer | `.kiro/agents/orchestration/producer.md` | 無外部工具，能用 shell 執行 git commit，負責引擎/遊戲類型偵測，是整條 Pipeline 的唯一調度中樞 |
+| Game Designer | `.kiro/agents/design/game-designer.md` | 無外部工具 |
+| Design Lead | `.kiro/agents/design/design-lead.md` | 無外部工具，Layer 2：整合 GDD、消矛盾、design-review gate |
+| Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
+| Fish Game Expert | `.kiro/agents/design/fish-game-expert.md` | 無外部工具，魚機/捕魚：命中機率/賠付經濟/RTP/合規 |
+| Shooter Expert | `.kiro/agents/design/shooter-expert.md` | 無外部工具，FPS/TPS：武器/彈道/命中判定/手感/AI |
+| MMO Expert | `.kiro/agents/design/mmo-expert.md` | 無外部工具，多人/MMORPG：netcode/伺服器權威/持久化 |
+| RPG Systems Expert | `.kiro/agents/design/rpg-systems-expert.md` | 無外部工具，RPG/ARPG：屬性/技能/掉落/傷害公式 |
+| Card Game Expert | `.kiro/agents/design/card-game-expert.md` | 無外部工具，卡牌/Deckbuilder：卡牌數值/combo/平衡 |
+| Puzzle / Match-3 Expert | `.kiro/agents/design/puzzle-match3-expert.md` | 無外部工具，三消/解謎：board 可解性/難度曲線/步數經濟 |
+| Platformer Expert | `.kiro/agents/design/platformer-expert.md` | 無外部工具，平台/metroidvania：跳躍手感/關卡節奏/能力 gating |
+| Roguelike Expert | `.kiro/agents/design/roguelike-expert.md` | 無外部工具，roguelike/lite：程序生成/build synergy/meta 進度 |
+| Strategy Expert | `.kiro/agents/design/strategy-expert.md` | 無外部工具，RTS/4X/塔防：兵種相剋/資源經濟/AI/波次曲線 |
+| Simulation Expert | `.kiro/agents/design/simulation-expert.md` | 無外部工具，模擬經營/生存/沙盒：生產鏈/供需經濟/自動化 |
+| Rhythm Expert | `.kiro/agents/design/rhythm-expert.md` | 無外部工具，音樂節奏：譜面/判定窗/延遲校正 |
+| Narrative / Adventure Expert | `.kiro/agents/design/narrative-adventure-expert.md` | 無外部工具，敘事/視覺小說/冒險：分支敘事/旗標/對話樹 |
+| Economy Designer | `.kiro/agents/design/economy-designer.md` | 無外部工具，F2P 數值/IAP/貨幣/獎勵曲線設計 |
+| UI/UX Team | `.kiro/agents/design/ui-ux-team.md` | 透過 `figma` MCP（官方 Remote Server）產出 UI/UX 版面、Design Token、切圖規格，見「Figma MCP 整合詳解」 |
+| Localization Team | `.kiro/agents/design/localization-team.md` | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） |
+| Art Lead | `.kiro/agents/art/art-lead.md` | 無外部工具，Layer 2：維護 style-guide、美術一致性 review |
+| ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfyui`（`artokun/comfyui-mcp`）連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
+| Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender（靜態建模+貼圖），見「Blender MCP 整合詳解」 |
+| Animator | `.kiro/agents/art/animator.md` | 透過 `blender-mcp` 做 rig/綁定/動畫 clip |
+| Audio Team | `.kiro/agents/art/audio-team.md` | 透過 `comfyui` 的 `generate_audio` 產出 SFX/BGM/voice |
+| Technical Artist | `.kiro/agents/art/technical-artist.md` | 透過 `blender-mcp`＋shell 做 shader/優化/LOD/美術-引擎管線 |
+| Tech Lead | `.kiro/agents/engineering/tech-lead.md` | read/write/shell，Layer 2：技術架構、效能預算、跨引擎 code-review gate |
+| Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor，見「Unity MCP 整合詳解」 |
+| Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor，見「Godot MCP 整合詳解」 |
+| Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor，見「Unreal MCP 整合詳解」 |
+| Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor，見「Cocos MCP 整合詳解」 |
+| DevOps Team | `.kiro/agents/engineering/devops-team.md` | headless build、CI pipeline、產物與版本管理（能用 shell 跑 build 腳本） |
+| QA Lead | `.kiro/agents/qa/qa-lead.md` | 無外部工具，Layer 2：測試策略、協調三 tester、go/no-go |
+| Functional Tester | `.kiro/agents/qa/functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
+| Balance Tester | `.kiro/agents/qa/balance-tester.md` | Monte Carlo 模擬驗證數值（老虎機 RTP、F2P 經濟平衡），能用 shell 跑模擬 |
+| Performance Tester | `.kiro/agents/qa/performance-tester.md` | 能用 shell 跑 profiling；FPS/記憶體/draw call/瓶頸分析 |
+| Compliance / Release | `.kiro/agents/publishing/compliance-release.md` | 分級、隱私合規、商店素材、送審清單、老虎機認證/牌照流程（能用 web 查現行政策） |
 | 其餘願景 Specialist | 見下方「團隊角色與職責」 | ⬜ 少數未建（combat/level/narrative-designer、systems/ui-programmer、vfx-artist、usability-tester、Audio Lead）；多為刻意合併或與現有角色重疊，見各節說明 |
 
 ### 已串接的元件（MCP）
@@ -1122,7 +1122,7 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 本專案把「不同遊戲類型的設計專業」拆成 13 個 Domain Expert（都在 `design/`，`claude-sonnet-5`，純知識型、不操作引擎 MCP）。Producer 依需求關鍵字路由到對應專家，產出**系統規格與數值**交 `game-designer` 整合進 GDD、`balance-tester` 驗數值、引擎 Team 實作。
 
-**共通模式**：每個專家被喚醒時都會先問清楚關鍵前提（單/多人、子類型、規模、平台），再產規格；數值一律標「初版，待模擬/實測調整」；完整規格見各自的 `.kiro/agents/design_*.md`。下面是「何時找它、交付什麼、最關鍵的專業點、跟誰協作」。
+**共通模式**：每個專家被喚醒時都會先問清楚關鍵前提（單/多人、子類型、規模、平台），再產規格；數值一律標「初版，待模擬/實測調整」；完整規格見各自的 `.kiro/agents/design/*.md`。下面是「何時找它、交付什麼、最關鍵的專業點、跟誰協作」。
 
 > 類型會**疊加**：一款遊戲常同時觸發多個專家（見末尾組合範例），由 Producer 串接。
 
@@ -1334,13 +1334,13 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 > ⚠️ **維護原則**：以下範例過去以「節錄貼上」的方式呈現，但實務上導致範例內容和真實檔案不同步（例如 Team 重構後範例還停留在舊版）。為避免此問題再度發生，這裡改為只列出**檔案路徑 + 核心設計原則摘要**，實際內容請直接開啟檔案查看，不在 README 裡重複貼一份可能過時的複本。
 
-### `.kiro/agents/art_blender-team.md`
+### `.kiro/agents/art/blender-team.md`
 
 核心設計：Agent 沒有背景常駐機制，每次被選中才算「被喚醒」一次。被喚醒後第一步永遠是先判斷情境（打招呼 vs 明確需求 vs Blender MCP 未連線），再決定要不要動手，而不是預設收到訊息就開始建模。啟動時先用 `get_blendfile_summary_path_info` 做連線自檢，連不上就停止並回報。
 
 > 「待命」不是背景常駐機制，而是 Agent 被喚醒時的第一步判斷邏輯。Kiro 的 Custom Agent 沒有 daemon；「平時待命，有需求才動」是寫進 system prompt 的行為規則，不是外部排程實現的。這條原則貫穿本專案所有已建立的 Agent。
 
-### `.kiro/agents/orchestration_producer.md`
+### `.kiro/agents/orchestration/producer.md`
 
 核心設計：Producer 不直接畫圖、不直接建模、不直接寫程式碼，只負責拆解需求、建立 Contract、用 Kiro 原生 subagent 委派給正確的 Team，並在流程尾端負責 Git commit（先 `git status` 給使用者確認，再 commit，不自動 push）。委派用扁平 `name`（`Use the "<name>" subagent to …`），並把完整 Contract 寫進 Prompt；即便如此，它不會虛構其他 Team 的執行結果或進度，只回報 subagent 真正回傳的內容。
 

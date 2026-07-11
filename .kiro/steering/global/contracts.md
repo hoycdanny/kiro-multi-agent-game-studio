@@ -72,7 +72,7 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 - ✅ 正確：`Use the "blender-team" subagent to …`、`Use the "unity-team" subagent to …`
 - ❌ 錯誤：`Use the "art/blender-team" agent …`、`Use the "engineering/unity-team" agent …`
 
-所有 Agent 檔案已平鋪存放在 `.kiro/agents/` 根目錄下（例如 `orchestration_producer.md`、`design_game-designer.md`）。檔名前綴（如 `orchestration_`、`design_` 等）僅作為組織與區分用途，**不是呼叫名稱的一部分**。Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識。
+所有 Agent 檔案依 layer 分放在 `.kiro/agents/` 的子目錄下（例如 `orchestration/producer.md`、`design/game-designer.md`）。**子目錄僅作為組織用途，不是呼叫名稱的一部分**——Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識（已實測：即使檔案在子目錄，`name` 仍勝過路徑，委派名維持扁平如 `blender-team`，不會變成 `art/blender-team`）。
 
 目前已註冊的扁平名稱：`creative-director`、`producer`、`game-designer`、`design-lead`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`art-lead`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`technical-artist`、`tech-lead`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`qa-lead`、`functional-tester`、`balance-tester`、`performance-tester`、`compliance-release`。
 
