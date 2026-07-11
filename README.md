@@ -267,6 +267,7 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 ### 系統架構圖
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '20px'}}}%%
 graph TD
     subgraph "Layer 0: Strategic ✅"
         CD[Creative Director]
