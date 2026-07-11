@@ -305,16 +305,16 @@ graph TD
         BAL[Balance Tester]
     end
 
-    subgraph "MCP Tools"
-        ComfyUI["ComfyUI ✅ 已連線"]
-        Blender["Blender ✅ 已連線"]
-        Figma["Figma ✅ 已連線"]
-        Unity["Unity ✅ 已連線"]
-        Godot["Godot ✅ 已連線"]
-        Unreal["Unreal ✅ 已連線"]
-        Cocos["Cocos Creator ✅ 已連線"]
-        Git["Git ⬜ 未走 MCP，用 shell"]
-        GHProjects["GitHub Projects ✅ 已設定"]
+    subgraph "MCP Tools（狀態見上方「已串接的元件」表）"
+        ComfyUI[ComfyUI]
+        Blender[Blender]
+        Figma[Figma]
+        Unity[Unity]
+        Godot[Godot]
+        Unreal[Unreal]
+        Cocos[Cocos Creator]
+        Git[Git]
+        GHProjects[GitHub Projects]
     end
 
     CD -.->|願景守護| P
