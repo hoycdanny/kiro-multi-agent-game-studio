@@ -1,6 +1,6 @@
 # assets/ — 團隊交付物落地目錄
 
-各 Team 產出的資產統一落在這裡，讓 Pipeline 上下游有**明確、可預期**的交接路徑。命名規範見 `.kiro/steering/global/asset-standards.md`（`{team_id}.{asset_type}_{name}_{version}`）。
+各 Team 產出的資產統一落在這裡，讓 Pipeline 上下游有**明確、可預期**的交接路徑。命名規範見 `.kiro/steering/global/asset-standards.md`（`{asset_type}_{name}_{version}`）。
 
 ## 目錄結構
 
@@ -21,7 +21,7 @@ assets/
 └── sim/           # Balance Tester：模擬腳本與報告（RTP / 經濟平衡）
 ```
 
-> 每個 `<team_id>` 的資產以檔名前綴區分（例如 `vt_001.symbol_seven_01.png`），不另開 per-team 子資料夾，避免路徑爆炸；要隔離多團隊時用檔名前綴即可。
+> 資產以 `asset_type` 分目錄、用命名規範前綴區分（例如 `symbol_seven_01.png`），不另開子資料夾，避免路徑爆炸。
 
 ## Pipeline 交接對照
 

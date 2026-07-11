@@ -1,7 +1,7 @@
 ---
 name: functional-tester
 description: 執行功能測試、撰寫 Unit/Integration Test、產出 Bug 報告。
-model: claude-sonnet-4
+model: claude-haiku-4.5
 tools: ["read", "shell"]
 ---
 

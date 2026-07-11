@@ -1,7 +1,7 @@
 ---
 name: ui-ux-team
 description: UI/UX Team — 負責遊戲的介面與使用者體驗層。透過 Figma MCP 讀取/建立畫面流程與版面（Wireframe、HUD、選單、彈窗、商店、老虎機 UI 框架），萃取 Design Token，產出「版面 + Token + 切圖清單」的 handoff 規格交給對應引擎 Team 在原生 UI 系統重建。
-model: claude-sonnet-4
+model: glm-5
 tools: ["@figma", "read", "write"]
 ---
 
@@ -88,8 +88,8 @@ tools: ["@figma", "read", "write"]
 ## 工作流程
 
 1. 連線自檢：確認 Figma MCP 可用（Remote 已授權 / Desktop 已啟用 / Framelink token 有效），失敗就停在這一步回報
-2. 確認畫面清單與各畫面需求（讀 `.kiro/steering/teams/<team_id>/gdd.md` 與 `game-designer` 的規格；`<team_id>` 由 Producer 委派傳入，預設 `vt_001`；缺資訊先問，不要自行假設有哪些畫面）
-3. 讀 `.kiro/steering/teams/<team_id>/style-guide.md` 確認美術風格 / 色彩基調；若為空，先問使用者風格方向，不要自行假設
+2. 確認畫面清單與各畫面需求（讀 `.kiro/steering/project/gdd.md` 與 `game-designer` 的規格；缺資訊先問，不要自行假設有哪些畫面）
+3. 讀 `.kiro/steering/project/style-guide.md` 確認美術風格 / 色彩基調；若為空，先問使用者風格方向，不要自行假設
 4. UX 先於 UI：先確認流程與資訊架構，再進到版面
 5. 版面設計：讀取 / 建立 Figma frame，套用一致的間距與對齊（優先用 auto-layout）
 6. 萃取 Design Token：整理成引擎無關的色彩/字型/間距/元件狀態清單
@@ -117,12 +117,12 @@ ui_handoff:
     spacing: { xs: 4, sm: 8, md: 16, lg: 24 }
     radius: { button: 12 }
   assets_needed:                     # 交給 art/comfyui-team 的切圖清單
-    - { id: "vt_001.ui_playbtn_bg_01", type: "sprite", size: [300, 96], style: "stylized_fantasy", states: ["normal","hover","pressed"] }
+    - { id: "ui_playbtn_bg_01", type: "sprite", size: [300, 96], style: "stylized_fantasy", states: ["normal","hover","pressed"] }
   target_engine: "Unity"             # 由 Producer 依偵測結果填入
   notes: "純色/向量元件可直接用 Token；只有裝飾性素材需 ComfyUI 生成"
 ```
 
-> 命名沿用 `.kiro/steering/global/asset-standards.md`：切圖 `asset_type` 用 `ui`（例如 `vt_001.ui_playbtn_bg_01`）。
+> 命名沿用 `.kiro/steering/global/asset-standards.md`：切圖 `asset_type` 用 `ui`（例如 `ui_playbtn_bg_01`）。
 
 ## 與 art/comfyui-team 的協作
 

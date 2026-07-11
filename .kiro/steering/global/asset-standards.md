@@ -9,13 +9,13 @@ inclusion: always
 ## 命名規範
 
 ```
-{team_id}.{asset_type}_{name}_{version}
+{asset_type}_{name}_{version}
 ```
 
-範例：`vt_001.weapon_sword_01`
+範例：`weapon_sword_01`
 
-- `team_id`：專案代號，單專案可用 `vt_001`
 - `asset_type`：`weapon` / `character` / `prop` / `environment` / `texture` / `sprite` / `symbol`（老虎機符號）/ `ui` / `rig` / `anim` / `sfx` / `music` / `voice` / `locale`
+- `name`：資產名稱（小寫、底線分隔）
 - `version`：整數，從 `01` 開始
 
 ## 3D 模型規範（Blender Team）
@@ -50,7 +50,7 @@ inclusion: always
 | `balance-tester` | `assets/sim/` | 模擬腳本與 RTP/經濟平衡報告 |
 
 規則：
-- 檔名一律用命名規範前綴 `{team_id}.{asset_type}_{name}_{version}`，多團隊靠前綴區分，不另開 per-team 子資料夾。
+- 檔名一律用命名規範 `{asset_type}_{name}_{version}`，依 `asset_type` 分目錄，不另開子資料夾。
 - 所有二進位資產走 Git LFS（見根目錄 `.gitattributes`），首次使用先 `git lfs install`。
 - `assets/` 放中介來源資產；匯入引擎後的引擎專屬檔（.meta/.import/.uasset）由各引擎專案自行管理，不放這裡。
 

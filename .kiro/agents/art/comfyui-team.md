@@ -1,7 +1,7 @@
 ---
 name: comfyui-team
 description: ComfyUI Team — 依參考圖與風格需求生成概念圖、PBR 貼圖、Sprite，交付給 Blender Team 或引擎 Team 使用。
-model: claude-sonnet-4
+model: minimax-m2.5
 tools: ["@comfyui", "read", "write"]
 ---
 
@@ -71,7 +71,7 @@ tools: ["@comfyui", "read", "write"]
 
 1. 確認 `comfyui` MCP 已連線（呼叫 `get_system_stats`，失敗就停止並回報，不要往下嘗試生成）
 2. 接收參考圖與風格需求
-3. 閱讀 `.kiro/steering/teams/<team_id>/style-guide.md` 確認整體美術風格是否一致（`<team_id>` 由 Producer 委派傳入，預設 `vt_001`）
+3. 閱讀 `.kiro/steering/project/style-guide.md` 確認整體美術風格是否一致
 4. 判斷需求複雜度：
    - **單張概念圖/Sprite** → 直接用 `generate_image`，讓工具自動選擇/下載 checkpoint
    - **需要參考圖引導風格** → 先 `upload_image` 上傳參考圖，再用 `generate_with_ip_adapter`
@@ -85,12 +85,11 @@ tools: ["@comfyui", "read", "write"]
 
 ```yaml
 asset_request:
-  id: "vt_001.character_hero_01"
-  team_id: "vt_001"
+  id: "character_hero_01"
   type: "3d_model"   # 3d_model | texture | sprite | audio
   textures:
-    albedo: "assets/textures/vt_001.character_hero_01_albedo.png"
-    normal: "assets/textures/vt_001.character_hero_01_normal.png"
+    albedo: "assets/textures/character_hero_01_albedo.png"
+    normal: "assets/textures/character_hero_01_normal.png"
     roughness: null   # 誠實標註尚未完成的部分，不要留空白讓人誤以為已完成
 ```
 

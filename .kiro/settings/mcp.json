@@ -23,12 +23,11 @@
       "autoApprove": []
     },
     "godot-mcp": {
-      "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/godot-mcp/build/index.js"],
+      "command": "npx",
+      "args": ["-y", "@coding-solo/godot-mcp"],
       "env": {
         "GODOT_PATH": "/Applications/Godot.app/Contents/MacOS/Godot",
-        "DEBUG": "false",
-        "READ_ONLY": "false"
+        "DEBUG": "false"
       },
       "disabled": false,
       "autoApprove": []
@@ -53,6 +52,15 @@
     "figma": {
       "url": "https://mcp.figma.com/mcp",
       "transport": "http",
+      "disabled": false,
+      "autoApprove": []
+    },
+    "github": {
+      "command": "github-mcp-server",
+      "args": ["stdio"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      },
       "disabled": false,
       "autoApprove": []
     }

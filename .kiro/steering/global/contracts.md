@@ -12,7 +12,7 @@ Agent 之間不靠隨意對話交付需求，而是透過以下兩種標準化 C
 task:
   id: "TASK-042"
   title: "任務標題"
-  assigned_to: "engineering/unity-team"   # 依目標引擎填入：unity-team | godot-team | unreal-team | cocos-team
+  assigned_to: "unity-team"                # 依目標引擎填入：unity-team | godot-team | unreal-team | cocos-team
   engine: "Unity"                          # Unity | Godot | Unreal | Cocos Creator
   input:
     - design_spec: "路徑或描述"
@@ -30,24 +30,23 @@ task:
 
 ```yaml
 asset_request:
-  id: "vt_001.weapon_sword_01"
-  team_id: "vt_001"
+  id: "weapon_sword_01"
   type: "3d_model"          # 3d_model | texture | sprite | audio | prefab
   spec:
     poly_budget: 5000
     style: "stylized_fantasy"
     reference_images: ["ref_sword_01.png"]
-  textures:                 # 由 art/comfyui-team 填入，art/blender-team 讀取
+  textures:                 # 由 comfyui-team 填入，blender-team 讀取
     albedo: null
     normal: null
     roughness: null
-  engine_import:             # 依目標引擎調整欄位，交給對應 engineering/{engine}-team 使用
+  engine_import:             # 依目標引擎調整欄位，交給對應引擎 team 使用
     engine: "Unity"           # Unity | Godot | Unreal | Cocos Creator
     scale: 0.01
     generate_collider: true
   metadata:
     priority: "high"
-    assigned_to: "art/blender-team"
+    assigned_to: "blender-team"
     depends_on: []
 ```
 
@@ -75,16 +74,7 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 
 資料夾（`art/`、`design/`、`engineering/`、`qa/`、`orchestration/`）只是 `.kiro/agents/` 底下的檔案組織，**不是呼叫名稱的一部分**。Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識。
 
-目前已註冊的扁平名稱：`producer`、`portfolio-orchestrator`、`game-designer`、`slot-game-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`functional-tester`、`balance-tester`、`compliance-release`。
-
-## 團隊隔離（team_id）
-
-Agent 讀寫團隊專屬檔案時，路徑一律用 `<team_id>` 佔位，實際值由 Producer 於委派時傳入（預設 `vt_001`）：
-
-- 設計 / 風格：`.kiro/steering/teams/<team_id>/gdd.md`、`.kiro/steering/teams/<team_id>/style-guide.md`
-- 任務看板：`.kiro/state/teams/<team_id>/tasks.yaml`
-
-**不要把 `vt_001` 寫死**——文件中的 `vt_001` 僅為範例。這樣才能讓多個 V-Team（`vt_001`、`vt_002`…）並行而不互相污染上下文。
+目前已註冊的扁平名稱：`producer`、`game-designer`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`functional-tester`、`balance-tester`、`compliance-release`。
 
 ## Subagent 委派機制（Kiro 原生，取代舊的手動轉接）
 
@@ -93,4 +83,36 @@ Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to 
 **尚待實測的邊界（誠實聲明）**：
 - subagent 執行環境是隔離的獨立 context window，因此**委派時必須把完整 Contract 與所有檔案路徑寫進 Prompt**，否則 Specialist 會缺上下文。
 - subagent 內**不會觸發 Hooks、也拿不到 Specs**（見 Kiro 官方 Subagents 文件）。
-- **多層巢狀委派**（`portfolio-orchestrator` → `producer` → Specialist，共三層）尚未在本專案完整驗證。若巢狀委派失敗，退化策略是由 `producer` 作為主 Agent 逐一委派各 Specialist，不強求三層自動串接。
+- **多層巢狀委派**（subagent 內再啟動另一層 subagent）尚未在本專案完整驗證。若失敗，退化策略是由 `producer` 作為主 Agent 逐一委派各 Specialist，不強求多層自動串接。
+
+## 檔案共享與交接（精簡協作規範）
+
+所有 agent 都有 `read` 權限，可讀 repo 內任何檔案——**agent 之間的「溝通」就是透過讀寫這些共享檔案**（subagent 彼此隔離、沒有即時對話，一律走檔案 + Producer 轉述）。
+
+**共享位置（大家都讀得到）**
+- 設計真相：`.kiro/steering/project/`（gdd.md、style-guide.md）
+- 全域規範：`.kiro/steering/global/`（本檔、asset-standards.md）
+- 任務與交接：`.kiro/state/`（tasks.yaml、handoffs/）
+- 實際產出：`assets/`（見 assets/README.md 的落地目錄）
+
+**規則**
+1. **動工前先讀**：對應的 Contract ＋ 上游的 Delivery Manifest（`handoffs/`）＋ gdd/style-guide ＋ 相關產出路徑。不要在沒讀上游交付的情況下開始。
+2. **交付後寫一則 Delivery Manifest** 到 `.kiro/state/handoffs/<contract_id>.delivery.yaml`，讓下游（含各引擎 team）讀得到你產出了什麼、在哪、有什麼已知問題。
+3. **blocker / 提問**：一句話記在該任務的 tasks.yaml 條目或 Delivery Manifest 的 `notes`，由 Producer 讀取並轉述給相關 agent；跨團隊的重要決策補進 gdd.md「變更紀錄」。
+4. **append-only**：交付紀錄只增不改，要更正就補一則新的（可追溯）。
+
+**Delivery Manifest 格式（交付回執，補完 Contract 的回程）**
+
+```yaml
+delivery:
+  contract_id: "TASK-042"
+  by: "blender-team"
+  outputs: ["assets/models/character_hero_01.fbx"]
+  acceptance:
+    - { criteria: "poly ≤ 8000", status: "pass" }
+  known_issues: ["roughness 貼圖尚缺"]
+  next: "交 unity-team 匯入，import scale 0.01"
+  notes: ""
+```
+
+Producer 是中樞：負責把上游的 Delivery Manifest 內容填進下一個 agent 的委派 prompt，確保跨 team（含 Unity/Godot/Unreal/Cocos）都讀得到彼此的產出與資料。

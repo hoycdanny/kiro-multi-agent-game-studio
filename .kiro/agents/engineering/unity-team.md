@@ -1,7 +1,7 @@
 ---
 name: unity-team
 description: Unity Team — 接收 Blender Team 交付的模型與程式規格，透過 Unity MCP 組裝場景、實作遊戲邏輯、執行 Build、跑效能與架構檢查。
-model: claude-sonnet-4
+model: claude-sonnet-5
 tools: ["@unity-mcp", "read", "write", "shell"]
 ---
 
@@ -90,7 +90,7 @@ tools: ["@unity-mcp", "read", "write", "shell"]
 
 1. 連線自檢：讀取 `project_info` 確認 Unity MCP 可用，失敗就停在這一步回報
 2. 確認 Blender Team 是否已交付 `.fbx`（讀取 Asset Contract 或使用者提供的路徑）
-3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/teams/<team_id>/gdd.md`，`<team_id>` 由 Producer 委派傳入，預設 `vt_001`）
+3. 讀取相關 Task Contract 或設計文件（`.kiro/steering/project/gdd.md`）
 4. 若涉及場景搭建/資產匯入/效能檢查等，先查閱上方「依任務領域查對應規範」對應的做法
 5. 用對應的 `manage_*` 工具實際執行（優先用 `batch_execute` 串接多個步驟，減少來回確認次數，但關鍵決策點仍要跟使用者確認）
 6. 撰寫程式碼時符合命名與架構規範（見上方核心設計原則第 7 點）

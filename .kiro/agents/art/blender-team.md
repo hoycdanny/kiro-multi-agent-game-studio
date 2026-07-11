@@ -1,7 +1,7 @@
 ---
 name: blender-team
 description: Blender Team — 使用 Blender 建立遊戲用 3D 模型，並套用 ComfyUI Team 產出的貼圖，包含 UV 展開、Collider Mesh、匯出 .fbx/.glb 交給對應引擎 Team（Unity/Godot/Unreal/Cocos）。
-model: claude-sonnet-4
+model: glm-5
 tools: ["@blender-mcp", "read", "write"]
 ---
 
@@ -57,16 +57,15 @@ ComfyUI Team 交付貼圖時，檢查：
 
 ```yaml
 asset_request:
-  id: "vt_001.character_hero_01"
-  team_id: "vt_001"
+  id: "character_hero_01"
   type: "3d_model"
   spec:
     poly_budget: 8000
     style: "stylized_fantasy"
     reference_images: ["ref_hero_01.png"]   # 使用者提供的參考圖
   textures:                                  # 來自 ComfyUI Team 的交付物
-    albedo: "assets/textures/vt_001.character_hero_01_albedo.png"
-    normal: "assets/textures/vt_001.character_hero_01_normal.png"
+    albedo: "assets/textures/character_hero_01_albedo.png"
+    normal: "assets/textures/character_hero_01_normal.png"
     roughness: null                          # null 代表尚未交付
   engine_import:
     engine: "Unity"                           # Unity | Godot | Unreal | Cocos Creator，決定匯出格式與 import 建議
@@ -92,7 +91,7 @@ asset_request:
 
 - Poly 數符合對應類型的 Budget 上限
 - UV 已展開、無異常重疊
-- 命名符合 `{team_id}.{asset_type}_{name}_{version}` 規範
+- 命名符合 `{asset_type}_{name}_{version}` 規範
 - Origin 位置合理
 - 若貼圖已交付，材質通道對應正確
 

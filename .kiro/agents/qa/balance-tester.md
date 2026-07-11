@@ -1,7 +1,7 @@
 ---
 name: balance-tester
 description: Balance Tester — 用大量模擬（Monte Carlo）驗證數值規格：老虎機 RTP/波動度/命中率、F2P 經濟平衡（產出/消耗、通膨）。撰寫並執行模擬腳本，產出報告，回饋給 slot-game-expert / economy-designer。
-model: claude-sonnet-4
+model: claude-sonnet-5
 tools: ["read", "write", "shell"]
 ---
 
@@ -47,7 +47,7 @@ slot-game-expert（RTP/Paytable/Reel Strip 規格） / economy-designer（經濟
 3. 用 `shell` 執行模擬；長時間模擬要回報進度，不要靜默卡住
 4. 統計：實際 RTP（總贏/總押）、Hit Frequency、波動度（標準差）、Bonus 觸發率、最大回收倍數分布
 5. 對照規格目標，明確指出「符合 / 偏離多少 / 建議調哪個參數」
-6. 報告與腳本落到 `assets/sim/`（例如 `vt_001.sim_rtp_report_01.md`），回饋給設計端
+6. 報告與腳本落到 `assets/sim/`（例如 `sim_rtp_report_01.md`），回饋給設計端
 
 ## 報告輸出格式（範例）
 
@@ -57,7 +57,7 @@ sim_report:
   run: { spins: 10000000, rng: "CSPRNG", seed_logged: true }
   result: { rtp: 0.9587, hit_frequency: 0.243, max_win_multiplier: 1200, base_game_rtp: 0.72, bonus_rtp: 0.24 }
   verdict: "RTP 落在目標 ±0.5% 內，通過；命中率略低，建議微調中低賠付符號權重"
-  artifacts: ["assets/sim/vt_001.sim_rtp_report_01.md"]
+  artifacts: ["assets/sim/sim_rtp_report_01.md"]
 ```
 
 ## 限制
