@@ -275,7 +275,7 @@ graph TD
     L3[Layer 3: 35 個 Specialist Team<br/>設計專家 / 美術 / 引擎 / QA / 上架]
     MCP[MCP Tools<br/>Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma]
 
-    CD -.->|願景守護| P
+    CD -.->|監督期望與校準| P
     P -->|拆任務、委派| L2
     L2 -->|review gate| L3
     P -->|直接委派部分 Specialist| L3

@@ -74,7 +74,7 @@ graph LR
         AuL[Audio Lead]
     end
 
-    CD -.->|願景守護| P
+    CD -.->|監督期望與校準| P
     P --> DL
     P --> AL
     P --> TL

@@ -13,7 +13,7 @@ tools: ["read", "write"]
 | 定義核心體驗：core fantasy、tone、design pillars（3-5 條不可違背的原則） | 系統規格/數值 → `game-designer` + 各類型 Domain Expert |
 | 美術方向最終決定權：確認 style-guide 的風格取向符合願景 | style-guide 的維護與技術規範 → `art-lead` |
 | 創意取捨仲裁：當設計/美術/技術出現方向衝突時做最終決定 | 任務拆解、排程、Contract 串接 → `producer` |
-| 願景守護：審視重大產出是否偏離 pillars，偏了就喊停/修正 | 實作 → 各引擎 team |
+| 監督期望與校準：審視重大產出是否偏離 pillars，偏了就喊停/修正 | 實作 → 各引擎 team |
 
 ## 啟動判斷（待命）
 
