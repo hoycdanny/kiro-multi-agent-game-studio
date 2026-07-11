@@ -1,10 +1,27 @@
 # Kiro Multi-Agent Game Studio
 
-用 AI Agent 模擬一整個遊戲開發團隊。你對 Producer 說「用 Unity 做一款 2D 平台動作遊戲」「用 Godot 做一款 roguelike」「用 Unreal 做一款 ARPG」，甚至「用 Cocos 做一款老虎機」，它會偵測目標引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型，拆解任務、指引對應的 Specialist Agent 接手（設計規格、貼圖生成、3D 建模、引擎場景組裝與程式邏輯、測試）—— 全程由 Agent 協作完成，**不綁定單一引擎、也不綁定單一類型**。
+用 AI Agent 模擬一整個遊戲開發團隊。**你只要對 Producer 說一句「用某引擎做某類型遊戲」，它就會偵測引擎與類型、拆解任務、自動委派對應的 Specialist Agent 接手，全程協作到引擎內可執行版本**——不綁定單一引擎、也不綁定單一類型。
 
-**涵蓋 13 種遊戲類型，不是單一 casino 引擎**：老虎機、魚機、射擊（FPS/TPS）、多人/MMORPG、RPG/ARPG、卡牌、三消/解謎、平台/metroidvania、roguelike、策略/RTS/塔防、模擬經營/生存、音樂節奏、敘事/視覺小說——每種都有專屬的 Domain Expert 提供該類型的專業設計；其餘類型（競速、格鬥、體育、walking sim…）走通用 `game-designer`。完整對照見「支援的遊戲類型」。
+一句話需求的例子：
 
-**適用場景**：可作為 PM 向團隊或投資人提案的架構藍圖，也適合個人遊戲開發者 / 小型獨立工作室（1-10 人）直接拿來用。
+- 「用 **Unity** 做一款 2D 平台動作遊戲」
+- 「用 **Godot** 做一款 roguelike」
+- 「用 **Unreal** 做一款 ARPG」
+- 「用 **Cocos** 做一款老虎機」
+
+Producer 接手後串起的環節：**設計規格 → 貼圖生成 → 3D 建模 → 引擎場景組裝與程式邏輯 → 測試**。
+
+### 支援 4 大引擎 × 13 種遊戲類型
+
+**引擎**：Unity ｜ Godot ｜ Unreal ｜ Cocos Creator（美術與設計階段引擎無關、可共用）。
+
+**遊戲類型**（每種都有專屬 Domain Expert，不是單一 casino 引擎）：
+
+`老虎機`・`魚機`・`射擊 FPS/TPS`・`多人 / MMORPG`・`RPG / ARPG`・`卡牌`・`三消 / 解謎`・`平台 / metroidvania`・`roguelike`・`策略 / RTS / 塔防`・`模擬經營 / 生存`・`音樂節奏`・`敘事 / 視覺小說`
+
+> 其餘類型（競速、格鬥、體育、walking sim…）走通用 `game-designer`。完整對照見下方「目前專案實際狀態」或 [docs/agents-and-roles.md](docs/agents-and-roles.md)。
+
+**適用場景**：可作為 PM 向團隊或投資人提案的架構藍圖，也適合個人開發者 / 小型獨立工作室（1–10 人）直接拿來用。
 
 ### 這個專案能幫你做什麼
 
@@ -18,9 +35,9 @@
 
 ---
 
-## 新手從這裡開始
+## 從這裡開始
 
-第一次看這個專案？記住一句話就好：**你對 Producer 說「用 X 引擎做一款 Y 類型遊戲」，它會自動調度一整組 AI Agent 幫你把遊戲做出來。**
+**您對 Producer 說「用 X 引擎做一款 Y 類型遊戲」，它會自動調度一整組 AI Agent 幫你把遊戲做出來。**
 
 三步上手：
 
@@ -235,7 +252,7 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 8. [下一步 Roadmap](#下一步-roadmap)
 9. [待確認事項](#待確認事項)
 
-### 深入文件（`docs/`，需要時再看）
+### 深入文件（`docs/`）
 
 - [MCP 整合詳解](docs/mcp-integrations.md) — Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub 八條 MCP 的安裝與設定
 - [Agent 與角色](docs/agents-and-roles.md) — Slot Game Expert 詳解、遊戲類型 Domain Expert 一覽、團隊角色與職責、Agent 定義格式、模型指派
