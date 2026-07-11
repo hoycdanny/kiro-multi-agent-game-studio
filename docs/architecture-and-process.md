@@ -4,7 +4,7 @@
 
 ## 完整系統架構圖
 
-README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 44 個 Agent 節點圖**，依 Layer 3 的職能再拆成 4 個子群組（避免單張圖過寬）。
+README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 45 個 Agent 節點圖**，依 Layer 3 的職能再拆成 5 個子群組（避免單張圖過寬）。Design 端拆成 **Design Lead**（核心設計，7 個常駐職能）與 **Domain Lead**（13 類遊戲類型專家，按偵測到的類型按需啟用）兩條線，避免單一 Lead 管太多互斥角色。
 
 ```mermaid
 graph LR
@@ -13,15 +13,25 @@ graph LR
         P[Producer]
     end
 
-    subgraph "Layer 2: Team Leads（review gate）"
-        DL[Design Lead]
+    subgraph "Layer 2: Lead（review gate）"
+        DL[Design Lead<br/>核心設計]
+        DML[Domain Lead<br/>遊戲類型專家]
         AL[Art Lead<br/>含聲音一致性把關]
         TL[Tech Lead]
         QL[QA Lead]
     end
 
-    subgraph "Layer 3: Design（20 個）"
+    subgraph "Layer 3: Design 核心（7 個）"
         GD[Game Designer]
+        LD[Level Designer]
+        ND[Narrative Designer]
+        CBD[Combat Designer]
+        ECO[Economy Designer]
+        UIUX[UI/UX Team]
+        LOC[Localization Team]
+    end
+
+    subgraph "Layer 3: Domain 類型專家（13 個）"
         SGE[Slot Game Expert]
         FGE[Fish Game Expert]
         SHE[Shooter Expert]
@@ -35,12 +45,6 @@ graph LR
         SIM[Simulation Expert]
         RHE[Rhythm Expert]
         NAE[Narrative/Adventure Expert]
-        LD[Level Designer]
-        ND[Narrative Designer]
-        CBD[Combat Designer]
-        ECO[Economy Designer]
-        UIUX[UI/UX Team]
-        LOC[Localization Team]
     end
 
     subgraph "Layer 3: Art（6 個）"
@@ -72,29 +76,30 @@ graph LR
 
     CD -.->|監督期望與校準| P
     P --> DL
+    P --> DML
     P --> AL
     P --> TL
     P --> QL
     DL --> GD
-    P -.->|各 Domain Expert 依關鍵字直接委派| SGE
-    P -.-> FGE
-    P -.-> SHE
-    P -.-> MMO
-    P -.-> RPG
-    P -.-> CGE
-    P -.-> PZE
-    P -.-> PFE
-    P -.-> RGE
-    P -.-> STE
-    P -.-> SIM
-    P -.-> RHE
-    P -.-> NAE
     DL --> LD
     DL --> ND
     DL --> CBD
     DL --> ECO
     DL --> UIUX
     DL --> LOC
+    DML --> SGE
+    DML --> FGE
+    DML --> SHE
+    DML --> MMO
+    DML --> RPG
+    DML --> CGE
+    DML --> PZE
+    DML --> PFE
+    DML --> RGE
+    DML --> STE
+    DML --> SIM
+    DML --> RHE
+    DML --> NAE
     AL --> CT
     AL --> BT2
     AL --> AN
@@ -115,7 +120,7 @@ graph LR
     P -.-> CR
 ```
 
-> 44 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Team Lead（4）＋ Layer 3 Design（20，含新建的 `Combat Designer`）＋ Art（6，含新建的 `VFX Artist`）＋ Engineering（7）＋ QA/Publishing（5，含新建的 `Usability Tester`）＝ 44。原願景清單裡的 `Audio Lead` 已刻意不獨立建立——`audio-team` 是唯一的音訊 Team，沒有需要協調的多個下屬，其一致性把關已併入 `Art Lead` 的職責（見上方 Layer 2 節點標注）。目前沒有仍為願景、尚未建立的 Layer 3 角色。MCP 連線狀態見 README「已串接的元件」表。
+> 45 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Lead（5，含新建的 `Domain Lead`）＋ Layer 3 Design 核心（7）＋ Domain 類型專家（13）＋ Art（6）＋ Engineering（7）＋ QA/Publishing（5）＝ 45。原願景清單裡的 `Audio Lead` 已刻意不獨立建立——`audio-team` 是唯一的音訊 Team，沒有需要協調的多個下屬，其一致性把關已併入 `Art Lead` 的職責（見上方 Layer 2 節點標注）。目前沒有仍為願景、尚未建立的 Layer 3 角色。MCP 連線狀態見 README「已串接的元件」表。
 
 ## 工具鏈與 MCP 整合
 
@@ -392,7 +397,7 @@ Agent 之間不是隨意對話，而是透過標準化的 **Contract** 傳遞需
 
 ### 檔案共享與交接（精簡協作規範）—— ✅ 已實作
 
-因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。44 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
+因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。45 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
 
 - **共享位置**（大家都讀得到）：`.kiro/steering/project/`（設計真相 gdd/style-guide）、`.kiro/steering/global/`（規範）、`.kiro/state/`（tasks.yaml + `handoffs/`）、`shared/`（Agent 檔案共享中轉站，各 Team 交付物落地處；命名避開 `assets` 以免與引擎內部 `Assets/`、`db://assets/` 混淆）
 - **規則**：動工前先讀「上游的 Delivery Manifest + gdd/style-guide + Contract」；交付後寫一則 **Delivery Manifest**（交付回執）到 `handoffs/<contract_id>.delivery.yaml`，讓下游（含各引擎 team）讀得到你產出了什麼、在哪、有什麼已知問題；blocker/提問一句話記在 tasks.yaml 或 manifest 的 `notes`，由 Producer 轉述；紀錄 append-only。
@@ -605,13 +610,13 @@ sequenceDiagram
 | **Small Team**（2-4 人） | 15-18 | + GitHub Projects | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 | ⬜ 規劃中 |
 
-### 啟用清單（✅ 已完成，共 44 個）
+### 啟用清單（✅ 已完成，共 45 個）
 
 > 下方以「資料夾/檔名」列出檔案位置；實際委派 / 呼叫時用扁平 `name`（例如 `producer`、`blender-team`），不加資料夾前綴。
 
 ```
 orchestration/creative-director, orchestration/producer,
-design/game-designer, design/design-lead,
+design/design-lead, design/domain-lead, design/game-designer,
 design/slot-game-expert, design/fish-game-expert, design/shooter-expert,
 design/mmo-expert, design/rpg-systems-expert, design/card-game-expert,
 design/puzzle-match3-expert, design/platformer-expert, design/roguelike-expert,

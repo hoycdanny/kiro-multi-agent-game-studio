@@ -160,20 +160,34 @@
 
 | Lead | 檔案 | 職責 | 狀態 |
 |------|------|------|------|
-| Design Lead | `design/design-lead.md` | 整合各 Domain Expert 規格進 GDD、消矛盾、design-review gate | ✅ |
+| Design Lead | `design/design-lead.md` | 核心設計（7 個常駐職能）整合 GDD、消矛盾、design-review gate | ✅ |
+| Domain Lead | `design/domain-lead.md` | 13 類遊戲類型 Domain Expert 的專業正確性審查與轉發（按需啟用，不進 GDD 整合，交 Design Lead） | ✅ |
 | Art Lead | `art/art-lead.md` | 維護 `style-guide.md`、跨美術 Team 一致性 review | ✅ |
 | Tech Lead | `engineering/tech-lead.md` | 技術架構決策、效能預算、跨引擎 code-review gate | ✅ |
 | QA Lead | `qa/qa-lead.md` | 測試策略、協調 functional/balance/performance tester、go/no-go | ✅ |
 
 > Audio Lead **刻意不獨立建立**：目前只有單一 `audio-team`，無需再加一層管理；音訊一致性已明確併入 `art-lead` 的職責（見 `art-lead.md` frontmatter 說明）。
+>
+> **Design Lead 與 Domain Lead 的分工**：Design Lead 管幾乎每個專案都會用到的 7 個核心設計職能；Domain Lead 管 13 個按遊戲類型按需啟用的專家（一個專案通常只用到其中 1-3 個）。Domain Lead 審類型的專業正確性（RTP 數學、netcode 架構等），Design Lead 審整體設計連貫性並最終整合進 GDD。詳見各自 agent 檔案的「與 XX 的分工」章節。
 
 ### Layer 3：Specialist Agents
 
-#### Design Team（20 個已建立）
+#### Design Team（7 個已建立，核心設計）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
 | game-designer | read, write | GDD、系統規格、數值平衡表、Asset Spec（無專屬 expert 的類型走這條） | ✅ |
+| economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass | ✅ |
+| combat-designer | read, write | 通用戰鬥系統/技能設計/敵人 AI；FPS 交 shooter-expert、RPG 交 rpg-systems-expert，避免重複覆蓋 | ✅ |
+| level-designer | read, write | 關卡佈局、觸發器/事件設計、難度曲線；產出交對應引擎 Team 實際搭建（引擎無關，不綁定單一引擎 MCP） | ✅ |
+| narrative-designer | read, write | 世界觀、角色背景、主線/支線劇情、對話內容、World Bible（與 narrative-adventure-expert 分工：內容 vs 系統結構） | ✅ |
+| ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
+| localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） | ✅ |
+
+#### Domain Team（13 個已建立，遊戲類型專家，按需啟用）
+
+| Agent | 工具 | 產出 | 狀態 |
+|-------|------|------|------|
 | slot-game-expert | read, write | 老虎機數學模型、RNG 指引、GLI 認證合規、負責任遊戲設計 | ✅（見「Slot Game Expert 詳解」） |
 | fish-game-expert | read, write | 魚機命中機率、賠付經濟、RTP、伺服器判定 RNG、合規 | ✅ |
 | shooter-expert | read, write | 武器數值/彈道、命中判定、TTK 平衡、敵人 AI、手感 | ✅ |
@@ -187,12 +201,6 @@
 | simulation-expert | read, write | 生產鏈/合成樹、供需經濟收斂、生存需求、自動化曲線 | ✅ |
 | rhythm-expert | read, write | 譜面設計、判定窗（ms）、延遲校正、計分/連段（綁 audio-team） | ✅ |
 | narrative-adventure-expert | read, write | 分支敘事結構、旗標/狀態變數、對話樹、選擇後果（綁 localization-team） | ✅ |
-| economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass | ✅ |
-| combat-designer | read, write | 通用戰鬥系統/技能設計/敵人 AI；FPS 交 shooter-expert、RPG 交 rpg-systems-expert，避免重複覆蓋 | ✅ |
-| level-designer | read, write | 關卡佈局、觸發器/事件設計、難度曲線；產出交對應引擎 Team 實際搭建（引擎無關，不綁定單一引擎 MCP） | ✅ |
-| narrative-designer | read, write | 世界觀、角色背景、主線/支線劇情、對話內容、World Bible（與 narrative-adventure-expert 分工：內容 vs 系統結構） | ✅ |
-| ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
-| localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） | ✅ |
 
 #### Art Team（5 個已建立 + Art Lead）
 

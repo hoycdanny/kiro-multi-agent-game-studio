@@ -116,13 +116,20 @@ max_iterations: 3
 ```
 kiro-multi-agent-game-studio/
 ├── .kiro/
-│   ├── agents/                                 # 44 個 Agent（委派用扁平 name，資料夾僅為組織）
+│   ├── agents/                                 # 45 個 Agent（委派用扁平 name，資料夾僅為組織）
 │   │   ├── orchestration/
 │   │   │   ├── creative-director.md            # ✅ Layer 0：願景守門 / pillars / 創意仲裁
 │   │   │   └── producer.md                     # ✅ 唯一調度中樞：拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
 │   │   ├── design/
+│   │   │   ├── design-lead.md                  # ✅ Layer 2：核心設計整合 GDD + design-review gate
+│   │   │   ├── domain-lead.md                  # ✅ Layer 2：13 類遊戲類型專家的專業審查與轉發
 │   │   │   ├── game-designer.md                # ✅ GDD、系統規格、數值平衡
-│   │   │   ├── design-lead.md                  # ✅ Layer 2：整合 GDD + design-review gate
+│   │   │   ├── level-designer.md               # ✅ 關卡佈局/觸發器/難度曲線
+│   │   │   ├── narrative-designer.md           # ✅ 世界觀/角色/劇情內容/World Bible
+│   │   │   ├── combat-designer.md              # ✅ 通用戰鬥系統/技能/敵人 AI
+│   │   │   ├── ui-ux-team.md                   # ✅ UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
+│   │   │   ├── economy-designer.md             # ✅ F2P 數值、IAP、貨幣、獎勵曲線、變現模型
+│   │   │   ├── localization-team.md            # ✅ 多語系字串、locale 檔、i18n 落地規格
 │   │   │   ├── slot-game-expert.md             # ✅ 老虎機：數學模型/RNG/認證合規
 │   │   │   ├── fish-game-expert.md             # ✅ 魚機/捕魚：命中機率/賠付/RTP/合規
 │   │   │   ├── shooter-expert.md               # ✅ 射擊：武器/彈道/命中/AI
@@ -135,16 +142,14 @@ kiro-multi-agent-game-studio/
 │   │   │   ├── strategy-expert.md              # ✅ 策略 RTS/4X/塔防：兵種相剋/經濟/AI/波次
 │   │   │   ├── simulation-expert.md            # ✅ 模擬經營/生存/沙盒：生產鏈/供需/自動化
 │   │   │   ├── rhythm-expert.md                # ✅ 音樂節奏：譜面/判定窗/延遲校正
-│   │   │   ├── narrative-adventure-expert.md   # ✅ 敘事/視覺小說/冒險：分支敘事/旗標/對話樹
-│   │   │   ├── ui-ux-team.md                   # ✅ UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
-│   │   │   ├── economy-designer.md             # ✅ F2P 數值、IAP、貨幣、獎勵曲線、變現模型
-│   │   │   └── localization-team.md            # ✅ 多語系字串、locale 檔、i18n 落地規格
+│   │   │   └── narrative-adventure-expert.md   # ✅ 敘事/視覺小說/冒險：分支敘事/旗標/對話樹
 │   │   ├── art/
-│   │   │   ├── art-lead.md                     # ✅ Layer 2：維護 style-guide + 美術一致性 review
+│   │   │   ├── art-lead.md                     # ✅ Layer 2：維護 style-guide + 美術/聲音一致性 review
 │   │   │   ├── comfyui-team.md                 # ✅ 影像：貼圖/sprite/UI 切圖（透過 comfyui）
 │   │   │   ├── blender-team.md                 # ✅ 靜態 3D 建模 + 套貼圖（透過 blender-mcp）
 │   │   │   ├── animator.md                     # ✅ rig/綁定/動畫 clip（透過 blender-mcp）
 │   │   │   ├── audio-team.md                   # ✅ SFX/BGM/voice（透過 comfyui generate_audio）
+│   │   │   ├── vfx-artist.md                   # ✅ 特效素材/序列幀（透過 comfyui）
 │   │   │   └── technical-artist.md             # ✅ shader/材質/LOD/優化/匯入管線
 │   │   ├── engineering/
 │   │   │   ├── tech-lead.md                    # ✅ Layer 2：技術架構 + 效能預算 + code-review gate
@@ -152,12 +157,15 @@ kiro-multi-agent-game-studio/
 │   │   │   ├── godot-team.md                   # ✅ 場景組裝、GDScript、Export（透過 godot-mcp）
 │   │   │   ├── unreal-team.md                  # ✅ 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
 │   │   │   ├── cocos-team.md                   # ✅ 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
+│   │   │   ├── systems-programmer.md           # ✅ 引擎無關的存檔/資源管理/事件系統設計
+│   │   │   ├── ui-programmer.md                # ✅ 把 ui-ux-team 版面綁定成可互動引擎 UI
 │   │   │   └── devops-team.md                  # ✅ headless build、CI pipeline、產物驗證
 │   │   ├── qa/
-│   │   │   ├── qa-lead.md                      # ✅ Layer 2：測試策略 + 協調三 tester
+│   │   │   ├── qa-lead.md                      # ✅ Layer 2：測試策略 + 協調四 tester
 │   │   │   ├── functional-tester.md            # ✅ 功能測試
 │   │   │   ├── balance-tester.md               # ✅ RTP/經濟數值 Monte Carlo 模擬
-│   │   │   └── performance-tester.md           # ✅ FPS/記憶體/draw call profiling
+│   │   │   ├── performance-tester.md           # ✅ FPS/記憶體/draw call profiling
+│   │   │   └── usability-tester.md             # ✅ 新手引導評估/卡關點分析
 │   │   └── publishing/
 │   │       └── compliance-release.md           # ✅ 分級、隱私合規、商店素材、送審/認證流程
 │   ├── steering/
