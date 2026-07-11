@@ -6,7 +6,7 @@ inclusion: always
 
 > **這份檔案是什麼**：本專案視覺風格的單一真相來源——色彩、風格、參考圖都寫在這裡；美術類 Agent（`comfyui-team` / `blender-team` / `animator` / `ui-ux-team`）產出前先讀它，確保整體視覺一致。放在 `.kiro/steering/project/`，`inclusion: always` 每次對話自動載入。
 >
-> **維護者**：目前無 `art-lead`，暫由 `art/comfyui-team` / `art/blender-team` 共同維護。目前為骨架，若章節為空，先詢問使用者風格方向，不要自行假設。
+> **維護者**：`art/art-lead`（把 `creative-director` 的美術方向落成本檔的風格規範）。目前為骨架，若章節為空，先詢問使用者風格方向，不要自行假設。
 
 ## 美術風格
 _（尚未定義，例如：stylized fantasy / low poly / pixel art）_

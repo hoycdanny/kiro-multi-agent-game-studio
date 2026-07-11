@@ -74,7 +74,7 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 
 資料夾（`art/`、`design/`、`engineering/`、`qa/`、`orchestration/`）只是 `.kiro/agents/` 底下的檔案組織，**不是呼叫名稱的一部分**。Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識。
 
-目前已註冊的扁平名稱：`producer`、`game-designer`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`functional-tester`、`balance-tester`、`compliance-release`。
+目前已註冊的扁平名稱：`creative-director`、`producer`、`game-designer`、`design-lead`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`art-lead`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`technical-artist`、`tech-lead`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`qa-lead`、`functional-tester`、`balance-tester`、`performance-tester`、`compliance-release`。
 
 ## Subagent 委派機制（Kiro 原生，取代舊的手動轉接）
 
