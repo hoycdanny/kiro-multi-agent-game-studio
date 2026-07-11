@@ -2,11 +2,19 @@
 
 用 AI Agent 模擬一整個遊戲開發團隊。你對 Producer 說「用 Unity 做一款 2D 平台動作遊戲」「用 Godot 做一款 roguelike」「用 Unreal 做一款 ARPG」，甚至「用 Cocos 做一款老虎機」，它會偵測目標引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型，拆解任務、指引對應的 Specialist Agent 接手（設計規格、貼圖生成、3D 建模、引擎場景組裝與程式邏輯、測試）—— 全程由 Agent 協作完成，**不綁定單一引擎、也不綁定單一類型**。
 
-**這是通用的獨立遊戲工作室，不是 casino 引擎**：大多數獨立遊戲類型（平台、動作、RPG、roguelike、塔防、卡牌、解謎、生存、模擬、敘事、多人…）都由通用的 `game-designer` + 引擎 team 完成；只有**老虎機這類需要數學模型/RNG/認證合規**的特殊類型，才另外交給專屬的 `slot-game-expert`。完整對照見「支援的遊戲類型」。
+**涵蓋 13 種遊戲類型，不是單一 casino 引擎**：老虎機、魚機、射擊（FPS/TPS）、多人/MMORPG、RPG/ARPG、卡牌、三消/解謎、平台/metroidvania、roguelike、策略/RTS/塔防、模擬經營/生存、音樂節奏、敘事/視覺小說——每種都有專屬的 Domain Expert 提供該類型的專業設計；其餘類型（競速、格鬥、體育、walking sim…）走通用 `game-designer`。完整對照見「支援的遊戲類型」。
 
 **適用場景**：可作為 PM 向團隊或投資人提案的架構藍圖，也適合個人遊戲開發者 / 小型獨立工作室（1-10 人）直接拿來用。
 
-> 📌 **本文件同時包含「架構願景」與「目前實際進度」**。願景章節描述完整設計；每個章節內會用 ✅ / ⬜ 標註目前哪些部分已建立、哪些是規劃中。想知道現在能做什麼，直接看下一節「目前專案實際狀態」。
+### 這個專案能幫你做什麼
+
+- **從一句需求到可執行遊戲**：描述「用 X 引擎做一款 Y 類型遊戲」，Producer 拆成任務、串接各 Specialist，一路做到引擎內可執行版本。
+- **從參考圖到遊戲資產**：丟一張參考圖，ComfyUI Team 生成概念圖/貼圖/UI 切圖，Blender Team 建模並套貼圖，交給引擎 Team 匯入。
+- **拿到該遊戲類型的專業設計**：13 種類型各有專屬顧問，產出數學模型/數值/系統規格，再由 `balance-tester` 用模擬驗證。
+- **四大引擎任選**：Unity / Godot / Unreal / Cocos Creator，Producer 依你指定的引擎分派；美術與設計階段引擎無關、可共用。
+- **一路顧到上線**：UI/UX（Figma）、音效、動畫、多語系、變現數值、CI 出包、分級與合規送審，都有對應的 Agent。
+
+> 📌 本文件同時涵蓋「已建立的功能」與「規劃中的擴充」，章節內用 ✅ / ⬜ 標註；想直接動手看「快速開始」。
 
 ---
 
@@ -16,19 +24,20 @@
 
 ### 核心設計：Producer 偵測「引擎 + 遊戲類型」，串接美術/設計 Team → 對應引擎 Team
 
-本專案不是照搬原願景的 30+ Agent 組織圖，而是採用更貼近實際工作流程的設計：**一條「參考圖 → 遊戲」的線性 Pipeline，由 Producer 依使用者指定的引擎與遊戲類型動態決定分派對象**：
+Producer 是唯一的調度中樞——你只跟它說需求，它偵測引擎與遊戲類型，依需求動態組出**一條「需求 → 遊戲」的 Pipeline**，把每一站的產出交給下一站：
 
 ```
 使用者需求（可含參考圖、指定引擎、指定遊戲類型）
-  → Producer 拆解，偵測引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型（平台/RPG/roguelike/… 或老虎機）
-  → design/game-designer          （一般系統規格——大多數類型走這條）
-  → design/slot-game-expert       （僅老虎機：數學模型/RNG/合規，特殊類型才插入）
+  → Producer 拆解，偵測引擎（Unity/Godot/Unreal/Cocos Creator）與遊戲類型
+  → design/{類型}-expert 或 game-designer  （系統規格/數值：依類型路由，見「支援的遊戲類型」）
   → design/ui-ux-team              （UI/介面需求時：Figma 版面/流程/Design Token + 切圖規格，若需要）
   → art/comfyui-team               （依參考圖生成貼圖 / UI 切圖素材）
   → art/blender-team               （建模 + 套用貼圖，2D 遊戲可跳過）
   → engineering/{engine}-team      （依偵測到的引擎分派：unity-team / godot-team / unreal-team / cocos-team）
   → Producer 確認完成 → git commit
 ```
+
+不是每個需求都要走完全部——只要一張貼圖就走到美術階段、只改程式邏輯就直接進引擎階段。Producer 會先把計畫列給你確認，再依序執行。
 
 ### 支援的遊戲類型（不是只有老虎機）
 
