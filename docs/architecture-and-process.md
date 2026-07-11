@@ -277,7 +277,7 @@ Agent 之間不是隨意對話，而是透過標準化的 **Contract** 傳遞需
 
 ### 檔案共享與交接（精簡協作規範）—— ✅ 已實作
 
-因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。37 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
+因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。41 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
 
 - **共享位置**（大家都讀得到）：`.kiro/steering/project/`（設計真相 gdd/style-guide）、`.kiro/steering/global/`（規範）、`.kiro/state/`（tasks.yaml + `handoffs/`）、`shared/`（Agent 檔案共享中轉站，各 Team 交付物落地處；命名避開 `assets` 以免與引擎內部 `Assets/`、`db://assets/` 混淆）
 - **規則**：動工前先讀「上游的 Delivery Manifest + gdd/style-guide + Contract」；交付後寫一則 **Delivery Manifest**（交付回執）到 `handoffs/<contract_id>.delivery.yaml`，讓下游（含各引擎 team）讀得到你產出了什麼、在哪、有什麼已知問題；blocker/提問一句話記在 tasks.yaml 或 manifest 的 `notes`，由 Producer 轉述；紀錄 append-only。
@@ -489,7 +489,7 @@ sequenceDiagram
 | **Small Team**（2-4 人） | 15-18 | + GitHub Projects | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 | ⬜ 規劃中 |
 
-### 啟用清單（✅ 已完成，共 37 個）
+### 啟用清單（✅ 已完成，共 41 個）
 
 > 下方以「資料夾/檔名」列出檔案位置；實際委派 / 呼叫時用扁平 `name`（例如 `producer`、`blender-team`），不加資料夾前綴。
 
@@ -500,11 +500,11 @@ design/slot-game-expert, design/fish-game-expert, design/shooter-expert,
 design/mmo-expert, design/rpg-systems-expert, design/card-game-expert,
 design/puzzle-match3-expert, design/platformer-expert, design/roguelike-expert,
 design/strategy-expert, design/simulation-expert, design/rhythm-expert,
-design/narrative-adventure-expert,
+design/narrative-adventure-expert, design/level-designer, design/narrative-designer,
 design/ui-ux-team, design/economy-designer, design/localization-team,
 art/art-lead, art/comfyui-team, art/blender-team, art/animator, art/audio-team, art/technical-artist,
 engineering/tech-lead, engineering/unity-team, engineering/godot-team,
-engineering/unreal-team, engineering/cocos-team, engineering/devops-team,
+engineering/unreal-team, engineering/cocos-team, engineering/systems-programmer, engineering/ui-programmer, engineering/devops-team,
 qa/qa-lead, qa/functional-tester, qa/balance-tester, qa/performance-tester,
 publishing/compliance-release
 ```
@@ -513,19 +513,13 @@ publishing/compliance-release
 
 ### Small Team 追加（⬜ 下一步可考慮的方向）
 
-```
-+ engineering/systems-programmer, engineering/ui-programmer
-```
-（`art-lead` 已於本階段建立；`concept-artist` 已合併進 `comfyui-team`）
-
-前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；`art/animator`、`art/audio-team`、`qa/balance-tester`、`engineering/devops-team`、`design/economy-designer`、`design/localization-team`、`publishing/compliance-release` 已於本階段建立）。
+前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；`art/animator`、`art/audio-team`、`qa/balance-tester`、`engineering/devops-team`、`engineering/systems-programmer`、`engineering/ui-programmer`、`design/economy-designer`、`design/localization-team`、`design/level-designer`、`design/narrative-designer`、`publishing/compliance-release` 已於本階段建立）。
 
 ### Studio 追加（⬜ 遠期）
 
 ```
-+ design/combat-designer, design/level-designer, design/narrative-designer,
-  art/vfx-artist, qa/usability-tester
++ design/combat-designer, art/vfx-artist, qa/usability-tester
 ```
-（`creative-director`、四個 Team Lead、`technical-artist`、`performance-tester` 已於本階段建立）
+（`creative-director`、四個 Team Lead、`technical-artist`、`performance-tester`、`level-designer`、`narrative-designer` 已於本階段建立）
 
 ---

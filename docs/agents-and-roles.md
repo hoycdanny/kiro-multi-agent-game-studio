@@ -169,7 +169,7 @@
 
 ### Layer 3：Specialist Agents
 
-#### Design Team（17 個已建立，3 個規劃中）
+#### Design Team（19 個已建立，1 個規劃中）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
@@ -189,8 +189,8 @@
 | narrative-adventure-expert | read, write | 分支敘事結構、旗標/狀態變數、對話樹、選擇後果（綁 localization-team） | ✅ |
 | economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass | ✅ |
 | combat-designer | read, write | 戰鬥系統、技能設計、敵人 AI | ⬜ |
-| level-designer | read, write, @unity | 關卡佈局、觸發器、難度曲線 | ⬜ |
-| narrative-designer | read, write | 世界觀、劇情、對話樹（Yarn/Ink） | ⬜ |
+| level-designer | read, write | 關卡佈局、觸發器/事件設計、難度曲線；產出交對應引擎 Team 實際搭建（引擎無關，不綁定單一引擎 MCP） | ✅ |
+| narrative-designer | read, write | 世界觀、角色背景、主線/支線劇情、對話內容、World Bible（與 narrative-adventure-expert 分工：內容 vs 系統結構） | ✅ |
 | ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
 | localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） | ✅ |
 
@@ -209,7 +209,7 @@
 >
 > 同理，原願景中 `ux-designer`（Design Team）與 `ui-artist`（Art Team）已合併成 `design/ui-ux-team`，因為兩者都圍繞 Figma 運作、共同負責 UI/UX 層。分工上：`ui-ux-team` 出版面與 Design Token（介面「怎麼排、怎麼流動」），`comfyui-team` 生成要放進版面的像素素材（icon/按鈕/背景），引擎 Team 負責在原生 UI 系統實作。
 
-#### Engineering Team（4 引擎 Team + DevOps 已建立，2 個規劃）
+#### Engineering Team（4 引擎 Team + Systems/UI Programmer + DevOps 已建立）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
@@ -217,8 +217,8 @@
 | godot-team | `@godot-mcp`, read, write, shell | 場景組裝、GDScript、State Machine、Export | ✅ 已連線（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)），見「Godot MCP 整合詳解」 |
 | unreal-team | `@unreal-engine`, read, write, shell | 關卡組裝、Blueprint 邏輯、材質工作流程 | ✅ 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)），見「Unreal MCP 整合詳解」 |
 | cocos-team | `@cocos-creator`, read, write, shell | 場景組裝、TypeScript 元件、Prefab、Build | ✅ 已連線（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)），見「Cocos MCP 整合詳解」 |
-| systems-programmer | shell | 存檔系統、資源管理、事件系統 | ⬜ |
-| ui-programmer | shell | UI 綁定（UI Toolkit）、Localization | ⬜ |
+| systems-programmer | read, write, shell | 引擎無關的存檔系統/資源管理/事件系統設計，交對應引擎 Team 落地實作 | ✅ |
+| ui-programmer | read, write, shell | 把 ui-ux-team 版面/Token 綁定成可互動引擎 UI，接 localization-team 多語落地 | ✅ |
 | devops-team | read, write, shell | headless build、CI pipeline、版本/產物管理、build 健康驗證 | ✅ |
 
 #### Audio Team（1 個已建立）

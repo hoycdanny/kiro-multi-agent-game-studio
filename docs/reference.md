@@ -116,7 +116,7 @@ max_iterations: 3
 ```
 kiro-multi-agent-game-studio/
 ├── .kiro/
-│   ├── agents/                                 # 37 個 Agent（委派用扁平 name，資料夾僅為組織）
+│   ├── agents/                                 # 41 個 Agent（委派用扁平 name，資料夾僅為組織）
 │   │   ├── orchestration/
 │   │   │   ├── creative-director.md            # ✅ Layer 0：願景守門 / pillars / 創意仲裁
 │   │   │   └── producer.md                     # ✅ 唯一調度中樞：拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
@@ -186,6 +186,6 @@ kiro-multi-agent-game-studio/
 └── README.md                                   # 本文件
 ```
 
-願景中尚未擴充的部分主要是 `workflows/`（ComfyUI Workflow Templates）與少數細分 Specialist（combat/level/narrative-designer、systems/ui-programmer、vfx-artist、usability-tester），待實際需求出現再建立。
+願景中尚未擴充的部分主要是 `workflows/`（ComfyUI Workflow Templates）與少數細分 Specialist（combat-designer、vfx-artist、usability-tester、Audio Lead），待實際需求出現再建立。
 
 ---
