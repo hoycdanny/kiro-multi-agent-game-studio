@@ -264,8 +264,8 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 
 ```mermaid
 graph TD
-    subgraph "Layer 0: Strategic（CD ✅）"
-        CD["Creative Director ✅"]
+    subgraph "Layer 0: Strategic ✅"
+        CD[Creative Director]
     end
 
     subgraph "Layer 1: Orchestration ✅"
@@ -281,19 +281,19 @@ graph TD
     end
 
     subgraph "Layer 3: 已建立的 Team / Specialist"
-        GD["Game Designer ✅"]
-        SGE["Slot Game Expert ✅"]
-        UIUX["UI/UX Team ✅"]
-        CT["ComfyUI Team ✅"]
-        BT2["Blender Team ✅"]
-        AN["Animator ✅"]
-        UT["Unity Team ✅"]
-        GT["Godot Team ✅"]
-        URT["Unreal Team ✅"]
-        COT["Cocos Team ✅"]
-        DO["DevOps Team ✅"]
-        FT["Functional Tester ✅"]
-        BAL["Balance Tester ✅"]
+        GD[Game Designer]
+        SGE[Slot Game Expert]
+        UIUX[UI/UX Team]
+        CT[ComfyUI Team]
+        BT2[Blender Team]
+        AN[Animator]
+        UT[Unity Team]
+        GT[Godot Team]
+        URT[Unreal Team]
+        COT[Cocos Team]
+        DO[DevOps Team]
+        FT[Functional Tester]
+        BAL[Balance Tester]
     end
 
     subgraph "Layer 3: 願景中，尚未建立"
