@@ -38,21 +38,21 @@ inclusion: always
 
 ## 資產落地目錄（所有 Team 交付物的存放位置）
 
-各 Team 產出的中介資產一律落在 repo 根目錄的 `assets/`，讓上下游有明確交接路徑（完整說明見 `assets/README.md`）：
+各 Team 產出的中介資產一律落在 repo 根目錄的 `shared/`（Agent 檔案共享中轉站；命名刻意避開 `assets`，以免與引擎內部的 Unity `Assets/`、Cocos `db://assets/` 混淆），讓上下游有明確交接路徑（完整說明見 `shared/README.md`）：
 
 | 產出 Team | 落地目錄 | 內容 |
 |-----------|----------|------|
-| `comfyui-team` | `assets/concept/` `assets/textures/` `assets/sprites/` `assets/ui/` | 概念圖、PBR 貼圖、sprite/符號、UI 切圖 |
-| `blender-team` | `assets/models/` | 靜態 3D 模型（.fbx/.glb） |
-| `animator` | `assets/rigs/` `assets/animations/` | 骨架、動畫 clip |
-| `audio-team` | `assets/audio/sfx/` `assets/audio/music/` `assets/audio/voice/` | 音效、音樂、配音 |
-| `localization-team` | `assets/locales/` | 多語 locale 檔 |
-| `balance-tester` | `assets/sim/` | 模擬腳本與 RTP/經濟平衡報告 |
+| `comfyui-team` | `shared/concept/` `shared/textures/` `shared/sprites/` `shared/ui/` | 概念圖、PBR 貼圖、sprite/符號、UI 切圖 |
+| `blender-team` | `shared/models/` | 靜態 3D 模型（.fbx/.glb） |
+| `animator` | `shared/rigs/` `shared/animations/` | 骨架、動畫 clip |
+| `audio-team` | `shared/audio/sfx/` `shared/audio/music/` `shared/audio/voice/` | 音效、音樂、配音 |
+| `localization-team` | `shared/locales/` | 多語 locale 檔 |
+| `balance-tester` | `shared/sim/` | 模擬腳本與 RTP/經濟平衡報告 |
 
 規則：
 - 檔名一律用命名規範 `{asset_type}_{name}_{version}`，依 `asset_type` 分目錄，不另開子資料夾。
 - 所有二進位資產走 Git LFS（見根目錄 `.gitattributes`），首次使用先 `git lfs install`。
-- `assets/` 放中介來源資產；匯入引擎後的引擎專屬檔（.meta/.import/.uasset）由各引擎專案自行管理，不放這裡。
+- `shared/` 放中介來源資產；匯入引擎後的引擎專屬檔（.meta/.import/.uasset）由各引擎專案自行管理，不放這裡。
 
 ## 音訊規範（Audio Team）
 

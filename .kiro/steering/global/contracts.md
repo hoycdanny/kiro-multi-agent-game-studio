@@ -72,18 +72,18 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 - ✅ 正確：`Use the "blender-team" subagent to …`、`Use the "unity-team" subagent to …`
 - ❌ 錯誤：`Use the "art/blender-team" agent …`、`Use the "engineering/unity-team" agent …`
 
-資料夾（`art/`、`design/`、`engineering/`、`qa/`、`orchestration/`）只是 `.kiro/agents/` 底下的檔案組織，**不是呼叫名稱的一部分**。Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識。
+所有 Agent 檔案已平鋪存放在 `.kiro/agents/` 根目錄下（例如 `orchestration_producer.md`、`design_game-designer.md`）。檔名前綴（如 `orchestration_`、`design_` 等）僅作為組織與區分用途，**不是呼叫名稱的一部分**。Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識。
 
 目前已註冊的扁平名稱：`creative-director`、`producer`、`game-designer`、`design-lead`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`economy-designer`、`ui-ux-team`、`localization-team`、`art-lead`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`technical-artist`、`tech-lead`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`devops-team`、`qa-lead`、`functional-tester`、`balance-tester`、`performance-tester`、`compliance-release`。
 
 ## Subagent 委派機制（Kiro 原生，取代舊的手動轉接）
 
-Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to …` 語法即可觸發，**不需要特別的 `subagent` 工具權限**，Specialist 執行完會自動把結果回傳給主 Agent。因此 Producer 應**主動自動委派**，不再要求使用者手動切換 Agent Selector 貼上 Contract。
+Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to …` 語法即可觸發。**注意：主 Agent 必須在其 YAML frontmatter 的 `tools` 列表中包含 `"subagent"` 工具權限**，Specialist 執行完會自動把結果回傳給主 Agent。因此 Producer 應**主動自動委派**，不再要求使用者手動切換 Agent Selector 貼上 Contract。
 
-**尚待實測的邊界（誠實聲明）**：
+**已知邊界（誠實聲明）**：
 - subagent 執行環境是隔離的獨立 context window，因此**委派時必須把完整 Contract 與所有檔案路徑寫進 Prompt**，否則 Specialist 會缺上下文。
 - subagent 內**不會觸發 Hooks、也拿不到 Specs**（見 Kiro 官方 Subagents 文件）。
-- **多層巢狀委派**（subagent 內再啟動另一層 subagent）尚未在本專案完整驗證。若失敗，退化策略是由 `producer` 作為主 Agent 逐一委派各 Specialist，不強求多層自動串接。
+- **多層巢狀委派不支援**：要委派的 agent 必須自身在 `tools` 含 `subagent`，各 Specialist 都沒有此權限，因此只支援單層「Producer → Specialist」；由 `producer` 逐一委派各 Specialist（Producer 已具備 `subagent` 權限）。
 
 ## 檔案共享與交接（精簡協作規範）
 
@@ -93,7 +93,7 @@ Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to 
 - 設計真相：`.kiro/steering/project/`（gdd.md、style-guide.md）
 - 全域規範：`.kiro/steering/global/`（本檔、asset-standards.md）
 - 任務與交接：`.kiro/state/`（tasks.yaml、handoffs/）
-- 實際產出：`assets/`（見 assets/README.md 的落地目錄）
+- 實際產出：`shared/`（Agent 檔案共享中轉站；命名避開 `assets` 以免和引擎內部 `Assets/`、`db://assets/` 混淆，見 shared/README.md 的落地目錄）
 
 **規則**
 1. **動工前先讀**：對應的 Contract ＋ 上游的 Delivery Manifest（`handoffs/`）＋ gdd/style-guide ＋ 相關產出路徑。不要在沒讀上游交付的情況下開始。
@@ -107,7 +107,7 @@ Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to 
 delivery:
   contract_id: "TASK-042"
   by: "blender-team"
-  outputs: ["assets/models/character_hero_01.fbx"]
+  outputs: ["shared/models/character_hero_01.fbx"]
   acceptance:
     - { criteria: "poly ≤ 8000", status: "pass" }
   known_issues: ["roughness 貼圖尚缺"]
