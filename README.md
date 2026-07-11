@@ -286,11 +286,14 @@ graph TD
         UIUX["UI/UX Team ✅"]
         CT["ComfyUI Team ✅"]
         BT2["Blender Team ✅"]
+        AN["Animator ✅"]
         UT["Unity Team ✅"]
         GT["Godot Team ✅"]
         URT["Unreal Team ✅"]
         COT["Cocos Team ✅"]
+        DO["DevOps Team ✅"]
         FT["Functional Tester ✅"]
+        BAL["Balance Tester ✅"]
     end
 
     subgraph "Layer 3: 願景中，尚未建立"
@@ -298,11 +301,8 @@ graph TD
         ND[Narrative Designer]
         UXD[UX Designer]
         UIA[UI Artist]
-        AN[Animator]
         SP[Systems Programmer]
         UIP[UI Programmer]
-        DO[DevOps]
-        BAL[Balance Tester]
     end
 
     subgraph "MCP Tools（狀態見上方「已串接的元件」表）"
@@ -360,7 +360,7 @@ graph TD
     Blender -.->|模型| Cocos
 ```
 
-> 圖中「Layer 3：已建立的 Team / Specialist」這 10 個節點（Game Designer、Slot Game Expert、UI/UX Team、ComfyUI Team、Blender Team、Unity Team、Godot Team、Unreal Team、Cocos Team、Functional Tester）加上 Producer，以及延伸的 Economy Designer、Localization Team、Animator、Audio Team、DevOps Team、Balance Tester、Compliance / Release，以及 12 個遊戲類型 Domain Expert（Fish/Shooter/MMO/RPG/Card/Puzzle/Platformer/Roguelike/Strategy/Simulation/Rhythm/Narrative），共 **37 個**已實際建立為 Agent 檔案（含 Layer 0 的 Creative Director、Layer 2 的四個 Lead，以及 Performance Tester、Technical Artist）；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。仍為願景的少數節點：combat/level/narrative-designer、systems/ui-programmer、vfx-artist、usability-tester、Audio Lead（多為刻意合併或與現有角色重疊）。
+> 圖中「Layer 3：已建立的 Team / Specialist」這 13 個節點（Game Designer、Slot Game Expert、UI/UX Team、ComfyUI Team、Blender Team、Animator、Unity Team、Godot Team、Unreal Team、Cocos Team、DevOps Team、Functional Tester、Balance Tester）加上 Producer，以及延伸的 Economy Designer、Localization Team、Audio Team、Compliance / Release，以及 12 個遊戲類型 Domain Expert（Fish/Shooter/MMO/RPG/Card/Puzzle/Platformer/Roguelike/Strategy/Simulation/Rhythm/Narrative），共 **37 個**已實際建立為 Agent 檔案（含 Layer 0 的 Creative Director、Layer 2 的四個 Lead，以及 Performance Tester、Technical Artist）；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。仍為願景的少數節點：level/narrative-designer、ux-designer、ui-artist、systems/ui-programmer（多為刻意合併或與現有角色重疊，見「Layer 3：願景中，尚未建立」子圖）。
 
 ### 工具資料流
 
