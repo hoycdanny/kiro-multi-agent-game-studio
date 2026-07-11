@@ -4,7 +4,7 @@
 
 ## 完整系統架構圖
 
-README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 41 個 Agent 節點圖**，依 Layer 3 的職能再拆成 4 個子群組（避免單張圖過寬）。
+README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 44 個 Agent 節點圖**，依 Layer 3 的職能再拆成 4 個子群組（避免單張圖過寬）。
 
 ```mermaid
 graph LR
@@ -15,12 +15,12 @@ graph LR
 
     subgraph "Layer 2: Team Leads（review gate）"
         DL[Design Lead]
-        AL[Art Lead]
+        AL[Art Lead<br/>含聲音一致性把關]
         TL[Tech Lead]
         QL[QA Lead]
     end
 
-    subgraph "Layer 3: Design（19 個）"
+    subgraph "Layer 3: Design（20 個）"
         GD[Game Designer]
         SGE[Slot Game Expert]
         FGE[Fish Game Expert]
@@ -37,16 +37,18 @@ graph LR
         NAE[Narrative/Adventure Expert]
         LD[Level Designer]
         ND[Narrative Designer]
+        CBD[Combat Designer]
         ECO[Economy Designer]
         UIUX[UI/UX Team]
         LOC[Localization Team]
     end
 
-    subgraph "Layer 3: Art（5 個）"
+    subgraph "Layer 3: Art（6 個）"
         CT[ComfyUI Team]
         BT2[Blender Team]
         AN[Animator]
         AUD[Audio Team]
+        VFX[VFX Artist]
         TA[Technical Artist]
     end
 
@@ -60,18 +62,12 @@ graph LR
         DO[DevOps Team]
     end
 
-    subgraph "Layer 3: QA + Publishing（4 個）"
+    subgraph "Layer 3: QA + Publishing（5 個）"
         FT[Functional Tester]
         BAL[Balance Tester]
         PT[Performance Tester]
-        CR[Compliance / Release]
-    end
-
-    subgraph "Layer 3: 願景中，尚未建立"
-        CBD[Combat Designer]
-        VFX[VFX Artist]
         UT2[Usability Tester]
-        AuL[Audio Lead]
+        CR[Compliance / Release]
     end
 
     CD -.->|監督期望與校準| P
@@ -95,6 +91,7 @@ graph LR
     P -.-> NAE
     DL --> LD
     DL --> ND
+    DL --> CBD
     DL --> ECO
     DL --> UIUX
     DL --> LOC
@@ -102,6 +99,7 @@ graph LR
     AL --> BT2
     AL --> AN
     AL --> AUD
+    AL --> VFX
     AL --> TA
     TL --> UT
     TL --> GT
@@ -113,10 +111,11 @@ graph LR
     QL --> FT
     QL --> BAL
     QL --> PT
+    QL --> UT2
     P -.-> CR
 ```
 
-> 41 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Team Lead（4）＋ Layer 3 Design（19）＋ Art（5）＋ Engineering（7）＋ QA/Publishing（4）＝ 41。仍為願景、尚未建立的只有 4 個：`Combat Designer`、`VFX Artist`、`Usability Tester`、`Audio Lead`（多為刻意合併或與現有角色重疊，見「Layer 3：願景中，尚未建立」子圖）。MCP 連線狀態見 README「已串接的元件」表。
+> 44 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Team Lead（4）＋ Layer 3 Design（20，含新建的 `Combat Designer`）＋ Art（6，含新建的 `VFX Artist`）＋ Engineering（7）＋ QA/Publishing（5，含新建的 `Usability Tester`）＝ 44。原願景清單裡的 `Audio Lead` 已刻意不獨立建立——`audio-team` 是唯一的音訊 Team，沒有需要協調的多個下屬，其一致性把關已併入 `Art Lead` 的職責（見上方 Layer 2 節點標注）。目前沒有仍為願景、尚未建立的 Layer 3 角色。MCP 連線狀態見 README「已串接的元件」表。
 
 ## 工具鏈與 MCP 整合
 
@@ -393,7 +392,7 @@ Agent 之間不是隨意對話，而是透過標準化的 **Contract** 傳遞需
 
 ### 檔案共享與交接（精簡協作規範）—— ✅ 已實作
 
-因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。41 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
+因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。44 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
 
 - **共享位置**（大家都讀得到）：`.kiro/steering/project/`（設計真相 gdd/style-guide）、`.kiro/steering/global/`（規範）、`.kiro/state/`（tasks.yaml + `handoffs/`）、`shared/`（Agent 檔案共享中轉站，各 Team 交付物落地處；命名避開 `assets` 以免與引擎內部 `Assets/`、`db://assets/` 混淆）
 - **規則**：動工前先讀「上游的 Delivery Manifest + gdd/style-guide + Contract」；交付後寫一則 **Delivery Manifest**（交付回執）到 `handoffs/<contract_id>.delivery.yaml`，讓下游（含各引擎 team）讀得到你產出了什麼、在哪、有什麼已知問題；blocker/提問一句話記在 tasks.yaml 或 manifest 的 `notes`，由 Producer 轉述；紀錄 append-only。
@@ -605,7 +604,7 @@ sequenceDiagram
 | **Small Team**（2-4 人） | 15-18 | + GitHub Projects | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
 | **Studio**（5-10 人） | 30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 | ⬜ 規劃中 |
 
-### 啟用清單（✅ 已完成，共 41 個）
+### 啟用清單（✅ 已完成，共 44 個）
 
 > 下方以「資料夾/檔名」列出檔案位置；實際委派 / 呼叫時用扁平 `name`（例如 `producer`、`blender-team`），不加資料夾前綴。
 
@@ -616,26 +615,23 @@ design/slot-game-expert, design/fish-game-expert, design/shooter-expert,
 design/mmo-expert, design/rpg-systems-expert, design/card-game-expert,
 design/puzzle-match3-expert, design/platformer-expert, design/roguelike-expert,
 design/strategy-expert, design/simulation-expert, design/rhythm-expert,
-design/narrative-adventure-expert, design/level-designer, design/narrative-designer,
+design/narrative-adventure-expert, design/level-designer, design/narrative-designer, design/combat-designer,
 design/ui-ux-team, design/economy-designer, design/localization-team,
-art/art-lead, art/comfyui-team, art/blender-team, art/animator, art/audio-team, art/technical-artist,
+art/art-lead, art/comfyui-team, art/blender-team, art/animator, art/audio-team, art/vfx-artist, art/technical-artist,
 engineering/tech-lead, engineering/unity-team, engineering/godot-team,
 engineering/unreal-team, engineering/cocos-team, engineering/systems-programmer, engineering/ui-programmer, engineering/devops-team,
-qa/qa-lead, qa/functional-tester, qa/balance-tester, qa/performance-tester,
+qa/qa-lead, qa/functional-tester, qa/balance-tester, qa/performance-tester, qa/usability-tester,
 publishing/compliance-release
 ```
 
-> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert。
+> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert；原願景的 `Audio Lead` 刻意不獨立建立，其一致性把關已併入 `art/art-lead`（見上方「完整系統架構圖」說明）。
 
 ### Small Team 追加（⬜ 下一步可考慮的方向）
 
-前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；`art/animator`、`art/audio-team`、`qa/balance-tester`、`engineering/devops-team`、`engineering/systems-programmer`、`engineering/ui-programmer`、`design/economy-designer`、`design/localization-team`、`design/level-designer`、`design/narrative-designer`、`publishing/compliance-release` 已於本階段建立）。
+前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；原願景的 `Audio Lead` 已併入 `art/art-lead`；`art/animator`、`art/audio-team`、`art/vfx-artist`、`qa/balance-tester`、`qa/usability-tester`、`engineering/devops-team`、`engineering/systems-programmer`、`engineering/ui-programmer`、`design/economy-designer`、`design/localization-team`、`design/level-designer`、`design/narrative-designer`、`design/combat-designer`、`publishing/compliance-release` 已於本階段建立）。
 
 ### Studio 追加（⬜ 遠期）
 
-```
-+ design/combat-designer, art/vfx-artist, qa/usability-tester
-```
-（`creative-director`、四個 Team Lead、`technical-artist`、`performance-tester`、`level-designer`、`narrative-designer` 已於本階段建立）
+目前 Studio 規模規劃的角色皆已建立完成，暫無追加項目。
 
 ---

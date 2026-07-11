@@ -165,11 +165,11 @@
 | Tech Lead | `engineering/tech-lead.md` | 技術架構決策、效能預算、跨引擎 code-review gate | ✅ |
 | QA Lead | `qa/qa-lead.md` | 測試策略、協調 functional/balance/performance tester、go/no-go | ✅ |
 
-> Audio Lead 未建：目前只有單一 `audio-team`，無需再加一層管理；音訊一致性暫由 `art-lead` 一併看。
+> Audio Lead **刻意不獨立建立**：目前只有單一 `audio-team`，無需再加一層管理；音訊一致性已明確併入 `art-lead` 的職責（見 `art-lead.md` frontmatter 說明）。
 
 ### Layer 3：Specialist Agents
 
-#### Design Team（19 個已建立，1 個規劃中）
+#### Design Team（20 個已建立）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
@@ -188,13 +188,13 @@
 | rhythm-expert | read, write | 譜面設計、判定窗（ms）、延遲校正、計分/連段（綁 audio-team） | ✅ |
 | narrative-adventure-expert | read, write | 分支敘事結構、旗標/狀態變數、對話樹、選擇後果（綁 localization-team） | ✅ |
 | economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass | ✅ |
-| combat-designer | read, write | 戰鬥系統、技能設計、敵人 AI | ⬜ |
+| combat-designer | read, write | 通用戰鬥系統/技能設計/敵人 AI；FPS 交 shooter-expert、RPG 交 rpg-systems-expert，避免重複覆蓋 | ✅ |
 | level-designer | read, write | 關卡佈局、觸發器/事件設計、難度曲線；產出交對應引擎 Team 實際搭建（引擎無關，不綁定單一引擎 MCP） | ✅ |
 | narrative-designer | read, write | 世界觀、角色背景、主線/支線劇情、對話內容、World Bible（與 narrative-adventure-expert 分工：內容 vs 系統結構） | ✅ |
 | ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
 | localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） | ✅ |
 
-#### Art Team（4 個已建立 + Art Lead，1 個規劃）
+#### Art Team（5 個已建立 + Art Lead）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
@@ -202,7 +202,7 @@
 | blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx | ✅ |
 | ui-artist | @figma, @comfyui | UI Layout、Design Token、互動狀態規格 | ✅ 已合併進 `design/ui-ux-team`（版面/Token 由 ui-ux-team 出，裝飾素材由 comfyui-team 生成） |
 | animator | @blender-mcp, read, write | 骨骼綁定、蒙皮權重、動畫 clip、含動畫匯出（接 blender-team 的靜態 mesh） | ✅ |
-| vfx-artist | @comfyui | 粒子特效、Shader、序列幀動畫 | ⬜ |
+| vfx-artist | @comfyui, read, write | 特效素材/序列幀生成；與 technical-artist 分工：內容 vs 技術實現 | ✅ |
 | technical-artist | @blender-mcp, read, write, shell | Shader/材質、LOD/貼圖壓縮/合批、VFX 技術、匯入管線 | ✅ |
 
 > `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個 ComfyUI 工具，拆開建立沒有實際差異。
@@ -229,14 +229,14 @@
 
 > 原願景的 `sound-designer` + `composer` 已合併成單一 `audio-team`（兩者都用同一個 comfyui MCP 的音訊生成能力，拆開沒有實際差異，比照 comfyui-team 的合併邏輯）。
 
-#### QA Team（3 個已建立 + QA Lead，1 個規劃）
+#### QA Team（4 個已建立 + QA Lead）
 
 | Agent | 工具 | 產出 | 狀態 |
 |-------|------|------|------|
 | functional-tester | read, shell | Unit/Integration Test、Bug 報告（驗「功能對不對」） | ✅（需目標專案已有測試框架） |
 | balance-tester | read, write, shell | RTP/經濟 Monte Carlo 模擬、平衡性報告（驗「數值對不對」） | ✅ |
 | performance-tester | read, write, shell | FPS/frame time/draw call/記憶體/載入 profiling、瓶頸分析、優化建議 | ✅ |
-| usability-tester | read, write | 新手引導評估、卡關點分析 | ⬜ |
+| usability-tester | read, write | 新手引導評估、卡關點分析；與 functional/balance/performance tester 分工：驗體驗好不好 | ✅ |
 
 #### Publishing Team（1 個已建立）
 
