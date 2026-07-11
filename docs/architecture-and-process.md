@@ -2,6 +2,122 @@
 
 > 這是 [Kiro Multi-Agent Game Studio](../README.md) 的深入文件之一。完整索引見 README 的「深入文件（Reference）」。
 
+## 完整系統架構圖
+
+README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 41 個 Agent 節點圖**，依 Layer 3 的職能再拆成 4 個子群組（避免單張圖過寬）。
+
+```mermaid
+graph LR
+    subgraph "Layer 0-1"
+        CD[Creative Director]
+        P[Producer]
+    end
+
+    subgraph "Layer 2: Team Leads（review gate）"
+        DL[Design Lead]
+        AL[Art Lead]
+        TL[Tech Lead]
+        QL[QA Lead]
+    end
+
+    subgraph "Layer 3: Design（19 個）"
+        GD[Game Designer]
+        SGE[Slot Game Expert]
+        FGE[Fish Game Expert]
+        SHE[Shooter Expert]
+        MMO[MMO Expert]
+        RPG[RPG Systems Expert]
+        CGE[Card Game Expert]
+        PZE[Puzzle/Match-3 Expert]
+        PFE[Platformer Expert]
+        RGE[Roguelike Expert]
+        STE[Strategy Expert]
+        SIM[Simulation Expert]
+        RHE[Rhythm Expert]
+        NAE[Narrative/Adventure Expert]
+        LD[Level Designer]
+        ND[Narrative Designer]
+        ECO[Economy Designer]
+        UIUX[UI/UX Team]
+        LOC[Localization Team]
+    end
+
+    subgraph "Layer 3: Art（5 個）"
+        CT[ComfyUI Team]
+        BT2[Blender Team]
+        AN[Animator]
+        AUD[Audio Team]
+        TA[Technical Artist]
+    end
+
+    subgraph "Layer 3: Engineering（7 個）"
+        UT[Unity Team]
+        GT[Godot Team]
+        URT[Unreal Team]
+        COT[Cocos Team]
+        SP[Systems Programmer]
+        UIP[UI Programmer]
+        DO[DevOps Team]
+    end
+
+    subgraph "Layer 3: QA + Publishing（4 個）"
+        FT[Functional Tester]
+        BAL[Balance Tester]
+        PT[Performance Tester]
+        CR[Compliance / Release]
+    end
+
+    subgraph "Layer 3: 願景中，尚未建立"
+        CBD[Combat Designer]
+        VFX[VFX Artist]
+        UT2[Usability Tester]
+        AuL[Audio Lead]
+    end
+
+    CD -.->|願景守護| P
+    P --> DL
+    P --> AL
+    P --> TL
+    P --> QL
+    DL --> GD
+    P -.->|各 Domain Expert 依關鍵字直接委派| SGE
+    P -.-> FGE
+    P -.-> SHE
+    P -.-> MMO
+    P -.-> RPG
+    P -.-> CGE
+    P -.-> PZE
+    P -.-> PFE
+    P -.-> RGE
+    P -.-> STE
+    P -.-> SIM
+    P -.-> RHE
+    P -.-> NAE
+    DL --> LD
+    DL --> ND
+    DL --> ECO
+    DL --> UIUX
+    DL --> LOC
+    AL --> CT
+    AL --> BT2
+    AL --> AN
+    AL --> AUD
+    AL --> TA
+    TL --> UT
+    TL --> GT
+    TL --> URT
+    TL --> COT
+    TL --> SP
+    TL --> UIP
+    TL --> DO
+    QL --> FT
+    QL --> BAL
+    QL --> PT
+    P -.-> CR
+```
+
+> 41 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Team Lead（4）＋ Layer 3 Design（19）＋ Art（5）＋ Engineering（7）＋ QA/Publishing（4）＝ 41。仍為願景、尚未建立的只有 4 個：`Combat Designer`、`VFX Artist`、`Usability Tester`、`Audio Lead`（多為刻意合併或與現有角色重疊，見「Layer 3：願景中，尚未建立」子圖）。MCP 連線狀態見 README「已串接的元件」表。
+
 ## 工具鏈與 MCP 整合
 
 

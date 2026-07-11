@@ -267,104 +267,22 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 ### 系統架構圖
 
 ```mermaid
-%%{init: {'themeVariables': {'fontSize': '20px'}}}%%
+%%{init: {'themeVariables': {'fontSize': '18px'}}}%%
 graph TD
-    subgraph "Layer 0: Strategic ✅"
-        CD[Creative Director]
-    end
-
-    subgraph "Layer 1: Orchestration ✅"
-        P[Producer]
-    end
-
-    subgraph "Layer 2: Team Leads ✅（review gate）"
-        DL[Design Lead]
-        AL[Art Lead]
-        TL[Tech Lead]
-        AuL[Audio Lead]
-        QL[QA Lead]
-    end
-
-    subgraph "Layer 3: 已建立的 Team / Specialist"
-        GD[Game Designer]
-        SGE[Slot Game Expert]
-        UIUX[UI/UX Team]
-        LD[Level Designer]
-        ND[Narrative Designer]
-        CT[ComfyUI Team]
-        BT2[Blender Team]
-        AN[Animator]
-        UT[Unity Team]
-        GT[Godot Team]
-        URT[Unreal Team]
-        COT[Cocos Team]
-        SP[Systems Programmer]
-        UIP[UI Programmer]
-        DO[DevOps Team]
-        FT[Functional Tester]
-        BAL[Balance Tester]
-    end
-
-    subgraph "Layer 3: 願景中，尚未建立"
-        CBD[Combat Designer]
-        VFX[VFX Artist]
-        UT2[Usability Tester]
-    end
-
-    subgraph "MCP Tools（狀態見上方「已串接的元件」表）"
-        ComfyUI[ComfyUI]
-        Blender[Blender]
-        Figma[Figma]
-        Unity[Unity]
-        Godot[Godot]
-        Unreal[Unreal]
-        Cocos[Cocos Creator]
-        Git[Git]
-        GHProjects[GitHub Projects]
-    end
+    CD[Layer 0: Creative Director]
+    P[Layer 1: Producer<br/>唯一調度中樞]
+    L2[Layer 2: 4 個 Team Lead<br/>Design / Art / Tech / QA]
+    L3[Layer 3: 35 個 Specialist Team<br/>設計專家 / 美術 / 引擎 / QA / 上架]
+    MCP[MCP Tools<br/>Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma]
 
     CD -.->|願景守護| P
-    P --> DL
-    P --> AL
-    P --> TL
-    P --> AuL
-    P --> QL
-    P --> GD
-    P --> SGE
-    P --> UIUX
-    P --> CT
-    P --> BT2
-    P --> UT
-    P --> GT
-    P --> URT
-    P --> COT
-    P --> FT
-    DL --> LD
-    DL --> ND
-    AL --> AN
-    TL --> SP
-    TL --> UIP
-    TL --> DO
-    QL --> BAL
-    UIUX --> Figma
-    CT --> ComfyUI
-    BT2 --> Blender
-    UT --> Unity
-    GT --> Godot
-    URT --> Unreal
-    COT --> Cocos
-    P --> GHProjects
-
-    ComfyUI -.->|貼圖| Blender
-    Figma -.->|版面/Token/切圖| Unity
-    ComfyUI -.->|UI 切圖素材| Figma
-    Blender -.->|模型| Unity
-    Blender -.->|模型| Godot
-    Blender -.->|模型| Unreal
-    Blender -.->|模型| Cocos
+    P -->|拆任務、委派| L2
+    L2 -->|review gate| L3
+    P -->|直接委派部分 Specialist| L3
+    L3 -->|操作外部工具| MCP
 ```
 
-> 圖中「Layer 3：已建立的 Team / Specialist」這 17 個節點（Game Designer、Slot Game Expert、UI/UX Team、Level Designer、Narrative Designer、ComfyUI Team、Blender Team、Animator、Unity Team、Godot Team、Unreal Team、Cocos Team、Systems Programmer、UI Programmer、DevOps Team、Functional Tester、Balance Tester）加上 Producer，以及延伸的 Economy Designer、Localization Team、Audio Team、Compliance / Release，以及 12 個遊戲類型 Domain Expert（Fish/Shooter/MMO/RPG/Card/Puzzle/Platformer/Roguelike/Strategy/Simulation/Rhythm/Narrative），共 **41 個**已實際建立為 Agent 檔案（含 Layer 0 的 Creative Director、Layer 2 的四個 Lead，以及 Performance Tester、Technical Artist）；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。仍為願景的少數節點：combat-designer、vfx-artist、usability-tester（多為刻意合併或與現有角色重疊，見「Layer 3：願景中，尚未建立」子圖）。
+> 這是簡化的層級關係圖，只顯示 5 個 Layer 彼此如何串接，共 **41 個**已實際建立的 Agent 檔案（Layer 0 的 Creative Director、Layer 1 的 Producer、Layer 2 的 4 個 Team Lead、Layer 3 的 35 個 Specialist）；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。**完整的 41 個 Agent 節點圖**（含每個 Team 的名稱、分組與資料流向）見 [docs/architecture-and-process.md](docs/architecture-and-process.md#完整系統架構圖)。
 
 ### 工具資料流
 
