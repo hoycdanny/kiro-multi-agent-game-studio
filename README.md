@@ -411,12 +411,7 @@ graph LR
 | Layer 2 | Team Leads（Design/Art/Tech/QA） | review gate、維護各領域真相文件、審核產出 | ✅ 4 個已建立 |
 | Layer 3 | 執行 Team（各設計/類型專家、美術、引擎、QA、上架 Specialist） | 實際執行工作，呼叫 MCP 工具 | ✅ 31 個已建立 |
 
-**關鍵機制（願景 vs 現況）：**
-- Producer 收到需求後，透過 Kiro 原生 **subagent** 委派（`Use the "<name>" subagent to …`）自動呼叫對應 Specialist 執行，不需人工轉接
-- 只支援單層委派：Producer（`tools` 含 `subagent`）→ Specialist。多層巢狀需中間層 agent 也有 `subagent` 權限，而各 Specialist 未給，故不支援——本專案本就採單層逐一委派
-- 每個階段都有 **Review Gate** 品質關卡的設計（願景），Solo Dev 規模下目前簡化為使用者自行確認
-- Agent 之間用 **Contract**（YAML 格式，定義於 `.kiro/steering/global/contracts.md`）傳遞需求和規格 —— ✅ 已實作
-- 成本控管（token budget）—— ⬜ 目前只在 Agent 對話中提醒，沒有實際自動化監控機制
+Producer 透過 Kiro 原生 subagent 委派自動呼叫對應 Specialist，不需人工轉接；Review Gate、Contract 傳遞機制、成本控管等細節，見 [docs/architecture-and-process.md](docs/architecture-and-process.md)。
 
 ---
 
