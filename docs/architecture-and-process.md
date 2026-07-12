@@ -4,7 +4,7 @@
 
 ## 完整系統架構圖
 
-README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 45 個 Agent 節點圖**，依 Layer 3 的職能再拆成 5 個子群組（避免單張圖過寬）。Design 端拆成 **Design Lead**（核心設計，7 個常駐職能）與 **Domain Lead**（13 類遊戲類型專家，按偵測到的類型按需啟用）兩條線，避免單一 Lead 管太多互斥角色。
+README 的「架構總覽」只放了簡化的 5-Layer 關係圖；這裡是**完整的 46 個 Agent 節點圖**，依 Layer 3 的職能再拆成 5 個子群組（避免單張圖過寬）。Design 端拆成 **Design Lead**（核心設計，7 個常駐職能）與 **Domain Lead**（13 類遊戲類型專家，按偵測到的類型按需啟用）兩條線，避免單一 Lead 管太多互斥角色。
 
 ```mermaid
 graph LR
@@ -66,12 +66,13 @@ graph LR
         DO[DevOps Team]
     end
 
-    subgraph "Layer 3: QA + Publishing（5 個）"
+    subgraph "Layer 3: QA + Publishing（6 個）"
         FT[Functional Tester]
         BAL[Balance Tester]
         PT[Performance Tester]
         UT2[Usability Tester]
         CR[Compliance / Release]
+        MKT[Marketing / PR Team]
     end
 
     CD -.->|監督期望與校準| P
@@ -118,9 +119,10 @@ graph LR
     QL --> PT
     QL --> UT2
     P -.-> CR
+    P -.-> MKT
 ```
 
-> 45 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Lead（5，含新建的 `Domain Lead`）＋ Layer 3 Design 核心（7）＋ Domain 類型專家（13）＋ Art（6）＋ Engineering（7）＋ QA/Publishing（5）＝ 45。原願景清單裡的 `Audio Lead` 已刻意不獨立建立——`audio-team` 是唯一的音訊 Team，沒有需要協調的多個下屬，其一致性把關已併入 `Art Lead` 的職責（見上方 Layer 2 節點標注）。目前沒有仍為願景、尚未建立的 Layer 3 角色。MCP 連線狀態見 README「已串接的元件」表。
+> 46 個已建立節點分組：Layer 0-1（2）＋ Layer 2 Lead（5，含新建的 `Domain Lead`）＋ Layer 3 Design 核心（7）＋ Domain 類型專家（13）＋ Art（6）＋ Engineering（7）＋ QA/Publishing（6，含新建的 `Marketing / PR Team`）＝ 46。原願景清單裡的 `Audio Lead` 已刻意不獨立建立——`audio-team` 是唯一的音訊 Team，沒有需要協調的多個下屬，其一致性把關已併入 `Art Lead` 的職責（見上方 Layer 2 節點標注）。目前沒有仍為願景、尚未建立的 Layer 3 角色。MCP 連線狀態見 README「已串接的元件」表。
 
 ## 工具鏈與 MCP 整合
 
@@ -397,7 +399,7 @@ Agent 之間不是隨意對話，而是透過標準化的 **Contract** 傳遞需
 
 ### 檔案共享與交接（精簡協作規範，已實作）
 
-因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。45 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
+因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。46 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
 
 - **共享位置**（大家都讀得到）：`.kiro/steering/project/`（設計真相 gdd/style-guide）、`.kiro/steering/global/`（規範）、`.kiro/state/`（tasks.yaml + `handoffs/`）、`shared/`（Agent 檔案共享中轉站，各 Team 交付物落地處；命名避開 `assets` 以免與引擎內部 `Assets/`、`db://assets/` 混淆）
 - **規則**：動工前先讀「上游的 Delivery Manifest + gdd/style-guide + Contract」；交付後寫一則 **Delivery Manifest**（交付回執）到 `handoffs/<contract_id>.delivery.yaml`，讓下游（含各引擎 team）讀得到你產出了什麼、在哪、有什麼已知問題；blocker/提問一句話記在 tasks.yaml 或 manifest 的 `notes`，由 Producer 轉述；紀錄 append-only。
@@ -610,7 +612,7 @@ sequenceDiagram
 | **Small Team**（2-4 人） | 15-18 | + GitHub Projects | $200-500 | 基本 Review Gate | 規劃中 |
 | **Studio**（5-10 人） | 30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 | 規劃中 |
 
-### 啟用清單（共 45 個）
+### 啟用清單（共 46 個）
 
 > 下方以「資料夾/檔名」列出檔案位置；實際委派 / 呼叫時用扁平 `name`（例如 `producer`、`blender-team`），不加資料夾前綴。
 
@@ -627,14 +629,14 @@ art/art-lead, art/comfyui-team, art/blender-team, art/animator, art/audio-team, 
 engineering/tech-lead, engineering/unity-team, engineering/godot-team,
 engineering/unreal-team, engineering/cocos-team, engineering/systems-programmer, engineering/ui-programmer, engineering/devops-team,
 qa/qa-lead, qa/functional-tester, qa/balance-tester, qa/performance-tester, qa/usability-tester,
-publishing/compliance-release
+publishing/compliance-release, publishing/marketing-team
 ```
 
-> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert；原願景的 `Audio Lead` 刻意不獨立建立，其一致性把關已併入 `art/art-lead`（見上方「完整系統架構圖」說明）。
+> 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert，以及參考《The Game Production Handbook》Ch24 新增 `publishing/marketing-team`（商店文案/預告片腳本/新聞稿/社群草稿，純文字產出，不執行實際發布/投放）；原願景的 `Audio Lead` 刻意不獨立建立，其一致性把關已併入 `art/art-lead`（見上方「完整系統架構圖」說明）。
 
 ### Small Team 追加（下一步可考慮的方向）
 
-前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；原願景的 `Audio Lead` 已併入 `art/art-lead`；`art/animator`、`art/audio-team`、`art/vfx-artist`、`qa/balance-tester`、`qa/usability-tester`、`engineering/devops-team`、`engineering/systems-programmer`、`engineering/ui-programmer`、`design/economy-designer`、`design/localization-team`、`design/level-designer`、`design/narrative-designer`、`design/combat-designer`、`publishing/compliance-release` 已於本階段建立）。
+前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；原願景的 `Audio Lead` 已併入 `art/art-lead`；`art/animator`、`art/audio-team`、`art/vfx-artist`、`qa/balance-tester`、`qa/usability-tester`、`engineering/devops-team`、`engineering/systems-programmer`、`engineering/ui-programmer`、`design/economy-designer`、`design/localization-team`、`design/level-designer`、`design/narrative-designer`、`design/combat-designer`、`publishing/compliance-release`、`publishing/marketing-team` 已於本階段建立）。
 
 ### Studio 追加（遠期）
 

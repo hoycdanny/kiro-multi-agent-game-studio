@@ -238,11 +238,12 @@
 | performance-tester | read, write, shell | FPS/frame time/draw call/記憶體/載入 profiling、瓶頸分析、優化建議 |
 | usability-tester | read, write | 新手引導評估、卡關點分析；與 functional/balance/performance tester 分工：驗體驗好不好 |
 
-#### Publishing Team（1 個）
+#### Publishing Team（2 個）
 
 | Agent | 工具 | 產出 |
 |-------|------|------|
 | compliance-release | read, write, web | 分級（IARC/ESRB/PEGI）、隱私合規（GDPR/COPPA）、商店素材規格、送審清單、老虎機認證/牌照流程 |
+| marketing-team | read, write | 商店文案、預告片腳本、新聞稿、社群貼文草稿、展會素材文案（純文字產出，不執行實際發布/投放，見 `docs/audio-pipeline.md` 同類誠實聲明慣例） |
 
 ---
 
@@ -322,6 +323,7 @@ Kiro 每個 Custom Agent 可在 frontmatter 用 `model` 欄位指定模型（見
 | `art-lead` / `technical-artist` | `glm-5` | 0.5x | 風格審查 / shader / 優化，美術向 coding → GLM-5，成本減半 |
 | `ui-ux-team` | `glm-5` | 0.5x | Figma + handoff 規格，generalist 夠用、省成本 |
 | `compliance-release` | `glm-5` | 0.5x | 查政策 + 條列清單，doc/結構化為主 |
+| `marketing-team` | `glm-5` | 0.5x | 文案/腳本寫作，generalist 夠用、省成本 |
 | `comfyui-team` / `audio-team` | `minimax-m2.5` | 0.25x | 主要在驅動 MCP 工具 → MiniMax M2.5「接近 Opus 的 coding、0.25x」，高 CP 值 |
 | `localization-team` | `minimax-m2.5` | 0.25x | 抽字串/locale 偏機械性，成本優先 |
 | `functional-tester` | `claude-haiku-4.5` | 0.4x | 跑測試回報 → Haiku 4.5「接近前沿、1/3 成本、適合 subagent」 |

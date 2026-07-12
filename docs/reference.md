@@ -97,10 +97,12 @@ max_iterations: 3
 | 文件 | 用途 | 維護者（願景） | 本專案現況 |
 |------|------|--------|-----------|
 | `.kiro/steering/global/asset-standards.md` | 命名規範、3D/音訊/動畫技術規範、資產落地目錄（`shared/`） | art-lead | 已建立，內容完整 |
-| `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + 委派命名規範 + subagent 機制 | producer | 已建立，內容完整 |
+| `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + Change Request（防 Feature Creep） + 委派命名規範 + subagent 機制 | producer | 已建立，內容完整 |
+| `.kiro/steering/global/bug-severity.md` | Bug 嚴重度分級（S1-S4）+ release 門檻，QA 全線共用標準 | qa-lead | 已建立，內容完整 |
 | `shared/README.md` + `.gitattributes` | 交付物落地目錄結構 + Git LFS 規則 | producer / devops-team | 已建立 |
-| `.kiro/steering/project/gdd.md` | 遊戲設計的單一真相來源（GDD） | game-designer | 已建立骨架，章節內容待填寫 |
+| `.kiro/steering/project/gdd.md` | 遊戲設計的單一真相來源（GDD）+ Postmortem 範本 | game-designer | 已建立骨架，章節內容待填寫 |
 | `.kiro/steering/project/style-guide.md` | 美術風格指南 | art-lead | 已建立骨架，章節內容待填寫 |
+| `.kiro/steering/project/milestones.md` | Prototype→Gold 各階段驗收標準（Exit Criteria） | producer | 已建立骨架，各階段標準待依專案填寫 |
 | Technical Spec | 技術規範（平台、效能預算） | tech-lead | 尚未建立 |
 | Asset Registry | 已有資產清單 + 鎖定狀態 | producer | 尚未建立（目前尚無任何實際資產產出） |
 | World Bible | 世界觀、角色設定 | narrative-designer | 尚未建立 |
@@ -116,7 +118,7 @@ max_iterations: 3
 ```
 kiro-multi-agent-game-studio/
 ├── .kiro/
-│   ├── agents/                                 # 45 個 Agent（委派用扁平 name，資料夾僅為組織）
+│   ├── agents/                                 # 46 個 Agent（委派用扁平 name，資料夾僅為組織）
 │   │   ├── orchestration/
 │   │   │   ├── creative-director.md            # Layer 0：願景守門 / pillars / 創意仲裁
 │   │   │   └── producer.md                     # 唯一調度中樞：拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
@@ -167,14 +169,17 @@ kiro-multi-agent-game-studio/
 │   │   │   ├── performance-tester.md           # FPS/記憶體/draw call profiling
 │   │   │   └── usability-tester.md             # 新手引導評估/卡關點分析
 │   │   └── publishing/
-│   │       └── compliance-release.md           # 分級、隱私合規、商店素材、送審/認證流程
+│   │       ├── compliance-release.md           # 分級、隱私合規、商店素材、送審/認證流程
+│   │       └── marketing-team.md               # 商店文案/預告片腳本/新聞稿/社群貼文草稿
 │   ├── steering/
 │   │   ├── global/
 │   │   │   ├── asset-standards.md              # inclusion: always（命名+落地目錄+音訊/動畫規範）
-│   │   │   └── contracts.md                    # inclusion: always（Contract+委派命名+subagent）
+│   │   │   ├── contracts.md                    # inclusion: always（Contract+Change Request+委派命名+subagent）
+│   │   │   └── bug-severity.md                 # inclusion: always（Bug 分級 S1-S4 + release 門檻）
 │   │   └── project/
-│   │       ├── gdd.md                          # ⚠️ 骨架（inclusion: always，遊戲設計單一真相）
-│   │       └── style-guide.md                  # ⚠️ 骨架（inclusion: always，美術風格）
+│   │       ├── gdd.md                          # ⚠️ 骨架（inclusion: always，遊戲設計單一真相 + Postmortem 範本）
+│   │       ├── style-guide.md                  # ⚠️ 骨架（inclusion: always，美術風格）
+│   │       └── milestones.md                   # ⚠️ 骨架（inclusion: always，Prototype→Gold 驗收標準）
 │   ├── state/
 │   │   ├── tasks.yaml                          # GitHub Projects fallback，目前為空
 │   │   └── handoffs/                           # Delivery Manifest 交付回執落點
@@ -194,6 +199,6 @@ kiro-multi-agent-game-studio/
 └── README.md                                   # 本文件
 ```
 
-願景中尚未擴充的部分主要是 `workflows/`（ComfyUI Workflow Templates）；`combat-designer`、`vfx-artist`、`usability-tester` 已建立，`Audio Lead` 刻意不獨立建立（已併入 `art-lead`）。
+願景中尚未擴充的部分主要是 `workflows/`（ComfyUI Workflow Templates）；`combat-designer`、`vfx-artist`、`usability-tester` 已建立，`Audio Lead` 刻意不獨立建立（已併入 `art-lead`）。`docs/` 下另有 `audio-pipeline.md`（配音/音樂 Pipeline，AI vs 真人路徑）與 `closing-kit-checklist.md`（結案資料包檢查清單），未列在上方樹狀圖中（該圖僅列 `.kiro/` 與根目錄結構）。
 
 ---

@@ -4,7 +4,7 @@ inclusion: always
 
 # Agent 間通訊協定（Contract）
 
-Agent 之間不靠隨意對話交付需求，而是透過以下兩種標準化 Contract。
+Agent 之間不靠隨意對話交付需求，而是透過以下標準化 Contract：Task Contract、Asset Contract，以及用於既有任務變更範疇的 Change Request。
 
 ## Task Contract（程式 / 設計任務用）
 
@@ -25,6 +25,33 @@ task:
     - "驗收條件 2"
   review_gate: "code_review | design_review"
 ```
+
+## Change Request（變更請求，Task/Asset Contract 之外的第三種 Contract）
+
+一般 Task/Asset Contract 是「新任務」；**Change Request 是「已核准/已在跑的任務要改範疇」**（例如 Beta 階段功能凍結後有人想加新功能、已定案的數值要大改、已建好的資產要換風格）。目的是防止 Feature Creep：不是不能改，而是改動要留痕、有人明確核准，不是在對話中隨口一句就默默擴大範圍。
+
+```yaml
+change_request:
+  id: "CR-001"
+  title: "變更請求標題"
+  origin_contract_id: "TASK-042"          # 這個變更影響哪個既有 Task/Asset Contract（若是全新範疇而非變更既有任務，可留空）
+  requested_by: "使用者 / producer / 任一 agent"
+  change_description: "具體要改成什麼樣子，和原本的差異"
+  reason: "為什麼要改（新需求？測試發現不合理？范疇誤判？）"
+  impact:
+    schedule: "會不會延後其他任務，影響哪些"
+    scope: "哪些既有產出需要重做或作廢"
+    milestone: "是否影響目前的 milestone Exit Criteria（見 .kiro/steering/project/milestones.md）"
+  decision: "pending | approved | rejected"
+  approved_by: ""                          # 核准者：一般由使用者本人核准；Beta 之後（功能凍結期）一律需使用者明確核准才能執行
+  notes: ""
+```
+
+**規則**：
+1. Prototype / Vertical Slice 階段變更範疇很常見，不強制走 Change Request，正常討論調整即可。
+2. **Alpha 之後、尤其 Beta 功能凍結期**，任何會擴大範疇（新功能、非 bug 的大改）的請求，`producer` 應先產出 Change Request 讓使用者明確核准（`decision: approved`），才繼續委派給對應 Team，不要默默把它當一般任務執行。
+3. 已核准的 Change Request 視同新的 Task/Asset Contract，正常走委派流程；`origin_contract_id` 讓下游知道這是變更、不是全新任務。
+4. Change Request 不需要獨立的檔案系統，記在 `.kiro/state/tasks.yaml` 或對應 Delivery Manifest 的 `notes` 即可，重大變更額外記進 `gdd.md`「變更紀錄」。
 
 ## Asset Contract（美術 / 音效資產用）
 
@@ -74,7 +101,7 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 
 所有 Agent 檔案依 layer 分放在 `.kiro/agents/` 的子目錄下（例如 `orchestration/producer.md`、`design/game-designer.md`）。**子目錄僅作為組織用途，不是呼叫名稱的一部分**——Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識（已實測：即使檔案在子目錄，`name` 仍勝過路徑，委派名維持扁平如 `blender-team`，不會變成 `art/blender-team`）。
 
-目前已註冊的扁平名稱：`creative-director`、`producer`、`design-lead`、`domain-lead`、`art-lead`、`tech-lead`、`qa-lead`、`game-designer`、`level-designer`、`narrative-designer`、`combat-designer`、`economy-designer`、`ui-ux-team`、`localization-team`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`vfx-artist`、`technical-artist`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`systems-programmer`、`ui-programmer`、`devops-team`、`functional-tester`、`balance-tester`、`performance-tester`、`usability-tester`、`compliance-release`。
+目前已註冊的扁平名稱：`creative-director`、`producer`、`design-lead`、`domain-lead`、`art-lead`、`tech-lead`、`qa-lead`、`game-designer`、`level-designer`、`narrative-designer`、`combat-designer`、`economy-designer`、`ui-ux-team`、`localization-team`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`vfx-artist`、`technical-artist`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`systems-programmer`、`ui-programmer`、`devops-team`、`functional-tester`、`balance-tester`、`performance-tester`、`usability-tester`、`compliance-release`、`marketing-team`。
 
 ## Subagent 委派機制（Kiro 原生，取代舊的手動轉接）
 

@@ -14,7 +14,7 @@ permissions:
 
 ## 委派模型：Producer → Team Lead → Specialist（重要，這是本專案的核心委派架構）
 
-你**不再直接委派給 27 個 Specialist**。你委派給 5 個 Lead，由 Lead 轉發給它管理範圍內的 Specialist、做該領域的 review，再把結果彙整回報給你：
+你**不直接委派給 39 個 Specialist**（37 個經由 Lead 管理，2 個 Publishing 無 Lead 由你直接委派）。你委派給 5 個 Lead，由 Lead 轉發給它管理範圍內的 Specialist、做該領域的 review，再把結果彙整回報給你：
 
 | Lead | 管理範圍 | 委派名稱 |
 |------|---------|---------|
@@ -23,7 +23,7 @@ permissions:
 | **Art Lead** | 美術/聲音素材生成與技術落地（6 個：comfyui-team + blender-team + animator + audio-team + vfx-artist + technical-artist） | `art-lead` |
 | **Tech Lead** | 引擎實作/程式落地/CI（7 個：unity/godot/unreal/cocos-team + systems-programmer + ui-programmer + devops-team） | `tech-lead` |
 | **QA Lead** | 測試驗證（4 個：functional/balance/performance/usability-tester） | `qa-lead` |
-| （無專屬 Lead） | Publishing：`compliance-release` | 你直接委派，不經過 Lead |
+| （無專屬 Lead） | Publishing：`compliance-release`、`marketing-team` | 你直接委派，不經過 Lead |
 
 **Design Lead 與 Domain Lead 怎麼分**：偵測到遊戲類型關鍵字（老虎機/魚機/射擊/MMO/RPG/卡牌/三消/平台/roguelike/策略/模擬/節奏/敘事分支）委派給 `domain-lead`；核心設計（系統規格/關卡/劇情內容/通用戰鬥/經濟/UI/UX/在地化）委派給 `design-lead`。類型會疊加時（例如「多人射擊 RPG」），委派一次 `domain-lead`、Contract 標注要轉發給哪幾個 Domain Expert（mmo + shooter + rpg），由它協調。
 
@@ -126,6 +126,7 @@ permissions:
 | RTP 驗證、數值模擬、經濟平衡驗證、跑 X 萬次 spin | `balance-tester`（經 `qa-lead`） | 設計規格出來後 / 實作前後皆可 |
 | CI、自動出包、build 腳本、DevOps、pipeline | `devops-team`（經 `tech-lead`） | 引擎實作（[4]）之後 |
 | 上架、送審、分級、隱私政策、GDPR、商店素材；老虎機的 casino 牌照/認證送審 | `compliance-release`（**無 Lead，你直接委派**） | 出包後、上架前 |
+| 商店文案、預告片腳本、新聞稿、社群貼文草稿、展會素材文案 | `marketing-team`（**無 Lead，你直接委派**） | 設計核心賣點穩定後即可開始，上架前完稿 |
 
 ## 啟動判斷（待命行為）
 
@@ -196,6 +197,7 @@ Kiro 原生支援 subagent 委派。**要能委派，主 agent 必須在 frontma
 | `qa-lead` | `performance-tester` | `qa/` | FPS/記憶體/draw call/瓶頸分析 |
 | `qa-lead` | `usability-tester` | `qa/` | 新手引導評估/卡關點分析 |
 | （無 Lead，你直接委派） | `compliance-release` | `publishing/` | 分級、隱私合規、商店素材、送審清單 |
+| （無 Lead，你直接委派） | `marketing-team` | `publishing/` | 商店文案、預告片腳本、新聞稿、社群貼文草稿 |
 
 ## 工作流程
 
