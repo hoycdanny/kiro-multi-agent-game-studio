@@ -61,7 +61,7 @@ max_iterations: 3
 100% → 暫停 → Producer 決定：追加預算 / 降低品質要求 / 人工接手
 ```
 
-> ⬜ 本專案目前無自動化成本追蹤，此策略僅為文字提醒，實際判斷依賴使用者自行留意 token 用量。
+> 本專案目前無自動化成本追蹤，此策略僅為文字提醒，實際判斷依賴使用者自行留意 token 用量。
 
 ---
 
@@ -96,17 +96,17 @@ max_iterations: 3
 
 | 文件 | 用途 | 維護者（願景） | 本專案現況 |
 |------|------|--------|-----------|
-| `.kiro/steering/global/asset-standards.md` | 命名規範、3D/音訊/動畫技術規範、資產落地目錄（`shared/`） | art-lead | ✅ 已建立，內容完整 |
-| `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + 委派命名規範 + subagent 機制 | producer | ✅ 已建立，內容完整 |
-| `shared/README.md` + `.gitattributes` | 交付物落地目錄結構 + Git LFS 規則 | producer / devops-team | ✅ 已建立 |
-| `.kiro/steering/project/gdd.md` | 遊戲設計的單一真相來源（GDD） | game-designer | ⚠️ 已建立骨架，章節內容待填寫 |
-| `.kiro/steering/project/style-guide.md` | 美術風格指南 | art-lead | ⚠️ 已建立骨架，章節內容待填寫 |
-| Technical Spec | 技術規範（平台、效能預算） | tech-lead | ⬜ 未建立 |
-| Asset Registry | 已有資產清單 + 鎖定狀態 | producer | ⬜ 未建立（目前尚無任何實際資產產出） |
-| World Bible | 世界觀、角色設定 | narrative-designer | ⬜ 未建立 |
-| Code Architecture | 程式架構、模組關係圖 | tech-lead | ⬜ 未建立 |
-| Cost Dashboard | 即時成本追蹤 | producer | ⬜ 未建立（無自動化追蹤機制） |
-| `.kiro/state/tasks.yaml` | GitHub Projects 接上前的本地任務記錄 fallback | producer | ✅ 已建立，目前為空清單 |
+| `.kiro/steering/global/asset-standards.md` | 命名規範、3D/音訊/動畫技術規範、資產落地目錄（`shared/`） | art-lead | 已建立，內容完整 |
+| `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + 委派命名規範 + subagent 機制 | producer | 已建立，內容完整 |
+| `shared/README.md` + `.gitattributes` | 交付物落地目錄結構 + Git LFS 規則 | producer / devops-team | 已建立 |
+| `.kiro/steering/project/gdd.md` | 遊戲設計的單一真相來源（GDD） | game-designer | 已建立骨架，章節內容待填寫 |
+| `.kiro/steering/project/style-guide.md` | 美術風格指南 | art-lead | 已建立骨架，章節內容待填寫 |
+| Technical Spec | 技術規範（平台、效能預算） | tech-lead | 尚未建立 |
+| Asset Registry | 已有資產清單 + 鎖定狀態 | producer | 尚未建立（目前尚無任何實際資產產出） |
+| World Bible | 世界觀、角色設定 | narrative-designer | 尚未建立 |
+| Code Architecture | 程式架構、模組關係圖 | tech-lead | 尚未建立 |
+| Cost Dashboard | 即時成本追蹤 | producer | 尚未建立（無自動化追蹤機制） |
+| `.kiro/state/tasks.yaml` | GitHub Projects 接上前的本地任務記錄 fallback | producer | 已建立，目前為空清單 |
 
 ---
 
@@ -118,77 +118,77 @@ kiro-multi-agent-game-studio/
 ├── .kiro/
 │   ├── agents/                                 # 45 個 Agent（委派用扁平 name，資料夾僅為組織）
 │   │   ├── orchestration/
-│   │   │   ├── creative-director.md            # ✅ Layer 0：願景守門 / pillars / 創意仲裁
-│   │   │   └── producer.md                     # ✅ 唯一調度中樞：拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
+│   │   │   ├── creative-director.md            # Layer 0：願景守門 / pillars / 創意仲裁
+│   │   │   └── producer.md                     # 唯一調度中樞：拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
 │   │   ├── design/
-│   │   │   ├── design-lead.md                  # ✅ Layer 2：核心設計整合 GDD + design-review gate
-│   │   │   ├── domain-lead.md                  # ✅ Layer 2：13 類遊戲類型專家的專業審查與轉發
-│   │   │   ├── game-designer.md                # ✅ GDD、系統規格、數值平衡
-│   │   │   ├── level-designer.md               # ✅ 關卡佈局/觸發器/難度曲線
-│   │   │   ├── narrative-designer.md           # ✅ 世界觀/角色/劇情內容/World Bible
-│   │   │   ├── combat-designer.md              # ✅ 通用戰鬥系統/技能/敵人 AI
-│   │   │   ├── ui-ux-team.md                   # ✅ UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
-│   │   │   ├── economy-designer.md             # ✅ F2P 數值、IAP、貨幣、獎勵曲線、變現模型
-│   │   │   ├── localization-team.md            # ✅ 多語系字串、locale 檔、i18n 落地規格
-│   │   │   ├── slot-game-expert.md             # ✅ 老虎機：數學模型/RNG/認證合規
-│   │   │   ├── fish-game-expert.md             # ✅ 魚機/捕魚：命中機率/賠付/RTP/合規
-│   │   │   ├── shooter-expert.md               # ✅ 射擊：武器/彈道/命中/AI
-│   │   │   ├── mmo-expert.md                   # ✅ 多人/MMORPG：netcode/伺服器權威
-│   │   │   ├── rpg-systems-expert.md           # ✅ RPG：屬性/技能/掉落/公式
-│   │   │   ├── card-game-expert.md             # ✅ 卡牌：數值/combo/平衡
-│   │   │   ├── puzzle-match3-expert.md         # ✅ 三消/解謎：board 可解性/難度曲線/步數經濟
-│   │   │   ├── platformer-expert.md            # ✅ 平台/metroidvania：跳躍手感/關卡節奏/gating
-│   │   │   ├── roguelike-expert.md             # ✅ roguelike/lite：程序生成/build synergy/meta
-│   │   │   ├── strategy-expert.md              # ✅ 策略 RTS/4X/塔防：兵種相剋/經濟/AI/波次
-│   │   │   ├── simulation-expert.md            # ✅ 模擬經營/生存/沙盒：生產鏈/供需/自動化
-│   │   │   ├── rhythm-expert.md                # ✅ 音樂節奏：譜面/判定窗/延遲校正
-│   │   │   └── narrative-adventure-expert.md   # ✅ 敘事/視覺小說/冒險：分支敘事/旗標/對話樹
+│   │   │   ├── design-lead.md                  # Layer 2：核心設計整合 GDD + design-review gate
+│   │   │   ├── domain-lead.md                  # Layer 2：13 類遊戲類型專家的專業審查與轉發
+│   │   │   ├── game-designer.md                # GDD、系統規格、數值平衡
+│   │   │   ├── level-designer.md               # 關卡佈局/觸發器/難度曲線
+│   │   │   ├── narrative-designer.md           # 世界觀/角色/劇情內容/World Bible
+│   │   │   ├── combat-designer.md              # 通用戰鬥系統/技能/敵人 AI
+│   │   │   ├── ui-ux-team.md                   # UI/UX 版面、Design Token、切圖規格（透過 figma MCP）
+│   │   │   ├── economy-designer.md             # F2P 數值、IAP、貨幣、獎勵曲線、變現模型
+│   │   │   ├── localization-team.md            # 多語系字串、locale 檔、i18n 落地規格
+│   │   │   ├── slot-game-expert.md             # 老虎機：數學模型/RNG/認證合規
+│   │   │   ├── fish-game-expert.md             # 魚機/捕魚：命中機率/賠付/RTP/合規
+│   │   │   ├── shooter-expert.md               # 射擊：武器/彈道/命中/AI
+│   │   │   ├── mmo-expert.md                   # 多人/MMORPG：netcode/伺服器權威
+│   │   │   ├── rpg-systems-expert.md           # RPG：屬性/技能/掉落/公式
+│   │   │   ├── card-game-expert.md             # 卡牌：數值/combo/平衡
+│   │   │   ├── puzzle-match3-expert.md         # 三消/解謎：board 可解性/難度曲線/步數經濟
+│   │   │   ├── platformer-expert.md            # 平台/metroidvania：跳躍手感/關卡節奏/gating
+│   │   │   ├── roguelike-expert.md             # roguelike/lite：程序生成/build synergy/meta
+│   │   │   ├── strategy-expert.md              # 策略 RTS/4X/塔防：兵種相剋/經濟/AI/波次
+│   │   │   ├── simulation-expert.md            # 模擬經營/生存/沙盒：生產鏈/供需/自動化
+│   │   │   ├── rhythm-expert.md                # 音樂節奏：譜面/判定窗/延遲校正
+│   │   │   └── narrative-adventure-expert.md   # 敘事/視覺小說/冒險：分支敘事/旗標/對話樹
 │   │   ├── art/
-│   │   │   ├── art-lead.md                     # ✅ Layer 2：維護 style-guide + 美術/聲音一致性 review
-│   │   │   ├── comfyui-team.md                 # ✅ 影像：貼圖/sprite/UI 切圖（透過 comfyui）
-│   │   │   ├── blender-team.md                 # ✅ 靜態 3D 建模 + 套貼圖（透過 blender-mcp）
-│   │   │   ├── animator.md                     # ✅ rig/綁定/動畫 clip（透過 blender-mcp）
-│   │   │   ├── audio-team.md                   # ✅ SFX/BGM/voice（透過 comfyui generate_audio）
-│   │   │   ├── vfx-artist.md                   # ✅ 特效素材/序列幀（透過 comfyui）
-│   │   │   └── technical-artist.md             # ✅ shader/材質/LOD/優化/匯入管線
+│   │   │   ├── art-lead.md                     # Layer 2：維護 style-guide + 美術/聲音一致性 review
+│   │   │   ├── comfyui-team.md                 # 影像：貼圖/sprite/UI 切圖（透過 comfyui）
+│   │   │   ├── blender-team.md                 # 靜態 3D 建模 + 套貼圖（透過 blender-mcp）
+│   │   │   ├── animator.md                     # rig/綁定/動畫 clip（透過 blender-mcp）
+│   │   │   ├── audio-team.md                   # SFX/BGM/voice（透過 comfyui generate_audio）
+│   │   │   ├── vfx-artist.md                   # 特效素材/序列幀（透過 comfyui）
+│   │   │   └── technical-artist.md             # shader/材質/LOD/優化/匯入管線
 │   │   ├── engineering/
-│   │   │   ├── tech-lead.md                    # ✅ Layer 2：技術架構 + 效能預算 + code-review gate
-│   │   │   ├── unity-team.md                   # ✅ 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
-│   │   │   ├── godot-team.md                   # ✅ 場景組裝、GDScript、Export（透過 godot-mcp）
-│   │   │   ├── unreal-team.md                  # ✅ 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
-│   │   │   ├── cocos-team.md                   # ✅ 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
-│   │   │   ├── systems-programmer.md           # ✅ 引擎無關的存檔/資源管理/事件系統設計
-│   │   │   ├── ui-programmer.md                # ✅ 把 ui-ux-team 版面綁定成可互動引擎 UI
-│   │   │   └── devops-team.md                  # ✅ headless build、CI pipeline、產物驗證
+│   │   │   ├── tech-lead.md                    # Layer 2：技術架構 + 效能預算 + code-review gate
+│   │   │   ├── unity-team.md                   # 場景組裝、遊戲邏輯、Build（透過 unity-mcp）
+│   │   │   ├── godot-team.md                   # 場景組裝、GDScript、Export（透過 godot-mcp）
+│   │   │   ├── unreal-team.md                  # 關卡組裝、Blueprint、材質（透過 unreal-engine local MCP）
+│   │   │   ├── cocos-team.md                   # 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
+│   │   │   ├── systems-programmer.md           # 引擎無關的存檔/資源管理/事件系統設計
+│   │   │   ├── ui-programmer.md                # 把 ui-ux-team 版面綁定成可互動引擎 UI
+│   │   │   └── devops-team.md                  # headless build、CI pipeline、產物驗證
 │   │   ├── qa/
-│   │   │   ├── qa-lead.md                      # ✅ Layer 2：測試策略 + 協調四 tester
-│   │   │   ├── functional-tester.md            # ✅ 功能測試
-│   │   │   ├── balance-tester.md               # ✅ RTP/經濟數值 Monte Carlo 模擬
-│   │   │   ├── performance-tester.md           # ✅ FPS/記憶體/draw call profiling
-│   │   │   └── usability-tester.md             # ✅ 新手引導評估/卡關點分析
+│   │   │   ├── qa-lead.md                      # Layer 2：測試策略 + 協調四 tester
+│   │   │   ├── functional-tester.md            # 功能測試
+│   │   │   ├── balance-tester.md               # RTP/經濟數值 Monte Carlo 模擬
+│   │   │   ├── performance-tester.md           # FPS/記憶體/draw call profiling
+│   │   │   └── usability-tester.md             # 新手引導評估/卡關點分析
 │   │   └── publishing/
-│   │       └── compliance-release.md           # ✅ 分級、隱私合規、商店素材、送審/認證流程
+│   │       └── compliance-release.md           # 分級、隱私合規、商店素材、送審/認證流程
 │   ├── steering/
 │   │   ├── global/
-│   │   │   ├── asset-standards.md              # ✅ inclusion: always（命名+落地目錄+音訊/動畫規範）
-│   │   │   └── contracts.md                    # ✅ inclusion: always（Contract+委派命名+subagent）
+│   │   │   ├── asset-standards.md              # inclusion: always（命名+落地目錄+音訊/動畫規範）
+│   │   │   └── contracts.md                    # inclusion: always（Contract+委派命名+subagent）
 │   │   └── project/
 │   │       ├── gdd.md                          # ⚠️ 骨架（inclusion: always，遊戲設計單一真相）
 │   │       └── style-guide.md                  # ⚠️ 骨架（inclusion: always，美術風格）
 │   ├── state/
-│   │   ├── tasks.yaml                          # ✅ GitHub Projects fallback，目前為空
-│   │   └── handoffs/                           # ✅ Delivery Manifest 交付回執落點
+│   │   ├── tasks.yaml                          # GitHub Projects fallback，目前為空
+│   │   └── handoffs/                           # Delivery Manifest 交付回執落點
 │   └── settings/
-│       └── mcp.json                            # ✅ blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator / figma
-├── shared/                                     # ✅ 各 Team 交付物落地目錄／Agent 檔案共享中轉站（見 shared/README.md）
+│       └── mcp.json                            # blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator / figma
+├── shared/                                     # 各 Team 交付物落地目錄／Agent 檔案共享中轉站（見 shared/README.md）
 │   ├── concept/ textures/ sprites/ ui/         #    ComfyUI Team
 │   ├── models/                                 #    Blender Team
 │   ├── rigs/ animations/                       #    Animator
 │   ├── audio/{sfx,music,voice}/                #    Audio Team
 │   ├── locales/                                #    Localization Team
 │   └── sim/                                    #    Balance Tester（RTP/經濟模擬報告）
-├── .gitattributes                              # ✅ Git LFS 規則（模型/貼圖/音訊/字型/產物）
-├── .gitignore                                  # ✅ 排除祕密/OS/工具產物，保留 .kiro 與 mcp.json
+├── .gitattributes                              # Git LFS 規則（模型/貼圖/音訊/字型/產物）
+├── .gitignore                                  # 排除祕密/OS/工具產物，保留 .kiro 與 mcp.json
 ├── blender/
 │   └── README.md                               # 已合併進本檔案「Blender MCP 整合詳解」章節
 └── README.md                                   # 本文件

@@ -138,33 +138,31 @@
 ## 團隊角色與職責
 
 
-> ✅ = 已建立 Agent 檔案　⬜ = 願景中，尚未建立
-
 ### Layer 0：Strategic（戰略層）
 
-| Agent | 檔案 | 職責 | 狀態 |
-|-------|------|------|------|
-| Creative Director | `orchestration/creative-director.md` | 守護遊戲願景、創意方向最終仲裁、美術風格決定權 | ✅ |
+| Agent | 檔案 | 職責 |
+|-------|------|------|
+| Creative Director | `orchestration/creative-director.md` | 守護遊戲願景、創意方向最終仲裁、美術風格決定權 |
 
 ### Layer 1：Orchestration（指揮層）
 
-| Agent | 檔案 | 工具 | 職責 | 狀態 |
-|-------|------|------|------|------|
-| Producer | `orchestration/producer.md` | read, write, shell（本機 git）, `@github`（Projects/issues，需連上） | 拆解任務、產出 Contract、指引分派、追蹤進度 | ✅ |
+| Agent | 檔案 | 工具 | 職責 |
+|-------|------|------|------|
+| Producer | `orchestration/producer.md` | read, write, shell（本機 git）, `@github`（Projects/issues，需連上） | 拆解任務、產出 Contract、指引分派、追蹤進度 |
 
 > Creative Director 管「做什麼」，Producer 管「怎麼做」。
 
-### Layer 2：Team Leads（品質守門 / review gate）
+### Layer 2：Lead（品質守門 / review gate）
 
 > 這一層是各領域的 review gate 與真相文件維護者；Producer 可在進入下一階段前委派它們審查。
 
-| Lead | 檔案 | 職責 | 狀態 |
-|------|------|------|------|
-| Design Lead | `design/design-lead.md` | 核心設計（7 個常駐職能）整合 GDD、消矛盾、design-review gate | ✅ |
-| Domain Lead | `design/domain-lead.md` | 13 類遊戲類型 Domain Expert 的專業正確性審查與轉發（按需啟用，不進 GDD 整合，交 Design Lead） | ✅ |
-| Art Lead | `art/art-lead.md` | 維護 `style-guide.md`、跨美術 Team 一致性 review | ✅ |
-| Tech Lead | `engineering/tech-lead.md` | 技術架構決策、效能預算、跨引擎 code-review gate | ✅ |
-| QA Lead | `qa/qa-lead.md` | 測試策略、協調 functional/balance/performance tester、go/no-go | ✅ |
+| Lead | 檔案 | 職責 |
+|------|------|------|
+| Design Lead | `design/design-lead.md` | 核心設計（7 個常駐職能）整合 GDD、消矛盾、design-review gate |
+| Domain Lead | `design/domain-lead.md` | 13 類遊戲類型 Domain Expert 的專業正確性審查與轉發（按需啟用，不進 GDD 整合，交 Design Lead） |
+| Art Lead | `art/art-lead.md` | 維護 `style-guide.md`、跨美術 Team 一致性 review |
+| Tech Lead | `engineering/tech-lead.md` | 技術架構決策、效能預算、跨引擎 code-review gate |
+| QA Lead | `qa/qa-lead.md` | 測試策略、協調 functional/balance/performance tester、go/no-go |
 
 > Audio Lead **刻意不獨立建立**：目前只有單一 `audio-team`，無需再加一層管理；音訊一致性已明確併入 `art-lead` 的職責（見 `art-lead.md` frontmatter 說明）。
 >
@@ -172,85 +170,79 @@
 
 ### Layer 3：Specialist Agents
 
-#### Design Team（7 個已建立，核心設計）
+#### Design Team（核心設計，7 個）
 
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| game-designer | read, write | GDD、系統規格、數值平衡表、Asset Spec（無專屬 expert 的類型走這條） | ✅ |
-| economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass | ✅ |
-| combat-designer | read, write | 通用戰鬥系統/技能設計/敵人 AI；FPS 交 shooter-expert、RPG 交 rpg-systems-expert，避免重複覆蓋 | ✅ |
-| level-designer | read, write | 關卡佈局、觸發器/事件設計、難度曲線；產出交對應引擎 Team 實際搭建（引擎無關，不綁定單一引擎 MCP） | ✅ |
-| narrative-designer | read, write | 世界觀、角色背景、主線/支線劇情、對話內容、World Bible（與 narrative-adventure-expert 分工：內容 vs 系統結構） | ✅ |
-| ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist） | ✅ 已連線，見「Figma MCP 整合詳解」 |
-| localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） | ✅ |
+| Agent | 工具 | 產出 |
+|-------|------|------|
+| game-designer | read, write | GDD、系統規格、數值平衡表、Asset Spec（無專屬 expert 的類型走這條） |
+| economy-designer | read, write | 經濟模型、F2P 數值、商城定價、IAP、Battle Pass |
+| combat-designer | read, write | 通用戰鬥系統/技能設計/敵人 AI；FPS 交 shooter-expert、RPG 交 rpg-systems-expert，避免重複覆蓋 |
+| level-designer | read, write | 關卡佈局、觸發器/事件設計、難度曲線；產出交對應引擎 Team 實際搭建（引擎無關，不綁定單一引擎 MCP） |
+| narrative-designer | read, write | 世界觀、角色背景、主線/支線劇情、對話內容、World Bible（與 narrative-adventure-expert 分工：內容 vs 系統結構） |
+| ui-ux-team | @figma, read, write | Wireframe、操作流程、新手引導、UI Layout、Design Token、互動狀態規格、切圖規格（合併原願景 ux-designer + ui-artist），見「Figma MCP 整合詳解」 |
+| localization-team | read, write, shell | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） |
 
-#### Domain Team（13 個已建立，遊戲類型專家，按需啟用）
+#### Domain Team（遊戲類型專家，13 個，按需啟用）
 
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| slot-game-expert | read, write | 老虎機數學模型、RNG 指引、GLI 認證合規、負責任遊戲設計 | ✅（見「Slot Game Expert 詳解」） |
-| fish-game-expert | read, write | 魚機命中機率、賠付經濟、RTP、伺服器判定 RNG、合規 | ✅ |
-| shooter-expert | read, write | 武器數值/彈道、命中判定、TTK 平衡、敵人 AI、手感 | ✅ |
-| mmo-expert | read, write | netcode、伺服器權威、狀態同步、持久化、防作弊、scope 界定 | ✅ |
-| rpg-systems-expert | read, write | 屬性/等級曲線、技能樹、裝備/掉落表、傷害公式 | ✅ |
-| card-game-expert | read, write | 卡牌數值、資源曲線、archetype/combo、平衡準則 | ✅ |
-| puzzle-match3-expert | read, write | board 生成/可解性、消除連鎖規則、關卡難度曲線、步數經濟 | ✅ |
-| platformer-expert | read, write | 跳躍手感（coyote/jump buffer）、移動物理、關卡節奏、metroidvania gating | ✅ |
-| roguelike-expert | read, write | 程序生成規則、build/synergy 平衡、風險報酬、meta 進度 | ✅ |
-| strategy-expert | read, write | 兵種相剋、資源經濟、AI 對手、塔防波次/塔數值曲線 | ✅ |
-| simulation-expert | read, write | 生產鏈/合成樹、供需經濟收斂、生存需求、自動化曲線 | ✅ |
-| rhythm-expert | read, write | 譜面設計、判定窗（ms）、延遲校正、計分/連段（綁 audio-team） | ✅ |
-| narrative-adventure-expert | read, write | 分支敘事結構、旗標/狀態變數、對話樹、選擇後果（綁 localization-team） | ✅ |
+| Agent | 工具 | 產出 |
+|-------|------|------|
+| slot-game-expert | read, write | 老虎機數學模型、RNG 指引、GLI 認證合規、負責任遊戲設計（見「Slot Game Expert 詳解」） |
+| fish-game-expert | read, write | 魚機命中機率、賠付經濟、RTP、伺服器判定 RNG、合規 |
+| shooter-expert | read, write | 武器數值/彈道、命中判定、TTK 平衡、敵人 AI、手感 |
+| mmo-expert | read, write | netcode、伺服器權威、狀態同步、持久化、防作弊、scope 界定 |
+| rpg-systems-expert | read, write | 屬性/等級曲線、技能樹、裝備/掉落表、傷害公式 |
+| card-game-expert | read, write | 卡牌數值、資源曲線、archetype/combo、平衡準則 |
+| puzzle-match3-expert | read, write | board 生成/可解性、消除連鎖規則、關卡難度曲線、步數經濟 |
+| platformer-expert | read, write | 跳躍手感（coyote/jump buffer）、移動物理、關卡節奏、metroidvania gating |
+| roguelike-expert | read, write | 程序生成規則、build/synergy 平衡、風險報酬、meta 進度 |
+| strategy-expert | read, write | 兵種相剋、資源經濟、AI 對手、塔防波次/塔數值曲線 |
+| simulation-expert | read, write | 生產鏈/合成樹、供需經濟收斂、生存需求、自動化曲線 |
+| rhythm-expert | read, write | 譜面設計、判定窗（ms）、延遲校正、計分/連段（綁 audio-team） |
+| narrative-adventure-expert | read, write | 分支敘事結構、旗標/狀態變數、對話樹、選擇後果（綁 localization-team） |
 
-#### Art Team（5 個已建立 + Art Lead）
+#### Art Team（Art Lead + 5 個）
 
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| comfyui-team | `@comfyui`, read, write | 概念圖、PBR 貼圖、Sprite、Workflow 組裝 | ✅ 已連線，見「ComfyUI MCP 整合詳解」 |
-| blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx | ✅ |
-| ui-artist | @figma, @comfyui | UI Layout、Design Token、互動狀態規格 | ✅ 已合併進 `design/ui-ux-team`（版面/Token 由 ui-ux-team 出，裝飾素材由 comfyui-team 生成） |
-| animator | @blender-mcp, read, write | 骨骼綁定、蒙皮權重、動畫 clip、含動畫匯出（接 blender-team 的靜態 mesh） | ✅ |
-| vfx-artist | @comfyui, read, write | 特效素材/序列幀生成；與 technical-artist 分工：內容 vs 技術實現 | ✅ |
-| technical-artist | @blender-mcp, read, write, shell | Shader/材質、LOD/貼圖壓縮/合批、VFX 技術、匯入管線 | ✅ |
+| Agent | 工具 | 產出 |
+|-------|------|------|
+| comfyui-team | `@comfyui`, read, write | 概念圖、PBR 貼圖、Sprite、Workflow 組裝，見「ComfyUI MCP 整合詳解」 |
+| blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx |
+| animator | @blender-mcp, read, write | 骨骼綁定、蒙皮權重、動畫 clip、含動畫匯出（接 blender-team 的靜態 mesh） |
+| vfx-artist | @comfyui, read, write | 特效素材/序列幀生成；與 technical-artist 分工：內容 vs 技術實現 |
+| technical-artist | @blender-mcp, read, write, shell | Shader/材質、LOD/貼圖壓縮/合批、VFX 技術、匯入管線 |
+| audio-team | `@comfyui`, read, write | SFX、BGM、配音（voice）；透過 ComfyUI `generate_audio` 生成 |
 
 > `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個 ComfyUI 工具，拆開建立沒有實際差異。
 >
 > 同理，原願景中 `ux-designer`（Design Team）與 `ui-artist`（Art Team）已合併成 `design/ui-ux-team`，因為兩者都圍繞 Figma 運作、共同負責 UI/UX 層。分工上：`ui-ux-team` 出版面與 Design Token（介面「怎麼排、怎麼流動」），`comfyui-team` 生成要放進版面的像素素材（icon/按鈕/背景），引擎 Team 負責在原生 UI 系統實作。
-
-#### Engineering Team（4 引擎 Team + Systems/UI Programmer + DevOps 已建立）
-
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| unity-team | `@unity-mcp`, read, write, shell | 場景組裝、遊戲邏輯、狀態機、技能系統、Build | ✅ 已連線（[unity-mcp](https://github.com/CoplayDev/unity-mcp)），見「Unity MCP 整合詳解」 |
-| godot-team | `@godot-mcp`, read, write, shell | 場景組裝、GDScript、State Machine、Export | ✅ 已連線（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)），見「Godot MCP 整合詳解」 |
-| unreal-team | `@unreal-engine`, read, write, shell | 關卡組裝、Blueprint 邏輯、材質工作流程 | ✅ 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)），見「Unreal MCP 整合詳解」 |
-| cocos-team | `@cocos-creator`, read, write, shell | 場景組裝、TypeScript 元件、Prefab、Build | ✅ 已連線（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)），見「Cocos MCP 整合詳解」 |
-| systems-programmer | read, write, shell | 引擎無關的存檔系統/資源管理/事件系統設計，交對應引擎 Team 落地實作 | ✅ |
-| ui-programmer | read, write, shell | 把 ui-ux-team 版面/Token 綁定成可互動引擎 UI，接 localization-team 多語落地 | ✅ |
-| devops-team | read, write, shell | headless build、CI pipeline、版本/產物管理、build 健康驗證 | ✅ |
-
-#### Audio Team（1 個已建立）
-
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| audio-team | `@comfyui`, read, write | SFX、BGM、配音（voice）；透過 ComfyUI `generate_audio` 生成 | ✅ |
-
+>
 > 原願景的 `sound-designer` + `composer` 已合併成單一 `audio-team`（兩者都用同一個 comfyui MCP 的音訊生成能力，拆開沒有實際差異，比照 comfyui-team 的合併邏輯）。
 
-#### QA Team（4 個已建立 + QA Lead）
+#### Engineering Team（4 引擎 Team + Systems/UI Programmer + DevOps）
 
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| functional-tester | read, shell | Unit/Integration Test、Bug 報告（驗「功能對不對」） | ✅（需目標專案已有測試框架） |
-| balance-tester | read, write, shell | RTP/經濟 Monte Carlo 模擬、平衡性報告（驗「數值對不對」） | ✅ |
-| performance-tester | read, write, shell | FPS/frame time/draw call/記憶體/載入 profiling、瓶頸分析、優化建議 | ✅ |
-| usability-tester | read, write | 新手引導評估、卡關點分析；與 functional/balance/performance tester 分工：驗體驗好不好 | ✅ |
+| Agent | 工具 | 產出 |
+|-------|------|------|
+| unity-team | `@unity-mcp`, read, write, shell | 場景組裝、遊戲邏輯、狀態機、技能系統、Build，見「Unity MCP 整合詳解」（[unity-mcp](https://github.com/CoplayDev/unity-mcp)） |
+| godot-team | `@godot-mcp`, read, write, shell | 場景組裝、GDScript、State Machine、Export，見「Godot MCP 整合詳解」（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)） |
+| unreal-team | `@unreal-engine`, read, write, shell | 關卡組裝、Blueprint 邏輯、材質工作流程，見「Unreal MCP 整合詳解」（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） |
+| cocos-team | `@cocos-creator`, read, write, shell | 場景組裝、TypeScript 元件、Prefab、Build，見「Cocos MCP 整合詳解」（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)） |
+| systems-programmer | read, write, shell | 引擎無關的存檔系統/資源管理/事件系統設計，交對應引擎 Team 落地實作 |
+| ui-programmer | read, write, shell | 把 ui-ux-team 版面/Token 綁定成可互動引擎 UI，接 localization-team 多語落地 |
+| devops-team | read, write, shell | headless build、CI pipeline、版本/產物管理、build 健康驗證 |
 
-#### Publishing Team（1 個已建立）
+#### QA Team（QA Lead + 4 個）
 
-| Agent | 工具 | 產出 | 狀態 |
-|-------|------|------|------|
-| compliance-release | read, write, web | 分級（IARC/ESRB/PEGI）、隱私合規（GDPR/COPPA）、商店素材規格、送審清單、老虎機認證/牌照流程 | ✅ |
+| Agent | 工具 | 產出 |
+|-------|------|------|
+| functional-tester | read, shell | Unit/Integration Test、Bug 報告（驗「功能對不對」；需目標專案已有測試框架） |
+| balance-tester | read, write, shell | RTP/經濟 Monte Carlo 模擬、平衡性報告（驗「數值對不對」） |
+| performance-tester | read, write, shell | FPS/frame time/draw call/記憶體/載入 profiling、瓶頸分析、優化建議 |
+| usability-tester | read, write | 新手引導評估、卡關點分析；與 functional/balance/performance tester 分工：驗體驗好不好 |
+
+#### Publishing Team（1 個）
+
+| Agent | 工具 | 產出 |
+|-------|------|------|
+| compliance-release | read, write, web | 分級（IARC/ESRB/PEGI）、隱私合規（GDPR/COPPA）、商店素材規格、送審清單、老虎機認證/牌照流程 |
 
 ---
 

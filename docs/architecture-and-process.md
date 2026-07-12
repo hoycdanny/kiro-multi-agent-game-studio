@@ -129,15 +129,15 @@ graph LR
 
 | 工具 | 用途 | 本專案狀態 | 若 MCP 不可用 |
 |------|------|-----------|--------------|
-| **Blender** | 3D 建模、動畫、渲染 | ✅ 已連線（`blender-mcp`） | Python Script + CLI |
-| **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | ✅ 已連線（[`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp)） | REST API |
-| **Figma** | UI/UX 設計、版面、規格匯出、Design Token | ✅ 已連線（[官方 Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)） | REST API |
-| **Unity** | 遊戲引擎（場景組裝、Build） | ✅ 已連線（[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)） | CLI Batch Mode |
-| **Godot** | 遊戲引擎（場景組裝、Export） | ✅ 已連線（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)） | CLI headless export |
-| **Unreal Engine** | 遊戲引擎（關卡組裝、Blueprint） | ✅ 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） | UBT/UAT CLI |
-| **Cocos Creator** | 遊戲引擎（場景組裝、跨平台/H5 Build） | ✅ 已連線（[DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)） | CLI Build |
+| **Blender** | 3D 建模、動畫、渲染 | 已連線（`blender-mcp`） | Python Script + CLI |
+| **ComfyUI** | 圖像生成（概念圖、貼圖、Sprite、UI Icon） | 已連線（[`artokun/comfyui-mcp`](https://github.com/artokun/comfyui-mcp)） | REST API |
+| **Figma** | UI/UX 設計、版面、規格匯出、Design Token | 已連線（[官方 Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)） | REST API |
+| **Unity** | 遊戲引擎（場景組裝、Build） | 已連線（[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)） | CLI Batch Mode |
+| **Godot** | 遊戲引擎（場景組裝、Export） | 已連線（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)） | CLI headless export |
+| **Unreal Engine** | 遊戲引擎（關卡組裝、Blueprint） | 已連線（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） | UBT/UAT CLI |
+| **Cocos Creator** | 遊戲引擎（場景組裝、跨平台/H5 Build） | 已連線（[DaxianLee/cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)） | CLI Build |
 | **Git（本機）** | 版本控制（本機 repo commit/diff） | 未透過 MCP，Producer 用 shell 直接操作 | shell CLI |
-| **GitHub Projects** | 任務追蹤、Sprint 看板（issues + Projects） | ✅ 已設定（`github`，原生 binary、**免 Docker**，需 PAT）；本地 `tasks.yaml` 為 fallback | GitHub MCP Server（REST/GraphQL） |
+| **GitHub Projects** | 任務追蹤、Sprint 看板（issues + Projects） | 已設定（`github`，原生 binary、**免 Docker**，需 PAT）；本地 `tasks.yaml` 為 fallback | GitHub MCP Server（REST/GraphQL） |
 
 ### 現有 MCP 配置（`.kiro/settings/mcp.json`，本專案實際內容）
 
@@ -222,7 +222,7 @@ graph LR
 
 ### 各工具的使用場景（願景設計，供未來擴充參考）
 
-#### ComfyUI（圖像生成）✅ 已連線
+#### ComfyUI（圖像生成，已連線）
 
 使用者（規劃）：concept-artist, texture-artist, ui-artist, vfx-artist
 
@@ -242,7 +242,7 @@ comfyui_workflows:
     output: 一批 UI Icon
 ```
 
-#### Figma（UI/UX 設計）✅ 已連線
+#### Figma（UI/UX 設計，已連線）
 
 使用者：`design/ui-ux-team`（合併原願景 ux-designer + ui-artist）→ 產出 handoff 規格給對應引擎 Team 實作。完整說明見「Figma MCP 整合詳解」。
 
@@ -257,7 +257,7 @@ graph LR
 
 分工：`ui-ux-team` 用 Figma 管結構與精確控制（版面、流程、Design Token），`comfyui-team` 生成風格化像素素材（icon/按鈕/背景），引擎 Team 依 handoff 規格在原生 UI 系統（Unity UI Toolkit / Godot Theme / Unreal UMG / Cocos UI）實作。
 
-#### Blender（3D）✅ 已連線
+#### Blender（3D，已連線）
 
 使用者：`art/blender-team`（已建立），animator / technical-artist（規劃）
 
@@ -280,7 +280,7 @@ graph LR
 - 根據貼圖檔名自動對應材質（`_Albedo`, `_Normal`, `_Roughness`）
 - 在指定路徑生成 Prefab，掛上對應的 Component
 
-#### Unity（遊戲引擎）✅ 已連線
+#### Unity（遊戲引擎，已連線）
 
 使用者：unity-team（已建立）、ui-programmer, devops, level-designer（規劃中）
 
@@ -373,9 +373,9 @@ graph TD
 | 1: Design | 產出系統規格、Wireframe、對話腳本 | game-designer, ux-designer, narrative-designer | 僅 game-designer 可用 |
 | 2: Pre-production | 概念圖、UI Layout、核心邏輯（平行） | concept-artist, ui-artist, programmer | 僅程式部分可用（無概念圖能力） |
 | 3: Production | PBR 貼圖、3D 模型、動畫、完整 C# | texture-artist, blender-team, animator, programmer | 3D 模型 + 程式可用，貼圖/動畫不可用 |
-| 4: Integration | 匯入 Unity、生成 Prefab、組裝場景 | devops / unity import | ✅ `unity-team` 可用（透過 `unity-mcp`） |
+| 4: Integration | 匯入 Unity、生成 Prefab、組裝場景 | devops / unity import | `unity-team` 可用（透過 `unity-mcp`） |
 | 5: QA | 功能/數值/效能測試、修 Bug（max 3 次） | functional-tester, balance-tester, performance-tester | 僅 functional-tester 可用 |
-| 6: Build | 打包目標平台、CI/CD | devops | ⬜ 未建立 |
+| 6: Build | 打包目標平台、CI/CD | devops | 尚未建立對應 Team |
 
 ### 兩個流程的關係
 
@@ -395,7 +395,7 @@ graph TD
 
 Agent 之間不是隨意對話，而是透過標準化的 **Contract** 傳遞需求和交付物。這套機制已實作於 `.kiro/steering/global/contracts.md`（`inclusion: always`，所有 Agent 對話都會自動載入）。
 
-### 檔案共享與交接（精簡協作規範）—— ✅ 已實作
+### 檔案共享與交接（精簡協作規範，已實作）
 
 因為 subagent 彼此隔離、沒有即時對話，agent 之間的「溝通」一律**透過讀寫共享檔案 + Producer 轉述**。45 個 agent 全都有 `read` 權限，可讀 repo 內任何檔案，重點只在於「約定去哪讀、交付後寫什麼」：
 
@@ -405,7 +405,7 @@ Agent 之間不是隨意對話，而是透過標準化的 **Contract** 傳遞需
 
 > 刻意精簡：不另建 message bus / ADR 目錄，決策直接記進 `gdd.md`「變更紀錄」。核心只有「共享位置 + Delivery Manifest」，確保所有引擎都讀得到彼此的檔案與資料。
 
-### Asset Contract（美術/音效資產用）—— ✅ 已實作，`blender-team` 會讀取此格式
+### Asset Contract（美術/音效資產用，已實作，`blender-team` 會讀取此格式）
 
 ```yaml
 asset_request:
@@ -431,7 +431,7 @@ asset_request:
     max_blender_operations: 20
 ```
 
-### Task Contract（程式/設計任務用）—— ✅ 已實作，`{engine}-team` / `functional-tester` 會讀取此格式
+### Task Contract（程式/設計任務用，已實作，`{engine}-team` / `functional-tester` 會讀取此格式）
 
 ```yaml
 task:
@@ -472,9 +472,9 @@ User → Producer（建立 Contract，標明轉發對象）
 ## 治理機制
 
 
-> 本章節全部為**願景設計**。Solo Dev 規模（目前配置）下，README 原文建議治理機制為「✗ 不啟用」，因此以下機制目前均未實作，僅供未來擴充到 Small Team / Studio 規模時參考。
+> 本章節全部為**願景設計**。Solo Dev 規模（目前配置）下，README 原文建議治理機制為「不啟用」，因此以下機制目前均未實作，僅供未來擴充到 Small Team / Studio 規模時參考。
 
-### Review Gate（品質關卡）⬜
+### Review Gate（品質關卡，尚未實作）
 
 ```mermaid
 graph LR
@@ -493,7 +493,7 @@ graph LR
 | Code Review | Tech Lead | 命名規範？效能？測試覆蓋？ |
 | Release Review | Producer | 無 Critical Bug？效能達標？ |
 
-### 衝突升級 ⬜
+### 衝突升級（尚未實作）
 
 ```mermaid
 graph TD
@@ -547,7 +547,7 @@ version_control:
   commit_format: "[team][type] description"
 ```
 
-> ⬜ 本專案目前沒有設定 Git LFS，且尚未產出任何 `.fbx` 等二進位資產。若之後開始大量產出 3D 模型/貼圖，建議在提交前先設定 LFS，避免 repo 體積暴增。
+> 本專案目前沒有設定 Git LFS，且尚未產出任何 `.fbx` 等二進位資產。若之後開始大量產出 3D 模型/貼圖，建議在提交前先設定 LFS，避免 repo 體積暴增。
 
 ---
 
@@ -581,13 +581,13 @@ sequenceDiagram
 
 **本專案目前能實測到哪一步：**
 
-| Step | 動作 | 狀態 |
+| Step | 動作 | 備註 |
 |------|------|------|
-| 1 | Producer 收到需求，偵測引擎與遊戲類型 | ✅ 可測試 |
-| 2 | Producer → `design-lead` → 轉發 `slot-game-expert` 出數學模型/RNG/合規規格 | ⚠️ 兩層委派尚待實測；退化時 Producer 直接委派 `slot-game-expert` |
-| 3 | Producer → `art-lead` → 轉發 `comfyui-team` 生成符號美術 | ⚠️ 兩層委派尚待實測；退化時 Producer 直接委派 `comfyui-team`（透過 `comfyui` / `artokun/comfyui-mcp`） |
-| 4 | Producer → `tech-lead` → 轉發 `unity-team`（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | ⚠️ 兩層委派尚待實測；退化時 Producer 直接委派對應引擎 Team（依引擎透過對應 MCP） |
-| 5 | Producer 執行 git commit | ✅ 可測試 |
+| 1 | Producer 收到需求，偵測引擎與遊戲類型 | 可測試 |
+| 2 | Producer → `design-lead` → 轉發 `slot-game-expert` 出數學模型/RNG/合規規格 | 兩層委派尚待實測；退化時 Producer 直接委派 `slot-game-expert` |
+| 3 | Producer → `art-lead` → 轉發 `comfyui-team` 生成符號美術 | 兩層委派尚待實測；退化時 Producer 直接委派 `comfyui-team`（透過 `comfyui` / `artokun/comfyui-mcp`） |
+| 4 | Producer → `tech-lead` → 轉發 `unity-team`（或 godot/unreal/cocos-team）組裝場景 + 寫遊戲邏輯 | 兩層委派尚待實測；退化時 Producer 直接委派對應引擎 Team（依引擎透過對應 MCP） |
+| 5 | Producer 執行 git commit | 可測試 |
 
 **實際操作流程：**
 1. 跟 `orchestration/producer` 說「請幫我用 XX 開發一款老虎機」（或先不指定引擎，看它是否會問你）
@@ -606,11 +606,11 @@ sequenceDiagram
 
 | 規模 | Agent 數 | 需要工具 | 月成本 | 啟用治理機制 | 本專案現況 |
 |------|---------|----------|--------|-------------|-----------|
-| **Solo Dev**（1 人） | 10 | ComfyUI, Figma, 引擎（任一）, Git | $50-150 | ✗ | ✅ **目前配置**（Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub 皆走 MCP；本機 Git 用 shell） |
-| **Small Team**（2-4 人） | 15-18 | + GitHub Projects | $200-500 | 基本 Review Gate | ⬜ 規劃中 |
-| **Studio**（5-10 人） | 30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 | ⬜ 規劃中 |
+| **Solo Dev**（1 人） | 10 | ComfyUI, Figma, 引擎（任一）, Git | $50-150 | 不啟用 | **目前配置**（Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub 皆走 MCP；本機 Git 用 shell） |
+| **Small Team**（2-4 人） | 15-18 | + GitHub Projects | $200-500 | 基本 Review Gate | 規劃中 |
+| **Studio**（5-10 人） | 30+ | 全套 + 雲端 GPU | $500-2000 | 完整治理 | 規劃中 |
 
-### 啟用清單（✅ 已完成，共 45 個）
+### 啟用清單（共 45 個）
 
 > 下方以「資料夾/檔名」列出檔案位置；實際委派 / 呼叫時用扁平 `name`（例如 `producer`、`blender-team`），不加資料夾前綴。
 
@@ -632,11 +632,11 @@ publishing/compliance-release
 
 > 注意：與原願景清單相比，本專案用 `art/comfyui-team`、`art/blender-team` 取代了原願景中拆得更細的 `concept-artist`/`texture-artist` 角色，並將原本單一的 `gameplay-programmer` 拆成 4 個引擎專屬 Team（`unity-team`/`godot-team`/`unreal-team`/`cocos-team`），因為引擎選擇會決定程式語言、API、Editor 操作方式，拆開才能各自套用對應的最佳實踐（例如 Godot 的靜態型別 GDScript 規範、Unreal 的 `ce` command 已知 crash 問題）。另外新增 `slot-game-expert` 這個特殊遊戲類型的 Domain Expert；原願景的 `Audio Lead` 刻意不獨立建立，其一致性把關已併入 `art/art-lead`（見上方「完整系統架構圖」說明）。
 
-### Small Team 追加（⬜ 下一步可考慮的方向）
+### Small Team 追加（下一步可考慮的方向）
 
 前提：需先接上 GitHub Projects（官方 GitHub MCP Server）（Figma MCP 已在前階段連線；原願景的 `ui-artist` 已併入 `design/ui-ux-team`；原願景的 `Audio Lead` 已併入 `art/art-lead`；`art/animator`、`art/audio-team`、`art/vfx-artist`、`qa/balance-tester`、`qa/usability-tester`、`engineering/devops-team`、`engineering/systems-programmer`、`engineering/ui-programmer`、`design/economy-designer`、`design/localization-team`、`design/level-designer`、`design/narrative-designer`、`design/combat-designer`、`publishing/compliance-release` 已於本階段建立）。
 
-### Studio 追加（⬜ 遠期）
+### Studio 追加（遠期）
 
 目前 Studio 規模規劃的角色皆已建立完成，暫無追加項目。
 

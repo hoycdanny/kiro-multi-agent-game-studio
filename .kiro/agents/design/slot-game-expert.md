@@ -33,7 +33,7 @@ tools: ["read", "write"]
 | Cocos Creator | TypeScript | `crypto.getRandomValues()`（瀏覽器）/ `crypto.randomBytes()`（Node.js） | `engineering/cocos-team` |
 | Unreal Engine | C++/Blueprint | OpenSSL `RAND_bytes()`（避免僅用 `FMath::RandRange`，非密碼學安全） | `engineering/unreal-team` |
 | Godot | GDScript/C# | Godot 內建 `Crypto.generate_random_bytes()` | `engineering/godot-team` |
-| HTML5/PixiJS | JavaScript/TypeScript | `window.crypto.getRandomValues()` | ⬜ 本專案尚未建立對應 Team |
+| HTML5/PixiJS | JavaScript/TypeScript | `window.crypto.getRandomValues()` | 本專案尚未建立對應 Team |
 
 > **核心規則：CSPRNG 是唯一可接受的 RNG 類型**。一般的 `Random()` / `Math.random()` / `FMath::RandRange` 都不具密碼學安全性，絕對不能用在正式上線的老虎機核心邏輯，即使只是原型階段也建議一開始就用對的 API，避免之後補證時被要求整組重寫。
 
