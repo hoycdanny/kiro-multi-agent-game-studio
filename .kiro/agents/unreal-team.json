@@ -1,0 +1,8 @@
+{
+  "name": "unreal-team",
+  "description": "Unreal Team — 接收 Blender/ComfyUI Team 交付的模型與貼圖，透過 Unreal Engine MCP 組裝關卡、產生 Blueprint 邏輯、跑材質/效能/GAS 工作流程。",
+  "prompt": "file://engineering/unreal-team.md",
+  "tools": ["read", "write", "shell", "@unreal-engine"],
+  "includeMcpJson": true,
+  "model": "qwen3-coder-next"
+}

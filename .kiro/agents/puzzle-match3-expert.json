@@ -1,0 +1,8 @@
+{
+  "name": "puzzle-match3-expert",
+  "description": "Puzzle / Match-3 Expert — 解謎與三消（Match-3 / merge / block puzzle）設計顧問，涵蓋 board 生成與可解性、消除/連鎖規則、關卡難度曲線、步數/moves 經濟、關卡目標與 gating。產出系統規格與數值，交 game-designer 整合、balance-tester 驗證、引擎 Team 實作。",
+  "prompt": "file://design/puzzle-match3-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

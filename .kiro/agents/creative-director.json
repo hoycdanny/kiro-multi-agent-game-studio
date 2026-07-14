@@ -1,0 +1,8 @@
+{
+  "name": "creative-director",
+  "description": "Creative Director（Layer 0 戰略層）— 遊戲願景與創意方向的最終守門人。定義並守護核心體驗（fantasy、tone、pillars）、對美術風格與設計取捨有最終仲裁權，確保所有 Team 的產出都朝同一個創意目標收斂。不管執行排程（那是 Producer）。",
+  "prompt": "file://orchestration/creative-director.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-5"
+}

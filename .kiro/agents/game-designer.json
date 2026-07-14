@@ -1,0 +1,8 @@
+{
+  "name": "game-designer",
+  "description": "撰寫遊戲設計文件（GDD）、系統規格、數值平衡表，產出給美術與工程團隊的 Asset Spec。",
+  "prompt": "file://design/game-designer.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

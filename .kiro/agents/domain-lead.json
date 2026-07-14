@@ -1,0 +1,8 @@
+{
+  "name": "domain-lead",
+  "description": "Domain Lead（Layer 2）— 13 類遊戲類型 Domain Expert（老虎機/魚機/射擊/MMO/RPG/卡牌/三消/平台/roguelike/策略/模擬/節奏/敘事）的專業審查者，也是 Producer 委派類型專家任務的中介調度者。與 design-lead 分工：Domain Lead 審「這個類型的專業數學/機制對不對」，design-lead 審「整體設計連貫不連貫、符不符合 pillars」。",
+  "prompt": "file://design/domain-lead.md",
+  "tools": ["read", "write", "subagent"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-5"
+}

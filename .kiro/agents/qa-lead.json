@@ -1,0 +1,8 @@
+{
+  "name": "qa-lead",
+  "description": "QA Lead（Layer 2）— 品質策略與測試協調者，也是 Producer 委派測試任務的中介調度者。收到 Producer 的 Contract 後，轉發給對應的 tester（functional/balance/performance/usability-tester），收回結果後彙整成品質報告，再回報給 Producer。",
+  "prompt": "file://qa/qa-lead.md",
+  "tools": ["read", "write", "subagent"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-5"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "slot-game-expert",
+  "description": "Slot Game Expert — 老虎機開發專業顧問，涵蓋 RNG 實作、數學模型設計（Paytable/RTP/Volatility）、GLI 認證合規、負責任遊戲設計，並依目標引擎給出對應的技術棧建議。",
+  "prompt": "file://design/slot-game-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "technical-artist",
+  "description": "Technical Artist（Layer 3 / Art）— 美術與工程之間的橋樑。負責 shader / 材質、資產優化（LOD、貼圖壓縮、合批）、美術管線與匯入設定、視覺效果（VFX）技術實現，讓美術產出在目標平台跑得順又好看。銜接 blender-team / comfyui-team 的資產與引擎 Team 的實作。",
+  "prompt": "file://art/technical-artist.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

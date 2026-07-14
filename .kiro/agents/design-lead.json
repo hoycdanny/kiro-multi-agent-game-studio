@@ -1,0 +1,8 @@
+{
+  "name": "design-lead",
+  "description": "Design Lead（Layer 2）— 核心設計端的品質守門人、GDD 整合者，也是 Producer 委派核心設計任務的中介調度者。收到 Producer 的 Contract 後，轉發給對應的核心設計 Specialist（game-designer/level-designer/narrative-designer/combat-designer/economy-designer/ui-ux-team/localization-team），收回產出後做整合審查，再彙整回報給 Producer。13 類遊戲類型 Domain Expert 由專責的 domain-lead 管理，不在此範圍。",
+  "prompt": "file://design/design-lead.md",
+  "tools": ["read", "write", "subagent"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-5"
+}

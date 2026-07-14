@@ -1,0 +1,8 @@
+{
+  "name": "systems-programmer",
+  "description": "Systems Programmer — 引擎無關的核心系統程式顧問，涵蓋存檔系統、資源管理、事件系統設計。產出可攜的設計規格與參考實作模式，交對應引擎 Team 落地到目標引擎的語言與 API。",
+  "prompt": "file://engineering/systems-programmer.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "qwen3-coder-next"
+}

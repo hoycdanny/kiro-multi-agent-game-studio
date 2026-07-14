@@ -1,7 +1,7 @@
 ---
 name: localization-team
 description: Localization / i18n Team — 負責多語系文字管理：抽字串、建立 locale 檔（key-value）、翻譯規格與風格規範、字型/字元集/排版（含 CJK、RTL）需求、以及交給引擎 Team 的 i18n 落地規格。
-model: minimax-m2.5
+model: claude-sonnet-5
 tools: ["read", "write", "shell"]
 permissions:
   rules:

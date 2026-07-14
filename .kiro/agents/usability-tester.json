@@ -1,0 +1,8 @@
+{
+  "name": "usability-tester",
+  "description": "Usability Tester — 可用性測試顧問，涵蓋新手引導評估、卡關點分析、操作流程易用性。與 functional-tester（功能對不對）、balance-tester（數值對不對）分工：本 Agent 驗「玩家體驗好不好、卡不卡」。",
+  "prompt": "file://qa/usability-tester.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-haiku-4.5"
+}

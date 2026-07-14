@@ -1,0 +1,8 @@
+{
+  "name": "simulation-expert",
+  "description": "Simulation Expert — 模擬經營 / 生存製作 / 沙盒設計顧問，涵蓋生產鏈與供需經濟、資源循環、建造/自動化系統、生存需求（飢餓/溫度/耐久）、系統交互與湧現、進度與解鎖節奏。產出系統規格交 game-designer 整合、balance-tester 驗證、引擎 Team 實作。",
+  "prompt": "file://design/simulation-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

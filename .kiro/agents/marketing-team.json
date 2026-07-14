@@ -1,0 +1,8 @@
+{
+  "name": "marketing-team",
+  "description": "Marketing / PR Team — 產出行銷與公關素材的文字規格：商店頁面文案、預告片 shot list/腳本、新聞稿草稿、社群貼文草稿、展會素材文案。純文字產出，不執行投放廣告、不代管社群帳號、不做影片剪輯本身。",
+  "prompt": "file://publishing/marketing-team.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-haiku-4.5"
+}

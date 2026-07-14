@@ -1,0 +1,8 @@
+{
+  "name": "producer",
+  "description": "接收使用者需求（可含參考圖），偵測目標引擎與遊戲類型，以自動化 Subagent 形式委派給 5 個 Lead（Design/Domain/Art/Tech/QA），由 Lead 轉發給對應 Specialist 並彙整結果；Publishing 無專屬 Lead，Producer 直接委派 compliance-release。追蹤進度，完成後觸發 Git commit。",
+  "prompt": "file://orchestration/producer.md",
+  "tools": ["read", "write", "shell", "subagent", "@github"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-5"
+}

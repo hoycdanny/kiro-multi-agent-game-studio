@@ -1,0 +1,8 @@
+{
+  "name": "strategy-expert",
+  "description": "Strategy Expert — 策略遊戲設計顧問，涵蓋 RTS / 回合制策略 / 4X / 塔防：單位/兵種相剋、資源與生產經濟、AI 對手行為、地圖與視野、塔防波次與塔數值曲線。產出系統規格交 game-designer 整合、balance-tester 驗證、引擎 Team 實作。",
+  "prompt": "file://design/strategy-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "level-designer",
+  "description": "Level Designer — 關卡設計顧問，涵蓋關卡佈局、觸發器與事件設計、難度曲線、節奏配置。產出關卡藍圖與規格，交 game-designer 整合、對應引擎 Team 實際搭建場景。",
+  "prompt": "file://design/level-designer.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

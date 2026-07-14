@@ -1,0 +1,8 @@
+{
+  "name": "vfx-artist",
+  "description": "VFX Artist — 視覺特效內容顧問，透過 ComfyUI 生成粒子/序列幀素材與特效概念圖。與 technical-artist 分工：本 Agent 產出特效「內容」（長什麼樣），technical-artist 負責特效的「技術實現」（shader/效能）。",
+  "prompt": "file://art/vfx-artist.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

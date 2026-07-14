@@ -1,0 +1,8 @@
+{
+  "name": "balance-tester",
+  "description": "Balance Tester — 用大量模擬（Monte Carlo）驗證數值規格：老虎機 RTP/波動度/命中率、F2P 經濟平衡（產出/消耗、通膨）。撰寫並執行模擬腳本，產出報告，回饋給 slot-game-expert / economy-designer。",
+  "prompt": "file://qa/balance-tester.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

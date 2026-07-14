@@ -1,0 +1,8 @@
+{
+  "name": "economy-designer",
+  "description": "Economy / Monetization Designer — 設計遊戲經濟系統與變現模型（F2P 數值、IAP 商品結構、虛擬貨幣、掉落/獎勵曲線、付費轉換與留存指標），產出可交給引擎 Team 實作、給 QA 驗證的規格。",
+  "prompt": "file://design/economy-designer.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

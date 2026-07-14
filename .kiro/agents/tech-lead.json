@@ -1,0 +1,8 @@
+{
+  "name": "tech-lead",
+  "description": "Tech Lead（Layer 2）— 技術架構決策者、code-review gate，也是 Producer 委派引擎/工程任務的中介調度者。收到 Producer 的 Contract 後，轉發給對應的引擎 Team（unity/godot/unreal/cocos-team）或工程 Specialist（systems-programmer/ui-programmer/devops-team），收回產出後做 code-review，再彙整回報給 Producer。[已知落差：IDE 版原本用 permissions.rules 把 shell 限制在 git/npm/node/python 白名單內，CLI agent schema 目前無對應欄位可還原此限制，此版本 shell 權限較寬，需人工留意]",
+  "prompt": "file://engineering/tech-lead.md",
+  "tools": ["read", "write", "shell", "subagent"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-5"
+}

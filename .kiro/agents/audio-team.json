@@ -1,0 +1,8 @@
+{
+  "name": "audio-team",
+  "description": "Audio Team — 產出遊戲音效（SFX）、背景音樂（BGM）與配音（voice），透過 ComfyUI 的音訊生成能力（generate_audio / ACE Step / Stable Audio）製作，依規範命名並交付給引擎 Team。",
+  "prompt": "file://art/audio-team.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

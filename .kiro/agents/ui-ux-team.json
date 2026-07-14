@@ -1,0 +1,8 @@
+{
+  "name": "ui-ux-team",
+  "description": "UI/UX Team — 負責遊戲的介面與使用者體驗層。透過 Figma MCP 讀取/建立畫面流程與版面（Wireframe、HUD、選單、彈窗、商店、老虎機 UI 框架），萃取 Design Token，產出「版面 + Token + 切圖清單」的 handoff 規格交給對應引擎 Team 在原生 UI 系統重建。",
+  "prompt": "file://design/ui-ux-team.md",
+  "tools": ["read", "write", "@figma"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "blender-team",
+  "description": "Blender Team — 使用 Blender 建立遊戲用 3D 模型，並套用 ComfyUI Team 產出的貼圖，包含 UV 展開、Collider Mesh、匯出 .fbx/.glb 交給對應引擎 Team（Unity/Godot/Unreal/Cocos）。",
+  "prompt": "file://art/blender-team.md",
+  "tools": ["read", "write", "@blender-mcp"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "narrative-adventure-expert",
+  "description": "Narrative / Adventure Expert — 敘事驅動與冒險遊戲設計顧問，涵蓋視覺小說 / 點擊冒險 / 敘事分支，包含分支敘事結構、旗標與狀態變數、對話樹、選擇後果與結局分歧、pacing 與解謎關卡。與 localization-team 強綁定。產出系統規格交 game-designer 整合、引擎 Team 實作。",
+  "prompt": "file://design/narrative-adventure-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

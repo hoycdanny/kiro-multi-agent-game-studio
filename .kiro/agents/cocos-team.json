@@ -1,0 +1,8 @@
+{
+  "name": "cocos-team",
+  "description": "Cocos Team — 接收 Blender/ComfyUI Team 交付的模型與貼圖，透過 Cocos Creator MCP 組裝場景、產生 TypeScript 元件、跑 Prefab/Build/效能工作流程。",
+  "prompt": "file://engineering/cocos-team.md",
+  "tools": ["read", "write", "shell", "@cocos-creator"],
+  "includeMcpJson": true,
+  "model": "qwen3-coder-next"
+}

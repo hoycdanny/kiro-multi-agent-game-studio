@@ -1,0 +1,8 @@
+{
+  "name": "rpg-systems-expert",
+  "description": "RPG Systems Expert — RPG/ARPG 系統設計顧問，涵蓋屬性/等級曲線、技能樹、裝備與掉落稀有度、傷害公式、狀態效果、任務與進度結構、職業/隊伍系統。產出系統規格與數值，交給 game-designer 整合、balance-tester 驗證、引擎 Team 實作。",
+  "prompt": "file://design/rpg-systems-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

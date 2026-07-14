@@ -1,0 +1,8 @@
+{
+  "name": "functional-tester",
+  "description": "執行功能測試、撰寫 Unit/Integration Test、產出 Bug 報告。",
+  "prompt": "file://qa/functional-tester.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-haiku-4.5"
+}

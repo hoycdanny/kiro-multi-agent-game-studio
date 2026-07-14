@@ -1,0 +1,8 @@
+{
+  "name": "roguelike-expert",
+  "description": "Roguelike / Roguelite Expert — 程序生成與 run-based 遊戲設計顧問，涵蓋程序生成（關卡/地城/掉落）、run 內 build 與 synergy 平衡、隨機事件與風險報酬、meta 進度（永久解鎖）、難度縮放。產出系統規格交 game-designer 整合、balance-tester 驗證、引擎 Team 實作。",
+  "prompt": "file://design/roguelike-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}

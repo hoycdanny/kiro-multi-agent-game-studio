@@ -1,0 +1,8 @@
+{
+  "name": "fish-game-expert",
+  "description": "Fish Game Expert — 捕魚機（Fish Hunter / 魚機）開發顧問，涵蓋每發命中機率模型、砲台下注與賠付經濟、RTP 調校、伺服器判定 RNG、特殊魚/武器設計、以及（casino 市場的）認證合規與負責任遊戲。產出數學模型與系統規格，交給對應引擎 Team 實作。",
+  "prompt": "file://design/fish-game-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

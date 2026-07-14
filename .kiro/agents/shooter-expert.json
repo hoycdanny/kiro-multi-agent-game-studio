@@ -1,0 +1,8 @@
+{
+  "name": "shooter-expert",
+  "description": "Shooter Expert — FPS/TPS 射擊遊戲設計顧問，涵蓋武器數值與彈道、命中判定（hitscan/projectile）、後座力/擴散/TTK、武器平衡、敵人/Bot AI、射擊手感（gunfeel）。產出系統規格交給 game-designer 整合、引擎 Team 實作。",
+  "prompt": "file://design/shooter-expert.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "deepseek-3.2"
+}

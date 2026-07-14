@@ -1,0 +1,8 @@
+{
+  "name": "narrative-designer",
+  "description": "Narrative Designer — 世界觀與劇情內容顧問，涵蓋世界觀設定、角色背景、主線/支線劇情、對話內容撰寫（Yarn/Ink 等分支對話工具）。維護 World Bible。與 narrative-adventure-expert 分工：本 Agent 產出敘事「內容」，narrative-adventure-expert 產出敘事「系統結構」。",
+  "prompt": "file://design/narrative-designer.md",
+  "tools": ["read", "write"],
+  "includeMcpJson": true,
+  "model": "claude-sonnet-4"
+}
