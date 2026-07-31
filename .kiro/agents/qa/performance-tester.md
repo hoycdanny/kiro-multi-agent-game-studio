@@ -1,7 +1,7 @@
 ---
 name: performance-tester
 description: Performance Tester（Layer 3 / QA）— 效能與 profiling 測試員。量測 FPS、frame time、draw call、記憶體、載入時間、GC/stutter，對照 tech-lead 的效能預算找瓶頸，產出可執行的優化建議。補上「功能對、數值對，但跑不順」的缺口。
-model: claude-sonnet-5
+model: claude-haiku-4.5
 tools: ["read", "write", "shell"]
 permissions:
   rules:

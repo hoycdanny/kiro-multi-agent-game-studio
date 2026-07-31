@@ -1,0 +1,12 @@
+{
+  "name": "krita-team",
+  "description": "Krita Team — 數位繪圖與手繪精修。承接 comfyui-team 的生成素材做圖層合成、遮罩、構圖修正與上色，或直接手繪 sprite/UI/貼圖，匯出交給 blender-team 或引擎 Team。領域知識以 kiro-krita-accelerator Power 為準。",
+  "prompt": "file://art/krita-team.md",
+  "tools": [
+    "read",
+    "write",
+    "@krita"
+  ],
+  "includeMcpJson": false,
+  "model": "claude-sonnet-4"
+}

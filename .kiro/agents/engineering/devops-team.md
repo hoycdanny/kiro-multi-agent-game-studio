@@ -1,7 +1,7 @@
 ---
 name: devops-team
 description: DevOps / CI Team — 建立自動化 Build / 匯出 / 驗證流程（CI pipeline、build script、版本號與產物管理），把各引擎 Team 手動觸發的 build 變成可重複、可驗證的自動化出包。
-model: claude-sonnet-5
+model: qwen3-coder-next
 tools: ["read", "write", "shell"]
 permissions:
   rules:

@@ -112,11 +112,11 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 
 > **類型會疊加**，Producer 負責串接多個 expert。例：「多人射擊 RPG」= `mmo-expert` + `shooter-expert` + `rpg-systems-expert`；「付費開包卡牌」= `card-game-expert` + `economy-designer` + `compliance-release`。所有數值一律交 `balance-tester` 模擬驗證。
 
-### 已建立的 Agent（46 個）
+### 已建立的 Agent（48 個）
 
 > 委派 / 呼叫 Agent 時用 frontmatter 的**扁平 `name`**（例如 `blender-team`），不是路徑（不是 `art/blender-team`）；下表「路徑」欄只是檔案位置。詳見 `.kiro/steering/global/contracts.md`「Agent 委派命名規範」。
 >
-> 💡 **Agent 出現在哪**：chat 輸入框的 **Agent Selector**（模式 / agent 下拉），不是左側「Agent Steering & Skills」面板——那個面板顯示的是 steering 檔（asset-standards / contracts / gdd / style-guide），跟 agent 是兩回事。若 Agent Selector 沒列出全部 46 個，先確認第一次開啟 workspace 時已點「信任」（workspace agent 需信任後才載入）。本專案的 agent 檔依 layer 分放在 `.kiro/agents/` 的子目錄（`orchestration/`、`design/`、`art/`、`engineering/`、`qa/`、`publishing/`），委派名稱取自各檔 frontmatter 的 `name`（例如 `blender-team`）。**實測確認：即使檔案放在子目錄，frontmatter `name` 仍勝過路徑**（見 [Custom agents](https://kiro.dev/docs/custom-agents/)），所以委派名維持乾淨的扁平 `name`，不會變成 `art/blender-team`。
+> 💡 **Agent 出現在哪**：chat 輸入框的 **Agent Selector**（模式 / agent 下拉），不是左側「Agent Steering & Skills」面板——那個面板顯示的是 steering 檔（asset-standards / contracts / gdd / style-guide），跟 agent 是兩回事。若 Agent Selector 沒列出全部 48 個，先確認第一次開啟 workspace 時已點「信任」（workspace agent 需信任後才載入）。本專案的 agent 檔依 layer 分放在 `.kiro/agents/` 的子目錄（`orchestration/`、`design/`、`art/`、`engineering/`、`qa/`、`publishing/`），委派名稱取自各檔 frontmatter 的 `name`（例如 `blender-team`）。**實測確認：即使檔案放在子目錄，frontmatter `name` 仍勝過路徑**（見 [Custom agents](https://kiro.dev/docs/custom-agents/)），所以委派名維持乾淨的扁平 `name`，不會變成 `art/blender-team`。
 
 | Agent | 路徑 | 依賴 |
 |-------|------|------|
@@ -125,8 +125,8 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 | Game Designer | `.kiro/agents/design/game-designer.md` | 無外部工具 |
 | Design Lead | `.kiro/agents/design/design-lead.md` | 無外部工具，Layer 2：核心設計（7 個）整合 GDD、消矛盾、design-review gate |
 | Domain Lead | `.kiro/agents/design/domain-lead.md` | 無外部工具，Layer 2：13 類遊戲類型 Domain Expert 的專業審查與轉發 |
-| Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問，見「Slot Game Expert 詳解」 |
-| Fish Game Expert | `.kiro/agents/design/fish-game-expert.md` | 無外部工具，魚機/捕魚：命中機率/賠付經濟/RTP/合規 |
+| Slot Game Expert | `.kiro/agents/design/slot-game-expert.md` | 無外部工具，老虎機數學模型/RNG/認證合規顧問；領域知識來自 **`kiro-slot-game-expert` Power** |
+| Fish Game Expert | `.kiro/agents/design/fish-game-expert.md` | 無外部工具，魚機/捕魚：命中機率/賠付經濟/RTP/合規；領域知識來自 **`kiro-fish-game-expert` Power** |
 | Shooter Expert | `.kiro/agents/design/shooter-expert.md` | 無外部工具，FPS/TPS：武器/彈道/命中判定/手感/AI |
 | MMO Expert | `.kiro/agents/design/mmo-expert.md` | 無外部工具，多人/MMORPG：netcode/伺服器權威/持久化 |
 | RPG Systems Expert | `.kiro/agents/design/rpg-systems-expert.md` | 無外部工具，RPG/ARPG：屬性/技能/掉落/傷害公式 |
@@ -142,16 +142,18 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 | UI/UX Team | `.kiro/agents/design/ui-ux-team.md` | 透過 `figma` MCP（官方 Remote Server）產出 UI/UX 版面、Design Token、切圖規格，見「Figma MCP 整合詳解」 |
 | Localization Team | `.kiro/agents/design/localization-team.md` | 多語系字串抽取、locale 檔、i18n 落地規格（CJK/RTL/字型需求） |
 | Art Lead | `.kiro/agents/art/art-lead.md` | 無外部工具，Layer 2：維護 style-guide、美術一致性 review |
-| ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfyui`（`artokun/comfyui-mcp`）連接本機 ComfyUI，見「ComfyUI MCP 整合詳解」 |
+| ComfyUI Team | `.kiro/agents/art/comfyui-team.md` | 透過 `comfyui`（`artokun/comfyui-mcp`）連接本機 ComfyUI；領域知識來自 **`kiro-comfyui-accelerator` Power** |
+| Krita Team | `.kiro/agents/art/krita-team.md` | 透過 `krita` MCP 做數位繪圖與手繪精修（承接 comfyui-team 產出）；領域知識來自 **`kiro-krita-accelerator` Power** |
 | Blender Team | `.kiro/agents/art/blender-team.md` | 透過 `blender-mcp` 連接 Blender（靜態建模+貼圖），見「Blender MCP 整合詳解」 |
 | Animator | `.kiro/agents/art/animator.md` | 透過 `blender-mcp` 做 rig/綁定/動畫 clip |
-| Audio Team | `.kiro/agents/art/audio-team.md` | 透過 `comfyui` 的 `generate_audio` 產出 SFX/BGM/voice |
+| Audio Team | `.kiro/agents/art/audio-team.md` | 音樂走 `ableton` MCP（領域知識來自 **`kiro-ableton-accelerator` Power**）、SFX/voice 走 `comfyui` 音訊生成 |
 | Technical Artist | `.kiro/agents/art/technical-artist.md` | 透過 `blender-mcp`＋shell 做 shader/優化/LOD/美術-引擎管線 |
 | Tech Lead | `.kiro/agents/engineering/tech-lead.md` | read/write/shell，Layer 2：技術架構、效能預算、跨引擎 code-review gate |
-| Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor，見「Unity MCP 整合詳解」 |
-| Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor，見「Godot MCP 整合詳解」 |
-| Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor，見「Unreal MCP 整合詳解」 |
-| Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor，見「Cocos MCP 整合詳解」 |
+| Unity Team | `.kiro/agents/engineering/unity-team.md` | 透過 `unity-mcp` 連接 Unity Editor；領域知識來自 **`kiro-unity-accelerator` Power** |
+| Godot Team | `.kiro/agents/engineering/godot-team.md` | 透過 `godot-mcp` 連接 Godot Editor；領域知識來自 **`kiro-godot-accelerator` Power** |
+| Unreal Team | `.kiro/agents/engineering/unreal-team.md` | 透過 `unreal-engine` local MCP 連接 Unreal Editor；領域知識來自 **`kiro-unreal-accelerator` Power** |
+| Cocos Team | `.kiro/agents/engineering/cocos-team.md` | 透過 `cocos-creator` MCP 連接 Cocos Creator Editor；領域知識來自 **`kiro-cocos-accelerator` Power** |
+| Wallet Systems Expert | `.kiro/agents/engineering/wallet-systems-expert.md` | 無外部工具，錢包/金流後端規格（餘額與交易模型、API、DB schema、幂等與鎖、對帳、可觀測性）；領域知識來自 **`kiro-gaming-wallet-expert` Power** |
 | DevOps Team | `.kiro/agents/engineering/devops-team.md` | headless build、CI pipeline、產物與版本管理（能用 shell 跑 build 腳本） |
 | QA Lead | `.kiro/agents/qa/qa-lead.md` | 無外部工具，Layer 2：測試策略、協調三 tester、go/no-go |
 | Functional Tester | `.kiro/agents/qa/functional-tester.md` | 需目標專案已有測試框架，否則會先詢問是否協助建立 |
@@ -179,7 +181,42 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 | **Cocos Creator** | `cocos-creator`（HTTP，[`DaxianLee/cocos-mcp-server`](https://github.com/DaxianLee/cocos-mcp-server)） | `.kiro/settings/mcp.json` |
 | **Figma** | `figma`（HTTP，[官方 Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/) Remote，`https://mcp.figma.com/mcp`） | `.kiro/settings/mcp.json` |
 | **GitHub Projects** | `github`（stdio，[`github/github-mcp-server`](https://github.com/github/github-mcp-server)） | `.kiro/settings/mcp.json` |
+| **Ableton Live** ⚠️ | `ableton`（stdio，`uvx ableton-mcp`）— `audio-team` 做音樂編曲/混音用 | **尚未加入 `mcp.json`，需手動加**（設定內容見「Ableton MCP 整合詳解」） |
+| **Krita** ⚠️ | `krita`（stdio，`python3 ${HOME}/krita-mcp/server.py`）— `krita-team` 做手繪/精修用 | **尚未加入 `mcp.json`，需手動加**（設定內容見「Krita MCP 整合詳解」） |
 | Git（本機） | Producer 用 shell 直接 commit | — |
+
+> ⚠️ 標記的兩個 server 是本次接入 Power 時新增的需求。`.kiro/settings/mcp.json` 受 IDE 權限規則保護、無法由 Agent 自動寫入，**必須你手動貼上設定**，否則 `audio-team`（音樂路徑）與 `krita-team` 會在連線自檢時停下並回報缺件。
+
+### 領域知識層：Kiro Powers（11 個 Agent 的專業知識來源）
+
+本專案採**兩層架構**：Agent 是**組織層**（誰做、何時做、用什麼 Contract 交付給誰），[Kiro Power](https://kiro.dev/docs/powers/) 是**領域知識層**（這個工具／領域實際上怎麼正確做）。
+
+11 個 Agent 的領域知識**不在 agent prompt 裡**，而在對應的 Power——那些知識對真實工具連線驗證過、且獨立於本 repo 持續更新：
+
+| Agent | Power（GitHub `hoycdanny/…`） | steering 檔數 |
+|-------|------------------------------|--------------|
+| `unity-team` | `kiro-unity-accelerator` | 15 |
+| `godot-team` | `kiro-godot-accelerator` | 13 |
+| `unreal-team` | `kiro-unreal-accelerator` | 11 |
+| `cocos-team` | `kiro-cocos-accelerator` | 14 |
+| `comfyui-team`、`vfx-artist` | `kiro-comfyui-accelerator` | 11 |
+| `krita-team` | `kiro-krita-accelerator` | 13 |
+| `audio-team` | `kiro-ableton-accelerator` | 11 |
+| `slot-game-expert` | `kiro-slot-game-expert` | 12 |
+| `fish-game-expert` | `kiro-fish-game-expert` | 16 |
+| `wallet-systems-expert` | `kiro-gaming-wallet-expert` | 10 |
+
+對照表、磁碟路徑規則與使用紀律見 `.kiro/steering/global/powers-registry.md`（`inclusion: always`，所有 Agent 自動載入）。
+
+**為什麼要這樣分**：agent prompt 裡手抄的工具細節會過時。整合前 `unity-team.md` 就有 7 處已失效的 API（`manage_asset(list)`、`manage_editor(action:"build")`、`manage_graphics(get_rendering_stats)` 等，Power 已標明這些 action 不存在），其中「連線自檢先讀 `project_info`」這一步本身就基於一個 Power 明確說「不要假設存在」的 resource。這些手抄內容已全部移除，改為指向 Power。
+
+**三個必須知道的邊界**：
+
+1. **Power 是全機安裝、不隨 repo 走**（在 `~/.kiro/powers/`）。clone 這個 repo 不會帶來知識層，需另外從 Powers 面板安裝。
+2. **缺 Power 時 Agent 會誠實停下**並回報安裝來源，不會憑印象操作工具、也不會靜默降級。
+3. **Power 內含的 `hooks/`（preToolUse，強迫先讀 steering）在本專案不生效**——依官方文件 subagent 不觸發 Hooks，而本專案 Pipeline 全走 subagent 委派。steering-first 紀律靠 prompt 自律，沒有機制強制。
+
+> `kiro-economy-balancing-expert` 這個 Power 的 repo 目前是空的（無 `steering/`），因此 `economy-designer` 與 `balance-tester` 尚未接入，維持自身 prompt 的知識。
 
 ### 端到端流程範例：「請幫我用 Unity 開發一款老虎機」
 
@@ -200,6 +237,7 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 | `.kiro/steering/global/asset-standards.md` | 命名規範、poly budget、3D 模型技術規範 | `always`（每次對話都載入） |
 | `.kiro/steering/global/contracts.md` | Task Contract / Asset Contract / Change Request 格式定義 | `always` |
 | `.kiro/steering/global/bug-severity.md` | Bug 嚴重度分級標準（S1-S4）與 release 門檻，QA 全線共用 | `always` |
+| `.kiro/steering/global/powers-registry.md` | Agent ↔ Kiro Power 對照表、Power 磁碟路徑規則、steering-first 與缺件處理紀律 | `always` |
 | `.kiro/steering/project/gdd.md` | 遊戲設計文件（GDD）骨架，單一真相來源，含 Postmortem 範本（章節待填寫） | `always`（每次對話都載入） |
 | `.kiro/steering/project/style-guide.md` | 美術風格指南骨架（章節待填寫） | `always` |
 | `.kiro/steering/project/milestones.md` | Prototype→Gold 各階段驗收標準（Exit Criteria）骨架 | `always` |
@@ -208,7 +246,7 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 
 Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://kiro.dev/docs/chat/subagents/)）：主 Agent 用 `Use the "<name>" subagent to …` 語法即可自動調度，被委派的 Agent 執行完會把結果回傳。**要能委派，主 Agent 必須在 frontmatter 的 `tools` 陣列中包含 `subagent`**——`producer.md` 與 5 個 Lead（`design-lead`/`domain-lead`/`art-lead`/`tech-lead`/`qa-lead`）都已具備此權限。
 
-**委派模型：Producer → Lead → Specialist（兩層）**。Producer 不再直接委派 27 個 Specialist，而是委派給對應的 Lead（5 個：Design/Domain/Art/Tech/QA），由 Lead 轉發給它管理範圍內的 Specialist、做該領域的 review，再彙整結果回報。Design Lead 管核心設計（7 個常駐職能），Domain Lead 管 13 類遊戲類型專家（按偵測到的類型按需啟用）：
+**委派模型：Producer → Lead → Specialist（兩層）**。Producer 不再直接委派 41 個 Specialist，而是委派給對應的 Lead（5 個：Design/Domain/Art/Tech/QA），由 Lead 轉發給它管理範圍內的 Specialist、做該領域的 review，再彙整結果回報。Design Lead 管核心設計（7 個常駐職能），Domain Lead 管 13 類遊戲類型專家（按偵測到的類型按需啟用）：
 
 ```
 使用者 → Producer（拆解需求、產出 Contract，標明轉發對象）
@@ -246,7 +284,8 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 - Agent 透過 MCP Server 操作外部工具：Blender / ComfyUI / Unity / Godot / Unreal / Cocos Creator / Figma 皆已連線
 - 支援 4 種遊戲引擎（Unity、Godot、Unreal Engine、Cocos Creator），Producer 依你的指定自動分派給對應 Team
 - 各遊戲類型分門別類有專屬 Domain Expert：老虎機（`slot-game-expert`）、魚機（`fish-game-expert`）、射擊（`shooter-expert`）、多人/MMORPG（`mmo-expert`）、RPG（`rpg-systems-expert`）、卡牌（`card-game-expert`）、三消/解謎（`puzzle-match3-expert`）、平台/metroidvania（`platformer-expert`）、roguelike（`roguelike-expert`）、策略/RTS/塔防（`strategy-expert`）、模擬經營/生存（`simulation-expert`）、音樂節奏（`rhythm-expert`）、敘事/視覺小說（`narrative-adventure-expert`）；其餘類型（競速/格鬥/體育…）走通用 `game-designer`
-- 完整團隊 46 個 Agent 全部已建立：戰略層 Creative Director、Producer、5 個 Lead（Design/Domain/Art/Tech/QA，Art Lead 已涵蓋原願景 Audio Lead 職責）、13 類遊戲類型專家（歸 Domain Lead）、Level/Narrative/Combat Designer（歸 Design Lead）、其餘設計、美術/動畫/音訊/VFX/Technical Artist、4 引擎 + Systems/UI Programmer + DevOps、功能/數值/效能/可用性 4 條 QA、上架合規 + 行銷公關
+- 完整團隊 48 個 Agent 全部已建立：戰略層 Creative Director、Producer、5 個 Lead（Design/Domain/Art/Tech/QA，Art Lead 已涵蓋原願景 Audio Lead 職責）、13 類遊戲類型專家（歸 Domain Lead）、Level/Narrative/Combat Designer（歸 Design Lead）、其餘設計、美術/手繪精修/動畫/音訊/VFX/Technical Artist、4 引擎 + Systems/UI Programmer + DevOps + 錢包金流、功能/數值/效能/可用性 4 條 QA、上架合規 + 行銷公關
+- 其中 11 個 Agent 的領域知識已外接到對應的 **Kiro Power**（4 引擎 + ComfyUI/Krita/Ableton + slot/fish/wallet），agent prompt 只留組織與交付紀律，見「領域知識層：Kiro Powers」
 - 所有設計規範存在 `.kiro/steering/` 裡，Agent 會自動參照（`inclusion: always` 的檔案每次對話都會載入）
 
 ---
@@ -282,7 +321,7 @@ graph TD
     CD[Layer 0: Creative Director]
     P[Layer 1: Producer<br/>唯一調度中樞]
     L2[Layer 2: 5 個 Lead<br/>Design / Domain / Art / Tech / QA]
-    L3[Layer 3: 40 個 Specialist Team<br/>設計專家 / 美術 / 引擎 / QA / 上架]
+    L3[Layer 3: 41 個 Specialist Team<br/>設計專家 / 美術 / 引擎 / QA / 上架]
     MCP[MCP Tools<br/>Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma]
 
     CD -.->|監督期望與校準| P
@@ -292,7 +331,7 @@ graph TD
     L3 -->|操作外部工具| MCP
 ```
 
-> 這是簡化的層級關係圖，只顯示 5 個 Layer 彼此如何串接，共 **46 個**已實際建立的 Agent 檔案（Layer 0 的 Creative Director、Layer 1 的 Producer、Layer 2 的 5 個 Lead、Layer 3 的 40 個 Specialist）；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。**完整的 46 個 Agent 節點圖**（含每個 Team 的名稱、分組與資料流向）見 [docs/architecture-and-process.md](docs/architecture-and-process.md#完整系統架構圖)。
+> 這是簡化的層級關係圖，只顯示 5 個 Layer 彼此如何串接，共 **48 個**已實際建立的 Agent 檔案（Layer 0 的 Creative Director、Layer 1 的 Producer、Layer 2 的 5 個 Lead、Layer 3 的 41 個 Specialist）；Blender、ComfyUI、Unity、Godot、Unreal、Cocos、Figma 七條 MCP 連線都已設定完成。**完整的 48 個 Agent 節點圖**（含每個 Team 的名稱、分組與資料流向）見 [docs/architecture-and-process.md](docs/architecture-and-process.md#完整系統架構圖)。
 
 ### 工具資料流
 
@@ -368,7 +407,7 @@ Producer 透過 Kiro 原生 subagent 委派自動呼叫對應 Specialist，不�
 
 > 不需要同時裝四個引擎，只需要裝你實際要用的那個。Producer 會依你的需求分派到對應引擎 Team。
 
-### 目前實際配置（Creative Director + Producer + 5 Lead（Design/Domain/Art/Tech/QA） + 20 設計/類型 Team（含 Level/Narrative/Combat Designer） + 6 美術 Team（含 rig/動畫、音訊、VFX、TA） + 7 引擎 Team（含 Systems/UI Programmer、DevOps） + 4 QA（功能/數值/效能/可用性） + 法遵上架 + 行銷公關，共 46 個）
+### 目前實際配置（Creative Director + Producer + 5 Lead（Design/Domain/Art/Tech/QA） + 20 設計/類型 Team（含 Level/Narrative/Combat Designer） + 7 美術 Team（含 rig/動畫、音訊、VFX、TA、手繪精修） + 8 引擎 Team（含 Systems/UI Programmer、DevOps、錢包金流） + 4 QA（功能/數值/效能/可用性） + 法遵上架 + 行銷公關，共 48 個）
 
 ```
 .kiro/agents/
@@ -428,7 +467,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # 或 macOS: brew install uv
 
 # 3. MCP 設定已存在於 .kiro/settings/mcp.json
-#    （blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator）
+#    （blender-mcp / comfyui / unity-mcp / godot-mcp / unreal-engine / cocos-creator / figma / github）
+#    ⚠️ ableton 與 krita 兩個 server 尚未加入，若要用 audio-team 的音樂路徑或 krita-team，
+#       需手動加進 mcp.json（設定內容見「Ableton / Krita MCP 整合詳解」）
 #    各工具的連線細節見對應的「XX MCP 整合詳解」章節
 
 # 4. 依你要用的引擎，啟動對應軟體並完成連線：
@@ -440,7 +481,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #    - Cocos Creator：安裝 cocos-mcp-server 外掛，擴展 → Cocos MCP Server → 啟動
 
 #    - Figma：預設用官方 Remote MCP Server（首次於 Kiro 完成 OAuth 授權即可，見「Figma MCP 整合詳解」）
-# 5. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 46 個 Agent
+# 5. 安裝領域知識層（Kiro Powers）：Kiro → Powers 面板 → 安裝需要的 Power
+#    來源 https://github.com/hoycdanny/<power 名稱>，對照表見 .kiro/steering/global/powers-registry.md
+#    未安裝時對應 Agent 會誠實回報缺件，不會憑印象操作工具
+
+# 6. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 48 個 Agent
 ```
 
 ### 使用方式

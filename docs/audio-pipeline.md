@@ -2,7 +2,9 @@
 
 > 這是 [Kiro Multi-Agent Game Studio](../README.md) 的深入文件之一。完整索引見 README 的「深入文件（Reference）」。
 >
-> 參考《The Game Production Handbook》Ch21（Voiceover）、Ch22（Music）的流程框架，但本文件**誠實區分「AI Agent 能自動化的部分」與「需要人類 Producer 線下處理的部分」**——不虛構本框架目前不具備的能力。`audio-team` 目前只能透過 ComfyUI 的音訊生成能力（`generate_audio`，ACE Step / Stable Audio 等 model family）產出音訊，沒有任何工具可以「找真人演員」「談授權合約」「進錄音室」，這些是人類的事。
+> 參考《The Game Production Handbook》Ch21（Voiceover）、Ch22（Music）的流程框架，但本文件**誠實區分「AI Agent 能自動化的部分」與「需要人類 Producer 線下處理的部分」**——不虛構本框架目前不具備的能力。`audio-team` 有**兩條產出路徑**：音樂／BGM 走 **Ableton Live**（`@ableton` MCP，領域知識來自 `kiro-ableton-accelerator` Power：樂理、和聲、鼓組律動、編曲結構、混音），SFX 與配音走 **ComfyUI 音訊生成**（`generate_audio`，ACE Step / Stable Audio 等 model family）。兩條都是本機工具——沒有任何工具可以「找真人演員」「談授權合約」「進錄音室」，這些仍是人類的事。
+>
+> ⚠️ `ableton` MCP server **尚未加入 `.kiro/settings/mcp.json`**（該檔受 IDE 權限規則保護、無法由 Agent 寫入），需手動加入才能使用音樂路徑，設定內容見 `docs/mcp-integrations.md`「Ableton MCP 整合詳解」。未加入時 `audio-team` 會在連線自檢時回報缺件，SFX/voice 的 ComfyUI 路徑不受影響。
 
 ## 兩條路徑
 
@@ -57,12 +59,24 @@ voiceover_plan:
 
 ## 音樂（Music）Pipeline
 
-### AI 生成路徑（`audio-team` 可執行）
+### 路徑 A：Ableton 編曲（`audio-team` 可執行，音樂的主要路徑）
 
 1. **確認曲風/情緒**：讀 `.kiro/steering/project/style-guide.md`「聲音基調」章節，或向使用者確認
+2. **讀 Power 知識**：先讀 `kiro-ableton-accelerator` 的 `POWER.md`（開頭有場景判斷表）與 `operation-safety.md`，再依需求讀 `music-theory` / `genre-playbooks` / `drums-and-groove` / `arrangement` / `mixing-and-effects`
+3. **在 Ableton 內製作**：建 MIDI、選音色、編排結構（intro／loop／build／drop）、混音
+4. **驗證**：依 Power 的 `verification-policy.md` 確認實際結果，不要只憑操作記錄假設成品正確
+5. **Loop 處理**：BGM 若需無縫循環，標注 loop point（見 `asset-standards.md` 音訊規範）
+6. **命名與交付**：`music_bgm_{場景}_01`，落到 `shared/audio/music/`
+
+> ⚠️ **改動使用者既有的 Live Set 前必須先讀 `operation-safety.md`**——DAW 專案的破壞性操作不易復原。
+
+### 路徑 B：ComfyUI 生成（適合氛圍/環境音樂、或沒有 Ableton 時）
+
+1. **確認曲風/情緒**：同上
 2. **生成**：用 `generate_audio`（ACE Step 支援 lyrics/musical key 等參數，Stable Audio 適合氛圍/環境音樂）
-3. **Loop 處理**：BGM 若需無縫循環，標注 loop point（見 `asset-standards.md` 音訊規範）
-4. **命名與交付**：`music_bgm_{場景}_01`，落到 `shared/audio/music/`
+3. **Loop 處理與命名交付**：同路徑 A 的第 5、6 步
+
+> SFX 與配音一律走這條（ComfyUI），不走 Ableton。
 
 ### 真人製作 / 授權路徑（人類 Producer 線下處理）
 

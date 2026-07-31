@@ -42,7 +42,8 @@ inclusion: always
 
 | 產出 Team | 落地目錄 | 內容 |
 |-----------|----------|------|
-| `comfyui-team` | `shared/concept/` `shared/textures/` `shared/sprites/` `shared/ui/` | 概念圖、PBR 貼圖、sprite/符號、UI 切圖 |
+| `comfyui-team` | `shared/concept/` `shared/textures/` `shared/sprites/` `shared/ui/` | 概念圖、PBR 貼圖、sprite/符號、UI 切圖（生成式） |
+| `krita-team` | `shared/concept/` `shared/textures/` `shared/sprites/` `shared/ui/` | 同上，但為手繪或精修完稿版（另存新檔，不覆蓋上游來源素材） |
 | `blender-team` | `shared/models/` | 靜態 3D 模型（.fbx/.glb） |
 | `animator` | `shared/rigs/` `shared/animations/` | 骨架、動畫 clip |
 | `audio-team` | `shared/audio/sfx/` `shared/audio/music/` `shared/audio/voice/` | 音效、音樂、配音 |

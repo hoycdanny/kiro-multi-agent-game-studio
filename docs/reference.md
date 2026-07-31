@@ -37,7 +37,7 @@
 |---------|-------|----------|-----------|
 | ComfyUI | 3 次（exponential backoff） | 通知用戶手動操作 WebUI | `comfyui-team.md` 目前做法更簡單：最多重試 2 次，連續失敗就停止並回報具體錯誤，不會自動退化成操作 WebUI |
 | Blender | 2 次 | 匯出 Python Script，用戶手動執行 | `blender-team.md` 目前做法更簡單：連線失敗直接回報並停止，不會自動重試或匯出腳本 |
-| Unity MCP | 1 次 | 產出 .cs，用戶在 Editor 操作 | `unity-team.md` 目前做法：連線失敗（`project_info` 讀不到）直接回報並停止；操作逾時（Unity 忙碌中）重試 1 次，不會自動退化成只產出 .cs |
+| Unity MCP | 1 次 | 產出 .cs，用戶在 Editor 操作 | `unity-team.md` 目前做法：依 `kiro-unity-accelerator` Power 的 `unity-general.md` 指定的輕量唯讀呼叫做連線自檢，失敗直接回報並停止；操作逾時（Unity 忙碌中）重試 1 次，不會自動退化成只產出 .cs |
 | Godot MCP | 1 次 | 產出 .gd，用戶在 Editor 操作 | `godot-team.md` 目前做法：連線失敗（`get_project_info` 失敗）直接回報並停止 |
 | Unreal MCP | 1 次 | 產出說明文件，用戶手動操作 | `unreal-team.md` 目前做法：連線失敗直接回報並停止；已知會 crash 的 `ce` command 絕不作為 fallback 使用 |
 | Cocos MCP | 1 次 | 產出 .ts，用戶在 Editor 操作 | `cocos-team.md` 目前做法：連線失敗（fetch failed）直接回報並停止 |
@@ -99,6 +99,7 @@ max_iterations: 3
 | `.kiro/steering/global/asset-standards.md` | 命名規範、3D/音訊/動畫技術規範、資產落地目錄（`shared/`） | art-lead | 已建立，內容完整 |
 | `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + Change Request（防 Feature Creep） + 委派命名規範 + subagent 機制 | producer | 已建立，內容完整 |
 | `.kiro/steering/global/bug-severity.md` | Bug 嚴重度分級（S1-S4）+ release 門檻，QA 全線共用標準 | qa-lead | 已建立，內容完整 |
+| `.kiro/steering/global/powers-registry.md` | Agent ↔ Kiro Power 對照表（11 個）、Power 磁碟路徑規則、steering-first 與缺件處理紀律 | producer | 已建立，內容完整 |
 | `shared/README.md` + `.gitattributes` | 交付物落地目錄結構 + Git LFS 規則 | producer / devops-team | 已建立 |
 | `.kiro/steering/project/gdd.md` | 遊戲設計的單一真相來源（GDD）+ Postmortem 範本 | game-designer | 已建立骨架，章節內容待填寫 |
 | `.kiro/steering/project/style-guide.md` | 美術風格指南 | art-lead | 已建立骨架，章節內容待填寫 |
@@ -118,7 +119,7 @@ max_iterations: 3
 ```
 kiro-multi-agent-game-studio/
 ├── .kiro/
-│   ├── agents/                                 # 46 個 Agent（委派用扁平 name，資料夾僅為組織）
+│   ├── agents/                                 # 48 個 Agent（委派用扁平 name，資料夾僅為組織）
 │   │   ├── orchestration/
 │   │   │   ├── creative-director.md            # Layer 0：願景守門 / pillars / 創意仲裁
 │   │   │   └── producer.md                     # 唯一調度中樞：拆任務、偵測引擎/遊戲類型、串接 Pipeline、Git commit
@@ -147,10 +148,11 @@ kiro-multi-agent-game-studio/
 │   │   │   └── narrative-adventure-expert.md   # 敘事/視覺小說/冒險：分支敘事/旗標/對話樹
 │   │   ├── art/
 │   │   │   ├── art-lead.md                     # Layer 2：維護 style-guide + 美術/聲音一致性 review
-│   │   │   ├── comfyui-team.md                 # 影像：貼圖/sprite/UI 切圖（透過 comfyui）
+│   │   │   ├── comfyui-team.md                 # 影像生成：貼圖/sprite/UI 切圖（comfyui + Power）
+│   │   │   ├── krita-team.md                   # 手繪/精修：圖層/遮罩/構圖/上色（krita + Power）
 │   │   │   ├── blender-team.md                 # 靜態 3D 建模 + 套貼圖（透過 blender-mcp）
 │   │   │   ├── animator.md                     # rig/綁定/動畫 clip（透過 blender-mcp）
-│   │   │   ├── audio-team.md                   # SFX/BGM/voice（透過 comfyui generate_audio）
+│   │   │   ├── audio-team.md                   # 音樂走 ableton + Power；SFX/voice 走 comfyui
 │   │   │   ├── vfx-artist.md                   # 特效素材/序列幀（透過 comfyui）
 │   │   │   └── technical-artist.md             # shader/材質/LOD/優化/匯入管線
 │   │   ├── engineering/
@@ -161,7 +163,8 @@ kiro-multi-agent-game-studio/
 │   │   │   ├── cocos-team.md                   # 場景組裝、TypeScript 元件、Prefab（透過 cocos-creator MCP）
 │   │   │   ├── systems-programmer.md           # 引擎無關的存檔/資源管理/事件系統設計
 │   │   │   ├── ui-programmer.md                # 把 ui-ux-team 版面綁定成可互動引擎 UI
-│   │   │   └── devops-team.md                  # headless build、CI pipeline、產物驗證
+│   │   │   ├── devops-team.md                  # headless build、CI pipeline、產物驗證
+│   │   │   └── wallet-systems-expert.md        # 錢包/金流後端規格：API/schema/幂等/對帳（Power）
 │   │   ├── qa/
 │   │   │   ├── qa-lead.md                      # Layer 2：測試策略 + 協調四 tester
 │   │   │   ├── functional-tester.md            # 功能測試
@@ -175,7 +178,8 @@ kiro-multi-agent-game-studio/
 │   │   ├── global/
 │   │   │   ├── asset-standards.md              # inclusion: always（命名+落地目錄+音訊/動畫規範）
 │   │   │   ├── contracts.md                    # inclusion: always（Contract+Change Request+委派命名+subagent）
-│   │   │   └── bug-severity.md                 # inclusion: always（Bug 分級 S1-S4 + release 門檻）
+│   │   │   ├── bug-severity.md                 # inclusion: always（Bug 分級 S1-S4 + release 門檻）
+│   │   │   └── powers-registry.md              # inclusion: always（Agent ↔ Kiro Power 對照 + 使用紀律）
 │   │   └── project/
 │   │       ├── gdd.md                          # ⚠️ 骨架（inclusion: always，遊戲設計單一真相 + Postmortem 範本）
 │   │       ├── style-guide.md                  # ⚠️ 骨架（inclusion: always，美術風格）

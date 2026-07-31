@@ -85,6 +85,7 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
       → design/slot-game-expert（老虎機數學模型/RNG/合規，若偵測到該類型）
       → design/ui-ux-team（Figma UI/UX 版面 + Design Token + 切圖規格，若含介面需求）
       → art/comfyui-team（貼圖 / UI 切圖素材，若需要）
+      → art/krita-team（手繪 / 精修生成素材，若需要）
       → art/blender-team（建模 + 套貼圖，2D 遊戲可跳過）
       → engineering/{unity,godot,unreal,cocos}-team（依偵測到的引擎分派，場景組裝 + 遊戲邏輯 + Build）
       → Producer（確認交付 → Git commit）
@@ -101,7 +102,13 @@ User → Producer（建立 Contract，偵測引擎與遊戲類型）
 
 所有 Agent 檔案依 layer 分放在 `.kiro/agents/` 的子目錄下（例如 `orchestration/producer.md`、`design/game-designer.md`）。**子目錄僅作為組織用途，不是呼叫名稱的一部分**——Kiro 依 frontmatter 的 `name` 註冊 Agent 並在 Agent Selector / slash command / subagent 委派中以該名稱辨識（已實測：即使檔案在子目錄，`name` 仍勝過路徑，委派名維持扁平如 `blender-team`，不會變成 `art/blender-team`）。
 
-目前已註冊的扁平名稱：`creative-director`、`producer`、`design-lead`、`domain-lead`、`art-lead`、`tech-lead`、`qa-lead`、`game-designer`、`level-designer`、`narrative-designer`、`combat-designer`、`economy-designer`、`ui-ux-team`、`localization-team`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`comfyui-team`、`blender-team`、`animator`、`audio-team`、`vfx-artist`、`technical-artist`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`systems-programmer`、`ui-programmer`、`devops-team`、`functional-tester`、`balance-tester`、`performance-tester`、`usability-tester`、`compliance-release`、`marketing-team`。
+目前已註冊的扁平名稱（48 個）：`creative-director`、`producer`、`design-lead`、`domain-lead`、`art-lead`、`tech-lead`、`qa-lead`、`game-designer`、`level-designer`、`narrative-designer`、`combat-designer`、`economy-designer`、`ui-ux-team`、`localization-team`、`slot-game-expert`、`fish-game-expert`、`shooter-expert`、`mmo-expert`、`rpg-systems-expert`、`card-game-expert`、`puzzle-match3-expert`、`platformer-expert`、`roguelike-expert`、`strategy-expert`、`simulation-expert`、`rhythm-expert`、`narrative-adventure-expert`、`comfyui-team`、`krita-team`、`blender-team`、`animator`、`audio-team`、`vfx-artist`、`technical-artist`、`unity-team`、`godot-team`、`unreal-team`、`cocos-team`、`systems-programmer`、`ui-programmer`、`devops-team`、`wallet-systems-expert`、`functional-tester`、`balance-tester`、`performance-tester`、`usability-tester`、`compliance-release`、`marketing-team`。
+
+## 領域知識層：Kiro Powers
+
+其中 11 個 Agent 的**領域知識來自對應的 Kiro Power**（外部知識庫，不在 agent prompt 裡）：4 個引擎 Team、`comfyui-team`、`vfx-artist`、`krita-team`、`audio-team`、`slot-game-expert`、`fish-game-expert`、`wallet-systems-expert`。對照表、磁碟路徑規則與使用紀律見 `.kiro/steering/global/powers-registry.md`。
+
+委派這些 Agent 時不需要在 Contract 裡重複 Power 的內容——它們會自己去讀。但要知道：**Power 是全機安裝、不隨本 repo 走**，缺件時該 Agent 會誠實停下並回報安裝來源，不會靜默降級硬做。
 
 ## Subagent 委派機制（Kiro 原生，取代舊的手動轉接）
 

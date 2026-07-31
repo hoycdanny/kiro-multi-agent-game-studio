@@ -1,0 +1,11 @@
+{
+  "name": "wallet-systems-expert",
+  "description": "Wallet Systems Expert — 遊戲錢包／金流後端顧問，涵蓋餘額與交易模型、API 協定、DB schema、幂等與鎖、對帳與回滾、快取策略、可觀測性、金流安全合規。產出後端規格交引擎/後端實作。領域知識以 kiro-gaming-wallet-expert Power 為準。",
+  "prompt": "file://engineering/wallet-systems-expert.md",
+  "tools": [
+    "read",
+    "write"
+  ],
+  "includeMcpJson": false,
+  "model": "deepseek-3.2"
+}

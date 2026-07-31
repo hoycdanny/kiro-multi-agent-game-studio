@@ -2,6 +2,12 @@
 
 > 這是 [Kiro Multi-Agent Game Studio](../README.md) 的深入文件之一。完整索引見 README 的「深入文件（Reference）」。
 
+> ⚠️ **本文件的定位：只講「怎麼接上 MCP」，不講「工具怎麼用」。**
+>
+> 本專案有 11 個 Agent 的領域知識來自對應的 **Kiro Power**（見 README「領域知識層：Kiro Powers」與 `.kiro/steering/global/powers-registry.md`）。**工具的精確名稱、參數與正確操作順序，一律以對應 Power 的 `POWER.md` / `steering/` 為權威來源**——那些內容對真實連線驗證過且持續更新，本文件內任何工具清單都只是概念性參考，可能落後。
+>
+> 若工具呼叫回傳 `Unknown action` 或參數驗證錯誤，**以錯誤訊息列出的合法值為最高權威**，其次才是 Power 文件。
+
 ## Blender MCP 整合詳解
 
 
@@ -236,23 +242,19 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 > **安全提醒**：HTTP 是刻意的設計選擇——這個 endpoint 只跟本機 `localhost`（loopback）上的 Unity Editor 通訊，流量不會離開這台機器，所以不需要 HTTPS。不要把這個 port 對外公開監聽。
 
-### 可用 Tools（概念分組，詳細參數依 `unity-mcp` 版本而定）
+### 可用 Tools
 
-| 分組 | 工具 |
-|------|------|
-| 資產/材質 | `manage_asset`, `manage_material`, `manage_texture`, `manage_shader` |
-| 場景/物件 | `manage_scene`, `manage_gameobject`, `manage_components`, `manage_prefabs` |
-| UI/視覺 | `manage_ui`, `manage_camera`, `manage_animation`, `manage_graphics` |
-| 專案/編輯器 | `manage_packages`, `manage_editor`, `manage_script`, `create_script` |
-| 執行/查詢 | `run_tests`, `read_console`, `batch_execute`, `find_gameobjects` |
-| 只讀 Resource | `project_info`, `editor_state`, `gameobject`, `editor_selection` |
+**不在此列出**。Unity 的工具清單與參數以 `kiro-unity-accelerator` Power 的 `POWER.md`（「Available MCP Tools」表，標明對真實連線逐一驗證過）為權威來源：`~/.kiro/powers/installed/kiro-unity-accelerator/POWER.md`。
+
+> 📌 **這裡曾經有一份手抄的工具表，已移除**。它列出的數個 action 實際上不存在（例如 `manage_asset(list)` 應為 `search`、`manage_editor(action:"build")` 應為 `manage_build`、`manage_graphics(get_rendering_stats)` 應為 `stats_get`、`manage_graphics(get_settings)` 應為 `pipeline_get_settings`；`manage_shader`/`manage_script` 沒有 `list`；`manage_asset` 沒有 `get_dependencies`），而 `project_info` / `editor_state` 這兩個 resource 也是 Power 明確要求「不要假設存在」的。這正是把工具知識集中到 Power、不在本專案複製的原因。
 
 ### `unity-team` 遵循的核心紀律
 
-- **連線健康檢查優先**：任何操作前先讀取 `project_info`，失敗就停下回報，不猜測、不硬闖
-- **Steering-First**：場景搭建、資產批次設定、Build、效能分析、架構檢查、平台相容性檢查等任務，各有一套「先查規範再動手」的具體工具呼叫順序（完整對照表見 `unity-team.md` 的「依任務領域查對應規範」）
-- **Play Mode 保護**：絕不在 Play Mode 下對場景做永久性修改
-- **批次操作要有摘要**：`batch_execute` 或大量物件操作後，回報「成功 N、失敗 M」，失敗要列原因
+- **領域知識來自 Power**：動手前依任務領域讀 `kiro-unity-accelerator` 的對應 steering（15 份，對照表見 `unity-team.md`），工具名稱與參數不憑印象
+- **連線健康檢查優先**：依 Power 的 `unity-general.md` 指定的輕量唯讀呼叫自檢；失敗就停下回報，不猜測、不硬闖
+- **Play Mode 保護、render pipeline 檢查、效能閾值判讀**：以 Power 的 `unity-general.md` / `performance-analysis.md` 為準
+- **批次操作要有摘要**：大量物件操作後回報「成功 N、失敗 M」，失敗要列原因（本專案自有的交付紀律）
+- **程式碼規範**：`namespace: GameForge.{Module}`、Composition over Inheritance（本專案規範，優先於 Power 的通用建議）
 
 ### 參考資料
 
@@ -598,5 +600,116 @@ Unity 端安裝了 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)
 
 - [github/github-mcp-server](https://github.com/github/github-mcp-server)（官方，MIT License）
 - [GitHub Projects 官方文件](https://docs.github.com/issues/planning-and-tracking-with-projects)
+
+---
+
+## Ableton MCP 整合詳解
+
+> `art/audio-team` 的**音樂路徑**（編曲、和聲、鼓組律動、混音）透過 Ableton Live 完成，領域知識來自 `kiro-ableton-accelerator` Power。SFX 與配音仍走 ComfyUI 音訊生成（見上方「ComfyUI MCP 整合詳解」）。
+
+### ⚠️ 需手動加入 `mcp.json`
+
+`.kiro/settings/mcp.json` 受 IDE 權限規則保護、無法由 Agent 自動寫入。請自行把以下內容加進 `mcpServers`：
+
+```json
+"ableton": {
+  "command": "uvx",
+  "args": ["ableton-mcp"],
+  "env": {
+    "ABLETON_HOST": "localhost",
+    "ABLETON_PORT": "9877",
+    "ABLETON_MCP_DISABLE_TELEMETRY": "true"
+  },
+  "disabled": false,
+  "autoApprove": []
+}
+```
+
+未加入時，`audio-team` 會在連線自檢時停下並回報缺件，**不會假裝已產出音檔**；SFX/voice 的 ComfyUI 路徑仍可正常運作。
+
+### 前置需求
+
+1. 安裝 [Ableton Live](https://www.ableton.com/)
+2. 安裝 [uv](https://docs.astral.sh/uv/)（`uvx` 隨附）
+3. 在 Ableton 端啟用對應的 MCP 橋接（Remote Script），使其在 `localhost:9877` 監聽
+4. 開啟 Ableton Live 後再喚醒 `audio-team`
+
+### 領域知識（11 份 steering）
+
+`~/.kiro/powers/installed/kiro-ableton-accelerator/steering/`：`operation-safety`、`verification-policy`、`session-inspection`、`music-theory`、`midi-note-model`、`drums-and-groove`、`arrangement`、`mixing-and-effects`、`browser-and-devices`、`genre-playbooks`、`troubleshooting`。
+
+該 Power 的 `POWER.md` 開頭有**場景判斷表**，`audio-team` 被要求先讀它再決定載入哪份 steering。
+
+> ⚠️ **改動既有 Ableton 專案前**，`audio-team` 必須先讀 Power 的 `operation-safety.md`——DAW 專案的破壞性操作不易復原。
+
+### 安全提醒
+
+MCP 只跟本機 `localhost:9877` 的 Ableton 通訊，不要對外公開監聽。
+
+### 參考資料
+
+- [`hoycdanny/kiro-ableton-accelerator`](https://github.com/hoycdanny/kiro-ableton-accelerator)（領域知識層 Power）
+- [Ableton Live 官方](https://www.ableton.com/)
+
+---
+
+## Krita MCP 整合詳解
+
+> `art/krita-team` 透過 Krita 做**數位繪圖與手繪精修**：承接 `comfyui-team` 的生成素材做圖層合成、遮罩、構圖修正與上色，或從零手繪 sprite／UI／貼圖。領域知識來自 `kiro-krita-accelerator` Power。
+
+### 為什麼需要這一層
+
+生成式 AI 出圖快但不受控。`comfyui-team` 負責「生成」，`krita-team` 負責把它「修到可交付」——這是 AI 素材進到遊戲前常見的缺口。
+
+### ⚠️ 需手動加入 `mcp.json`
+
+同樣受權限規則保護，請自行加進 `mcpServers`：
+
+```json
+"krita": {
+  "command": "python3",
+  "args": ["${HOME}/krita-mcp/server.py"],
+  "transport": "stdio",
+  "env": {
+    "KRITA_URL": "http://127.0.0.1:5678"
+  },
+  "disabled": false,
+  "autoApprove": []
+}
+```
+
+未加入時，`krita-team` 會在連線自檢時停下並回報缺件，不會假裝已完成繪圖或匯出。
+
+### 前置需求
+
+1. 安裝 [Krita](https://krita.org/)
+2. 安裝 Krita MCP 橋接（Krita Python 外掛 + MCP server）。外掛會在 Krita 內於 `127.0.0.1:5678` 開一個 HTTP server，並把每個指令排進 Krita 主執行緒的 command queue
+3. 把 MCP server 放到 `${HOME}/krita-mcp/server.py`（或改上方 `args` 指向你實際的路徑）
+4. 開啟 Krita 並啟用外掛後再喚醒 `krita-team`
+
+> Power 的 `POWER.md` 說明它評估過兩個 MIT 授權的橋接實作，兩者核心工具名稱與簽章相同，因此該 Power 對兩者都適用。實際採用哪一個、以及安裝細節，以該 Power 的 `POWER.md` 為準。
+
+### 領域知識（13 份 steering）
+
+`~/.kiro/powers/installed/kiro-krita-accelerator/steering/`：`krita-general`、`canvas-setup`、`painting-workflow`、`brush-and-stroke`、`layer-management`、`selection-and-masking`、`color-and-palette`、`composition`、`iterative-review`、`export-and-delivery`、`batch-automation`、`performance-and-limits`、`language-zh-tw`。
+
+其中 `iterative-review.md` 是這個 Power 的特色：每一步都把畫布匯出成圖檔再檢視，讓 AI **看得到自己畫出來的結果**，而不是憑操作記錄假設畫面正確。`krita-team` 被要求照它執行。
+
+### 職責界線
+
+| 交給 `krita-team` | 交給別人 |
+|------------------|---------|
+| 手繪、精修、圖層合成、遮罩、構圖修正、上色 | 生成式出圖 → `comfyui-team` |
+| 承接生成素材做可交付化（去背、修邊、統一色調） | 特效素材生成 → `vfx-artist`（其序列幀可交由 krita 逐格精修） |
+| 手繪 sprite／UI 素材／貼圖 touch-up | UI 版面與 Design Token → `ui-ux-team` |
+
+### 安全提醒
+
+MCP 只跟本機 `127.0.0.1:5678` 的 Krita 通訊，不要對外公開監聽。
+
+### 參考資料
+
+- [`hoycdanny/kiro-krita-accelerator`](https://github.com/hoycdanny/kiro-krita-accelerator)（領域知識層 Power）
+- [Krita 官方](https://krita.org/)
 
 ---

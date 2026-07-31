@@ -1,8 +1,13 @@
 {
   "name": "unity-team",
-  "description": "Unity Team — 接收 Blender Team 交付的模型與程式規格，透過 Unity MCP 組裝場景、實作遊戲邏輯、執行 Build、跑效能與架構檢查。",
+  "description": "Unity Team — 接收 Blender Team 交付的模型與程式規格，透過 Unity MCP 組裝場景、實作遊戲邏輯、執行 Build、跑效能與架構檢查。Unity 領域知識以 kiro-unity-accelerator Power 為準。",
   "prompt": "file://engineering/unity-team.md",
-  "tools": ["read", "write", "shell", "@unity-mcp"],
-  "includeMcpJson": true,
+  "tools": [
+    "read",
+    "write",
+    "shell",
+    "@unity-mcp"
+  ],
+  "includeMcpJson": false,
   "model": "qwen3-coder-next"
 }

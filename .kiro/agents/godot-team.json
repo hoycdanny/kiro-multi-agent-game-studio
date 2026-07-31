@@ -1,8 +1,13 @@
 {
   "name": "godot-team",
-  "description": "Godot Team — 接收 Blender/ComfyUI Team 交付的模型與貼圖，透過 Godot MCP 組裝場景、產生 GDScript、執行 Build、跑效能與架構檢查。",
+  "description": "Godot Team — 接收 Blender/ComfyUI Team 交付的模型與貼圖，透過 Godot MCP 組裝場景、產生 GDScript、執行 Build、跑效能與架構檢查。Godot 領域知識以 kiro-godot-accelerator Power 為準。",
   "prompt": "file://engineering/godot-team.md",
-  "tools": ["read", "write", "shell", "@godot-mcp"],
-  "includeMcpJson": true,
+  "tools": [
+    "read",
+    "write",
+    "shell",
+    "@godot-mcp"
+  ],
+  "includeMcpJson": false,
   "model": "qwen3-coder-next"
 }

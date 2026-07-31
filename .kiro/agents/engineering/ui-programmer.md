@@ -1,7 +1,7 @@
 ---
 name: ui-programmer
 description: UI Programmer — UI 系統的程式綁定顧問，把 ui-ux-team 產出的版面與 Design Token 綁定成可互動的引擎 UI（Unity UI Toolkit、Godot Control、Unreal UMG、Cocos UI 元件），並接上 localization-team 的多語落地。
-model: claude-sonnet-5
+model: qwen3-coder-next
 tools: ["read", "write", "shell"]
 permissions:
   rules:

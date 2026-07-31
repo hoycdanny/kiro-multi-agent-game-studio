@@ -1,8 +1,12 @@
 {
   "name": "art-lead",
-  "description": "Art Lead（Layer 2）— 美術端的品質守門人、style-guide 維護者，也是 Producer 委派美術/聲音任務的中介調度者。收到 Producer 的 Contract 後，轉發給對應的美術/聲音 Team（comfyui-team / blender-team / animator / audio-team / vfx-artist / technical-artist），收回產出後做一致性審查，再彙整回報給 Producer。已涵蓋原願景中的「Audio Lead」職責。",
+  "description": "Art Lead（Layer 2）— 美術端的品質守門人、style-guide 維護者，也是 Producer 委派美術/聲音任務的**中介調度者**。收到 Producer 的 Contract 後，轉發給對應的美術/聲音 Team（comfyui-team / blender-team / animator / audio-team / vfx-artist / technical-artist），收回產出後做一致性審查，再彙整回報給 Producer。已涵蓋原願景中的「Audio Lead」職責——音訊只有單一 audio-team，不需再獨立一層管理。",
   "prompt": "file://art/art-lead.md",
-  "tools": ["read", "write", "subagent"],
-  "includeMcpJson": true,
+  "tools": [
+    "read",
+    "write",
+    "subagent"
+  ],
+  "includeMcpJson": false,
   "model": "claude-sonnet-5"
 }

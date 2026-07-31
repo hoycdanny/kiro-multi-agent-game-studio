@@ -6,6 +6,8 @@
 
 
 > `design/slot-game-expert` 不是一個操作 MCP 工具的執行 Team，而是一個**純知識型 Domain Expert**，產出數學模型/RNG/認證合規規格，交給對應的引擎 Team 實作。
+>
+> 📌 **它的領域知識來自 `kiro-slot-game-expert` Power**（12 份 steering，涵蓋 `math-model`、`math-verification`、`rng-game-logic`、`jurisdiction-matrix`、`certification-prep`、`change-management-recert`、`responsible-gaming`、`aml-kyc-player-account`、`data-protection-privacy`、`platform-systems-compliance`、`incident-malfunction-handling`、`advisory-engagement`），**不在 agent prompt 裡**。本節只是概覽；具體數值、法規條號與做法一律以 Power 為權威來源。缺 Power 時它會明確標示「本次未取用 Power 知識」，不會憑印象給合規結論。
 
 ### 為什麼獨立於 `game-designer` 之外
 
@@ -29,8 +31,11 @@
 
 > **核心規則**：CSPRNG 是唯一可接受的 RNG 類型，一般的 `Random()` / `Math.random()` / `FMath::RandRange` 都不具密碼學安全性，絕對不能用在正式上線的核心邏輯。
 
-### 參考資料（完整清單見 `slot-game-expert.md` 內文，24 條已驗證官方文獻）
+### 參考資料
 
+驗證來源（GLI、UKGC、MGA、AGCO、NIST、W3C 等）現在集中在 `kiro-slot-game-expert` Power 的 steering 內，不再複製到 agent prompt 或本文件——避免同一份法規清單在三個地方各自過時。入口：
+
+- Power：`~/.kiro/powers/installed/kiro-slot-game-expert/`（`certification-prep.md`、`jurisdiction-matrix.md` 內含對應法規來源）
 - [GLI Standards](https://gaminglabs.com/gli-standards/)
 - [NIST SP 800-90A Rev.1](https://csrc.nist.gov/pubs/sp/800/90/a/r1/final)
 
@@ -39,7 +44,7 @@
 ## 遊戲類型 Domain Expert 一覽
 
 
-本專案把「不同遊戲類型的設計專業」拆成 13 個 Domain Expert（都在 `design/`，`claude-sonnet-5`，純知識型、不操作引擎 MCP）。Producer 依需求關鍵字路由到對應專家，產出**系統規格與數值**交 `game-designer` 整合進 GDD、`balance-tester` 驗數值、引擎 Team 實作。
+本專案把「不同遊戲類型的設計專業」拆成 13 個 Domain Expert（都在 `design/`，純知識型、不操作引擎 MCP；模型依角色分配，見末尾「模型指派」）。其中 `slot-game-expert` 與 `fish-game-expert` 的領域知識來自對應的 Kiro Power（見 `.kiro/steering/global/powers-registry.md`），其餘 11 個的知識目前寫在各自的 prompt 內。Producer 依需求關鍵字路由到對應專家，產出**系統規格與數值**交 `game-designer` 整合進 GDD、`balance-tester` 驗數值、引擎 Team 實作。
 
 **共通模式**：每個專家被喚醒時都會先問清楚關鍵前提（單/多人、子類型、規模、平台），再產規格；數值一律標「初版，待模擬/實測調整」；完整規格見各自的 `.kiro/agents/design/*.md`。下面是「何時找它、交付什麼、最關鍵的專業點、跟誰協作」。
 
@@ -160,8 +165,8 @@
 |------|------|------|
 | Design Lead | `design/design-lead.md` | 核心設計（7 個常駐職能）整合 GDD、消矛盾、design-review gate |
 | Domain Lead | `design/domain-lead.md` | 13 類遊戲類型 Domain Expert 的專業正確性審查與轉發（按需啟用，不進 GDD 整合，交 Design Lead） |
-| Art Lead | `art/art-lead.md` | 維護 `style-guide.md`、跨美術 Team 一致性 review |
-| Tech Lead | `engineering/tech-lead.md` | 技術架構決策、效能預算、跨引擎 code-review gate |
+| Art Lead | `art/art-lead.md` | 維護 `style-guide.md`、跨美術 Team 一致性 review（管 7 個美術/聲音 Specialist） |
+| Tech Lead | `engineering/tech-lead.md` | 技術架構決策、效能預算、跨引擎 code-review gate（管 8 個工程 Specialist，含錢包金流） |
 | QA Lead | `qa/qa-lead.md` | 測試策略、協調 functional/balance/performance tester、go/no-go |
 
 > Audio Lead **刻意不獨立建立**：目前只有單一 `audio-team`，無需再加一層管理；音訊一致性已明確併入 `art-lead` 的職責（見 `art-lead.md` frontmatter 說明）。
@@ -200,34 +205,42 @@
 | rhythm-expert | read, write | 譜面設計、判定窗（ms）、延遲校正、計分/連段（綁 audio-team） |
 | narrative-adventure-expert | read, write | 分支敘事結構、旗標/狀態變數、對話樹、選擇後果（綁 localization-team） |
 
-#### Art Team（Art Lead + 5 個）
+#### Art Team（Art Lead + 7 個）
 
-| Agent | 工具 | 產出 |
-|-------|------|------|
-| comfyui-team | `@comfyui`, read, write | 概念圖、PBR 貼圖、Sprite、Workflow 組裝，見「ComfyUI MCP 整合詳解」 |
-| blender-team | @blender-mcp, read, write | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx |
-| animator | @blender-mcp, read, write | 骨骼綁定、蒙皮權重、動畫 clip、含動畫匯出（接 blender-team 的靜態 mesh） |
-| vfx-artist | @comfyui, read, write | 特效素材/序列幀生成；與 technical-artist 分工：內容 vs 技術實現 |
-| technical-artist | @blender-mcp, read, write, shell | Shader/材質、LOD/貼圖壓縮/合批、VFX 技術、匯入管線 |
-| audio-team | `@comfyui`, read, write | SFX、BGM、配音（voice）；透過 ComfyUI `generate_audio` 生成 |
+| Agent | 工具 | 領域知識 Power | 產出 |
+|-------|------|---------------|------|
+| comfyui-team | `@comfyui`, read, write | `kiro-comfyui-accelerator` | 概念圖、PBR 貼圖、Sprite、Workflow 組裝（生成式） |
+| krita-team | `@krita`, read, write | `kiro-krita-accelerator` | 手繪與精修：圖層合成、遮罩、構圖修正、上色；或從零手繪 sprite/UI/貼圖 |
+| blender-team | `@blender-mcp`, read, write | （無） | 3D 模型 + UV、Collider Mesh、套貼圖、匯出 .fbx |
+| animator | `@blender-mcp`, read, write | （無） | 骨骼綁定、蒙皮權重、動畫 clip、含動畫匯出（接 blender-team 的靜態 mesh） |
+| vfx-artist | `@comfyui`, read, write | `kiro-comfyui-accelerator` | 特效素材/序列幀生成；與 technical-artist 分工：內容 vs 技術實現 |
+| technical-artist | `@blender-mcp`, read, write, shell | （無） | Shader/材質、LOD/貼圖壓縮/合批、VFX 技術、匯入管線 |
+| audio-team | `@ableton`, `@comfyui`, read, write | `kiro-ableton-accelerator` | 音樂/BGM 走 Ableton（編曲/混音）；SFX 與配音走 ComfyUI 音訊生成 |
+
+> **生成 vs 精修的分工**：`comfyui-team` 出得快但不受控，`krita-team` 負責把它修到可交付。常見組合是先 comfyui 出初稿、再 krita 精修——`art-lead` 會依序轉發兩次，並把前者的 Delivery Manifest 路徑帶進後者的 Contract。
 
 > `concept-artist` / `texture-artist` 這兩個原願景角色已合併進 `comfyui-team`，不再分別建立，因為兩者都依賴同一個 ComfyUI 工具，拆開建立沒有實際差異。
 >
 > 同理，原願景中 `ux-designer`（Design Team）與 `ui-artist`（Art Team）已合併成 `design/ui-ux-team`，因為兩者都圍繞 Figma 運作、共同負責 UI/UX 層。分工上：`ui-ux-team` 出版面與 Design Token（介面「怎麼排、怎麼流動」），`comfyui-team` 生成要放進版面的像素素材（icon/按鈕/背景），引擎 Team 負責在原生 UI 系統實作。
 >
-> 原願景的 `sound-designer` + `composer` 已合併成單一 `audio-team`（兩者都用同一個 comfyui MCP 的音訊生成能力，拆開沒有實際差異，比照 comfyui-team 的合併邏輯）。
+> 原願景的 `sound-designer` + `composer` 已合併成單一 `audio-team`。合併後它有兩條產出路徑：音樂編曲/混音走 Ableton（`kiro-ableton-accelerator` Power 提供樂理與混音知識），SFX/配音走 ComfyUI 音訊生成。
 
-#### Engineering Team（4 引擎 Team + Systems/UI Programmer + DevOps）
+#### Engineering Team（4 引擎 Team + Systems/UI Programmer + DevOps + 錢包金流）
 
-| Agent | 工具 | 產出 |
-|-------|------|------|
-| unity-team | `@unity-mcp`, read, write, shell | 場景組裝、遊戲邏輯、狀態機、技能系統、Build，見「Unity MCP 整合詳解」（[unity-mcp](https://github.com/CoplayDev/unity-mcp)） |
-| godot-team | `@godot-mcp`, read, write, shell | 場景組裝、GDScript、State Machine、Export，見「Godot MCP 整合詳解」（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)） |
-| unreal-team | `@unreal-engine`, read, write, shell | 關卡組裝、Blueprint 邏輯、材質工作流程，見「Unreal MCP 整合詳解」（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） |
-| cocos-team | `@cocos-creator`, read, write, shell | 場景組裝、TypeScript 元件、Prefab、Build，見「Cocos MCP 整合詳解」（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)） |
-| systems-programmer | read, write, shell | 引擎無關的存檔系統/資源管理/事件系統設計，交對應引擎 Team 落地實作 |
-| ui-programmer | read, write, shell | 把 ui-ux-team 版面/Token 綁定成可互動引擎 UI，接 localization-team 多語落地 |
-| devops-team | read, write, shell | headless build、CI pipeline、版本/產物管理、build 健康驗證 |
+| Agent | 工具 | 領域知識 Power | 產出 |
+|-------|------|---------------|------|
+| unity-team | `@unity-mcp`, read, write, shell | `kiro-unity-accelerator` | 場景組裝、遊戲邏輯、狀態機、技能系統、Build（[unity-mcp](https://github.com/CoplayDev/unity-mcp)） |
+| godot-team | `@godot-mcp`, read, write, shell | `kiro-godot-accelerator` | 場景組裝、GDScript、State Machine、Export（[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp)） |
+| unreal-team | `@unreal-engine`, read, write, shell | `kiro-unreal-accelerator` | 關卡組裝、Blueprint 邏輯、材質工作流程（local MCP from [flopperam/unreal-engine-mcp](https://github.com/flopperam/unreal-engine-mcp)） |
+| cocos-team | `@cocos-creator`, read, write, shell | `kiro-cocos-accelerator` | 場景組裝、TypeScript 元件、Prefab、Build（[cocos-mcp-server](https://github.com/DaxianLee/cocos-mcp-server)） |
+| systems-programmer | read, write, shell | （無） | 引擎無關的存檔系統/資源管理/事件系統設計，交對應引擎 Team 落地實作 |
+| ui-programmer | read, write, shell | （無） | 把 ui-ux-team 版面/Token 綁定成可互動引擎 UI，接 localization-team 多語落地 |
+| devops-team | read, write, shell | （無） | headless build、CI pipeline、版本/產物管理、build 健康驗證 |
+| wallet-systems-expert | read, write | `kiro-gaming-wallet-expert` | 錢包/金流**後端規格**：餘額與交易模型、API 協定、DB schema、幂等與鎖、對帳與回滾、快取、可觀測性、金流安全合規 |
+
+> **`wallet-systems-expert` 為什麼放在 Engineering 而非 Design**：它的 Power steering 全是後端工程主題（API 協定、DB schema、幂等與鎖、Redis 快取、對帳回滾、可觀測性、AWS 部署），本質是伺服器端系統設計，所以歸 `tech-lead` 管。
+>
+> **和相鄰角色的分法**：`economy-designer` 決定「賣什麼、多少錢、貨幣怎麼流動」；`wallet-systems-expert` 決定「這些錢怎麼被安全記錄與流轉」。casino 類專案（老虎機/魚機）常同時需要它和對應 Domain Expert——後者定「這一局賠多少」，它定「這筆賠付怎麼安全記進帳」。
 
 #### QA Team（QA Lead + 4 個）
 
@@ -293,46 +306,26 @@ Kiro 每個 Custom Agent 可在 frontmatter 用 `model` 欄位指定模型（見
 
 ### 本專案的指派
 
-| Agent | 模型 | credit | 依據（對應官方定位） |
-|-------|------|--------|---------------------|
-| `slot-game-expert` | `claude-opus-4.8` | 2.2x | 數學模型/RTP/認證錯誤代價最高 → Opus 4.8「最高可靠度、會標記不確定、~4x 更少讓程式碼瑕疵溜過」 |
-| `fish-game-expert` | `claude-opus-4.8` | 2.2x | casino 數學/RTP/合規，與 slot 同等級正確性要求 → Opus 4.8 |
-| `shooter-expert` | `claude-sonnet-5` | 1.3x | 武器/命中/AI 系統設計推理 → Sonnet 5 |
-| `mmo-expert` | `claude-sonnet-5` | 1.3x | netcode/跨系統架構設計推理 → Sonnet 5 |
-| `rpg-systems-expert` | `claude-sonnet-5` | 1.3x | 數值/公式/系統設計 → Sonnet 5 |
-| `card-game-expert` | `claude-sonnet-5` | 1.3x | 卡牌數值/平衡設計 → Sonnet 5 |
-| `puzzle-match3-expert` | `claude-sonnet-5` | 1.3x | board 可解性/難度曲線/步數經濟設計 → Sonnet 5 |
-| `platformer-expert` | `claude-sonnet-5` | 1.3x | 跳躍手感參數/關卡節奏/gating 設計 → Sonnet 5 |
-| `roguelike-expert` | `claude-sonnet-5` | 1.3x | 程序生成/build synergy/meta 進度設計 → Sonnet 5 |
-| `strategy-expert` | `claude-sonnet-5` | 1.3x | 兵種相剋/經濟/AI/波次曲線設計 → Sonnet 5 |
-| `simulation-expert` | `claude-sonnet-5` | 1.3x | 生產鏈/供需經濟收斂設計 → Sonnet 5 |
-| `rhythm-expert` | `claude-sonnet-5` | 1.3x | 譜面/判定窗/延遲校正設計 → Sonnet 5 |
-| `narrative-adventure-expert` | `claude-sonnet-5` | 1.3x | 分支敘事/旗標/對話樹結構設計 → Sonnet 5 |
-| `creative-director` | `claude-sonnet-5` | 1.3x | 願景仲裁/創意判斷，需結構化推理 → Sonnet 5 |
-| `producer` | `claude-sonnet-5` | 1.3x | 拆任務/調度/串接多步 → Sonnet 5「接近 Opus 工具使用、能跑完多步 agentic」，比 Opus 省 |
-| `game-designer` | `claude-sonnet-5` | 1.3x | spec 導向文件 → Sonnet 5「適合 spec 導向、高保真實作」 |
-| `design-lead` | `claude-sonnet-5` | 1.3x | 整合/審查設計規格、消矛盾 → Sonnet 5 |
-| `economy-designer` | `claude-sonnet-5` | 1.3x | 經濟數值設計，需結構化推理 |
-| `balance-tester` | `claude-sonnet-5` | 1.3x | 寫模擬程式 + 統計判讀，多步 agentic |
-| `qa-lead` | `claude-sonnet-5` | 1.3x | 測試策略/彙整/go-no-go 判斷 → Sonnet 5 |
-| `performance-tester` | `claude-sonnet-5` | 1.3x | profiling 判讀 + 量測腳本，多步 → Sonnet 5 |
-| `unity/godot/unreal/cocos-team` | `claude-sonnet-5` | 1.3x | 寫程式 + 大量 MCP 工具編排，要高工具可靠度 → Sonnet 5「近 Opus 工具使用」 |
-| `tech-lead` | `claude-sonnet-5` | 1.3x | 架構決策/跨引擎 code-review，需高可靠度 → Sonnet 5 |
-| `devops-team` | `claude-sonnet-5` | 1.3x | CI/build 腳本，需正確性 |
-| `blender-team` / `animator` | `glm-5` | 0.5x | 寫 Blender Python（程式）但非關鍵 → GLM-5「長流程 agentic coding、跨檔案」，成本減半 |
-| `art-lead` / `technical-artist` | `glm-5` | 0.5x | 風格審查 / shader / 優化，美術向 coding → GLM-5，成本減半 |
-| `ui-ux-team` | `glm-5` | 0.5x | Figma + handoff 規格，generalist 夠用、省成本 |
-| `compliance-release` | `glm-5` | 0.5x | 查政策 + 條列清單，doc/結構化為主 |
-| `marketing-team` | `glm-5` | 0.5x | 文案/腳本寫作，generalist 夠用、省成本 |
-| `comfyui-team` / `audio-team` | `minimax-m2.5` | 0.25x | 主要在驅動 MCP 工具 → MiniMax M2.5「接近 Opus 的 coding、0.25x」，高 CP 值 |
-| `localization-team` | `minimax-m2.5` | 0.25x | 抽字串/locale 偏機械性，成本優先 |
-| `functional-tester` | `claude-haiku-4.5` | 0.4x | 跑測試回報 → Haiku 4.5「接近前沿、1/3 成本、適合 subagent」 |
+> ⚠️ **本節已對齊 `.kiro/agents/*.json` 的實際值**。此處先前描述的是一套**未落地的規劃**（`claude-opus-4.8` 給 casino 專家、`glm-5` 給美術、`minimax-m2.5` 給 comfyui/audio），與檔案內容不符。下表是**實際生效**的配置。若你原本想要的是那套規劃，需要改 48 個 `.json` 的 `model` 欄位——這是行為與成本的改變，本次未擅自執行。
+
+實際採 5 層配置，依「錯誤代價 × 是否為 coding 任務 × 呼叫量」分配：
+
+| 模型 | 數量 | 分配給 | 分配邏輯 |
+|------|------|--------|---------|
+| `claude-sonnet-5` | 7 | `creative-director`、`producer`、5 個 Lead（`design`/`domain`/`art`/`tech`/`qa`） | 調度與 review gate：要跑多步 agentic、要做取捨判斷，錯誤會擴散到整條 Pipeline |
+| `deepseek-3.2` | 9 | `slot-game-expert`、`fish-game-expert`、`rpg-systems-expert`、`shooter-expert`、`card-game-expert`、`strategy-expert`、`economy-designer`、`balance-tester`、`wallet-systems-expert` | 數值與機率推理密集：RTP/賠付/成長曲線/經濟收斂/金流一致性，重推理不重 coding |
+| `claude-sonnet-4` | 20 | 美術全線（`comfyui-team`、`krita-team`、`blender-team`、`animator`、`vfx-artist`、`technical-artist`、`audio-team`）＋一般設計與類型專家＋`ui-ux-team`、`compliance-release` | 通用強度足夠，是數量最多的一層 |
+| `qwen3-coder-next` | 7 | 4 個引擎 Team＋`systems-programmer`、`ui-programmer`、`devops-team` | 純 coding 與工具編排，用 coding 專用模型 |
+| `claude-haiku-4.5` | 5 | `functional-tester`、`performance-tester`、`usability-tester`、`localization-team`、`marketing-team` | 高呼叫量、單次錯誤代價低（測試會重跑、文案會人工過目） |
+
+實際每個 agent 的值以 `.kiro/agents/<name>.json` 的 `model` 欄位為準（`.md` frontmatter 已與其同步）。
 
 ### 調整槓桿
 
-- **想更省**：engine team 可改 `glm-5`（0.5x，官方定位「repo 規模 agentic、跨檔案」）；`minimax` 那批可降到 `qwen3-coder-next`（0.05x）。
-- **想更穩**：關鍵 agent 升到 `claude-opus-4.8`，或在 chat 把 reasoning effort 調到 High/Max（官方：effort 越高越深入但更耗 credit）。
-- **懶得逐一調**：全設 `auto`（1.0x），Kiro 自動路由。
+- **想更省**：`claude-sonnet-4` 那 20 個裡，純執行型（美術 Team）可降一階；`claude-haiku-4.5` 已是最省的一層，不建議再降。
+- **想更穩**：錯誤代價最高的 `slot-game-expert` / `fish-game-expert` / `wallet-systems-expert` 可升到 `claude-opus-4.8`（casino 數學與金流一致性算錯的代價遠高於 credit 差額）；或在 chat 把 reasoning effort 調到 High/Max。
+- **懶得逐一調**：全設 `auto`，讓 Kiro 自動路由。
+- **改動方式**：`.kiro/agents/<name>.json` 的 `model` 欄位是實際生效值，改完記得同步 `.md` frontmatter 的 `model`（兩邊不一致時難以判斷哪個生效，本次已全部對齊）。
 - **怎麼改**：編輯各 agent frontmatter 的 `model`，值必須是你 `/model` 清單裡的**確切 ID**；填了不存在的 ID 會自動退回預設模型 + 警告。
 - **注意（Experimental 與 region，會影響可用性）**：依 [kiro.dev/docs/models](https://kiro.dev/docs/models/)（2026-07-01）——
   - `claude-sonnet-5`（本專案約 20 個 agent 的預設）與 `glm-5`：**Experimental，且僅在 us-east-1**。
