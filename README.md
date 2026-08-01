@@ -216,7 +216,51 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 2. **缺 Power 時 Agent 會誠實停下**並回報安裝來源，不會憑印象操作工具、也不會靜默降級。
 3. **Power 內含的 `hooks/`（preToolUse，強迫先讀 steering）在本專案不生效**——依官方文件 subagent 不觸發 Hooks，而本專案 Pipeline 全走 subagent 委派。steering-first 紀律靠 prompt 自律，沒有機制強制。
 
-> `kiro-economy-balancing-expert` 這個 Power 的 repo 目前是空的（無 `steering/`），因此 `economy-designer` 與 `balance-tester` 尚未接入，維持自身 prompt 的知識。
+### 架構聲明：知識庫在 repo 外，本 repo 只存路由
+
+這一點是刻意的設計，不是實作偷懶：
+
+| | 存什麼 | 在哪 |
+|---|---|---|
+| **本 repo** | **路由與組織**：哪個 agent 對應哪個 Power、該讀哪個 steering 檔名、什麼時機讀、缺件時怎麼回報 | `.kiro/` |
+| **Kiro Power** | **知識本身**：那個 steering 檔案實際寫了什麼 | `~/.kiro/powers/installed/`（全機安裝，repo 外） |
+
+可驗證的事實：129 份 Power steering 全部在 repo 外；repo 內對 Power 知識內容的字串搜尋零命中（測過 `Redlock`、`euler_ancestral`、`GPU Resident Drawer`、`krita_select_by_alpha` 等各 Power 獨有字串）；repo 內僅 15 個檔案提到 Power 路徑，內容都是引用而非複製。
+
+**為什麼不把知識放進來**：Power 的知識對真實工具連線驗證過，且獨立於本專案持續更新。複製進 repo 就會產生第二份會過時的副本——本專案已經因此吃過一次教訓（見上方那 7 處失效的 Unity API）。
+
+**代價（誠實聲明）**：這讓本 repo **不是自足的**。clone 下來，那 11 個 agent 的知識層是空的，需要另外從 Powers 面板安裝。目前沒有可機器檢查的 manifest 或 setup 腳本，只有文件說明。
+
+### 尚缺的 Power（18 個，歡迎補齊）
+
+目前 48 個 agent 裡只有 11 個有 Power 支撐。其餘角色的知識還寫在自己的 prompt 裡——**這正是本專案已證實會出問題的形態**（`unity-team` 曾有 7 處失效 API）。
+
+| 優先 | 建議 Power 名稱 | 受益 agent | 為什麼值得 |
+|------|---------------|-----------|-----------|
+| **P1** | `kiro-blender-accelerator` | `blender-team`、`animator`、`technical-artist` | 3 個 agent 共用 blender-mcp 卻零 Power 支撐，是最大缺口 |
+| **P1** | `kiro-economy-balancing-expert` | `economy-designer`、`balance-tester` | repo 已存在但是空的，補起來成本最低 |
+| **P1** | `kiro-game-compliance-expert` | `compliance-release` | 分級與隱私法規有大量可驗證官方來源，錯誤代價高 |
+| P2 | `kiro-mmo-netcode-expert` | `mmo-expert` | 伺服器權威／同步／延遲補償，極容易寫錯 |
+| P2 | `kiro-rpg-systems-expert` | `rpg-systems-expert` | 成長曲線／傷害公式／掉落機率，純數學可驗證 |
+| P2 | `kiro-card-game-expert` | `card-game-expert` | 資源曲線／power creep 基準／combo 平衡 |
+| P2 | `kiro-puzzle-match3-expert` | `puzzle-match3-expert` | board 可解性證明、組合數學 |
+| P2 | `kiro-rhythm-expert` | `rhythm-expert` | 判定窗、audio/input offset 校正 |
+| P2 | `kiro-platformer-expert` | `platformer-expert` | 跳躍物理、coyote time、jump buffer 參數 |
+| P2 | `kiro-shooter-expert` | `shooter-expert` | TTK／後座力／擴散／命中判定模型 |
+| P2 | `kiro-strategy-expert` | `strategy-expert` | 兵種相剋矩陣、塔防波次曲線 |
+| P2 | `kiro-simulation-expert` | `simulation-expert` | 生產鏈、供需收斂 |
+| P2 | `kiro-roguelike-expert` | `roguelike-expert` | 程序生成、build synergy 平衡 |
+| P2 | `kiro-narrative-adventure-expert` | `narrative-adventure-expert` | 分支結構、旗標管理 |
+| P3 | `kiro-game-systems-expert` | `systems-programmer` | 存檔版本遷移、資源生命週期、事件系統模式 |
+| P3 | `kiro-i18n-expert` | `localization-team` | CJK 斷行、RTL 鏡像、字型 subset |
+| P3 | `kiro-game-devops-expert` | `devops-team` | 四引擎 headless build CLI、產物驗證 |
+| P3 | `kiro-usability-expert` | `usability-tester` | 新手引導評估框架、卡關點分析 |
+
+**每一個 Power 的詳細建置規格**（受益 agent、Power 類型、建議 steering 檔案清單與各檔內容、驗證來源、完成後要在本專案改哪裡）見 **[docs/missing-powers.md](docs/missing-powers.md)**。
+
+> **建議不要一次補 11 個 Domain Expert**，只補你實際會做的類型。一個沒有 Power 的 Domain Expert 價值接近零（內容不超過基礎模型已知範圍，卻佔 Agent Selector 位置與 context），但補一個就多一條能真正上線的類型線。
+
+**刻意不需要 Power 的角色**：`producer`、`creative-director`、5 個 Lead、`game-designer`、`level-designer`、`narrative-designer`、`combat-designer`、`marketing-team`、`functional-tester`、`performance-tester`。它們是流程與組織角色，「領域知識」就是本專案的組織規範本身（`contracts.md` / `advisory-mode.md` / `bug-severity.md` / `milestones.md`）——外包到 Power 反而會把專案的組織規則散到 repo 之外。`performance-tester` 的 profiling 知識已在各引擎 Power 內，不必重複。
 
 ### 端到端流程範例：「請幫我用 Unity 開發一款老虎機」
 
@@ -306,7 +350,8 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 
 ### 深入文件（`docs/`）
 
-- [MCP 整合詳解](docs/mcp-integrations.md) — Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub 八條 MCP 的安裝與設定
+- [MCP 整合詳解](docs/mcp-integrations.md) — Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub / Ableton / Krita 十條 MCP 的安裝與設定
+- [尚缺的 Power：建置規格](docs/missing-powers.md) — 18 個尚缺 Power 的完整建置規格：受益 agent、Power 型態、建議 steering 檔案清單與各檔內容、驗證來源、接入步驟
 - [Agent 與角色](docs/agents-and-roles.md) — Slot Game Expert 詳解、遊戲類型 Domain Expert 一覽、團隊角色與職責、Agent 定義格式、模型指派
 - [架構與流程](docs/architecture-and-process.md) — 工具鏈資料流、開發流程、通訊協定、治理機制、端到端 Demo、擴展指南
 - [參考資料](docs/reference.md) — 成本估算、錯誤處理與退化策略、設計依據、共享知識庫、專案檔案結構
@@ -510,7 +555,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 | 文件 | 內容 |
 |------|------|
-| [docs/mcp-integrations.md](docs/mcp-integrations.md) | 八條 MCP（Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub）整合與設定詳解 |
+| [docs/mcp-integrations.md](docs/mcp-integrations.md) | 十條 MCP（Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub / Ableton / Krita）整合與設定詳解 |
+| [docs/missing-powers.md](docs/missing-powers.md) | **尚缺的 18 個 Kiro Power 建置規格**：兩種 Power 型態的慣例、每個 Power 的受益 agent／steering 檔案清單／驗證來源／接入步驟、完成度檢查清單 |
 | [docs/agents-and-roles.md](docs/agents-and-roles.md) | Slot Game Expert 詳解、遊戲類型 Domain Expert 一覽、團隊角色與職責、Agent 定義格式、模型指派 |
 | [docs/architecture-and-process.md](docs/architecture-and-process.md) | 工具鏈與資料流、開發流程、Agent 間通訊協定、治理機制、端到端 Demo、漸進式擴展指南 |
 | [docs/reference.md](docs/reference.md) | 成本估算、錯誤處理與退化策略、設計依據、共享知識庫、專案檔案結構 |
