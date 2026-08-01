@@ -238,6 +238,7 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 | `.kiro/steering/global/contracts.md` | Task Contract / Asset Contract / Change Request 格式定義 | `always` |
 | `.kiro/steering/global/bug-severity.md` | Bug 嚴重度分級標準（S1-S4）與 release 門檻，QA 全線共用 | `always` |
 | `.kiro/steering/global/powers-registry.md` | Agent ↔ Kiro Power 對照表、Power 磁碟路徑規則、steering-first 與缺件處理紀律 | `always` |
+| `.kiro/steering/global/advisory-mode.md` | 諮詢模式：使用者不懂遊戲開發時，Lead 該主動給建議與預設值而非丟問題；決定分級（現在必須定／可用預設往前走／上線前必須定） | `always` |
 | `.kiro/steering/project/gdd.md` | 遊戲設計文件（GDD）骨架，單一真相來源，含 Postmortem 範本（章節待填寫） | `always`（每次對話都載入） |
 | `.kiro/steering/project/style-guide.md` | 美術風格指南骨架（章節待填寫） | `always` |
 | `.kiro/steering/project/milestones.md` | Prototype→Gold 各階段驗收標準（Exit Criteria）骨架 | `always` |

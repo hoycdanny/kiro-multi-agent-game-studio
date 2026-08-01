@@ -100,6 +100,7 @@ max_iterations: 3
 | `.kiro/steering/global/contracts.md` | Task/Asset Contract 格式 + Change Request（防 Feature Creep） + 委派命名規範 + subagent 機制 | producer | 已建立，內容完整 |
 | `.kiro/steering/global/bug-severity.md` | Bug 嚴重度分級（S1-S4）+ release 門檻，QA 全線共用標準 | qa-lead | 已建立，內容完整 |
 | `.kiro/steering/global/powers-registry.md` | Agent ↔ Kiro Power 對照表（11 個）、Power 磁碟路徑規則、steering-first 與缺件處理紀律 | producer | 已建立，內容完整 |
+| `.kiro/steering/global/advisory-mode.md` | 諮詢模式：使用者不懂遊戲時主動給建議與預設值、決定分級、各 Lead 的諮詢範圍 | producer | 已建立，內容完整 |
 | `shared/README.md` + `.gitattributes` | 交付物落地目錄結構 + Git LFS 規則 | producer / devops-team | 已建立 |
 | `.kiro/steering/project/gdd.md` | 遊戲設計的單一真相來源（GDD）+ Postmortem 範本 | game-designer | 已建立骨架，章節內容待填寫 |
 | `.kiro/steering/project/style-guide.md` | 美術風格指南 | art-lead | 已建立骨架，章節內容待填寫 |
@@ -179,7 +180,8 @@ kiro-multi-agent-game-studio/
 │   │   │   ├── asset-standards.md              # inclusion: always（命名+落地目錄+音訊/動畫規範）
 │   │   │   ├── contracts.md                    # inclusion: always（Contract+Change Request+委派命名+subagent）
 │   │   │   ├── bug-severity.md                 # inclusion: always（Bug 分級 S1-S4 + release 門檻）
-│   │   │   └── powers-registry.md              # inclusion: always（Agent ↔ Kiro Power 對照 + 使用紀律）
+│   │   │   ├── powers-registry.md              # inclusion: always（Agent ↔ Kiro Power 對照 + 使用紀律）
+│   │   │   └── advisory-mode.md                # inclusion: always（諮詢模式 + 決定分級 + Lead 諮詢範圍）
 │   │   └── project/
 │   │       ├── gdd.md                          # ⚠️ 骨架（inclusion: always，遊戲設計單一真相 + Postmortem 範本）
 │   │       ├── style-guide.md                  # ⚠️ 骨架（inclusion: always，美術風格）
