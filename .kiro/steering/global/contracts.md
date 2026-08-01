@@ -141,6 +141,7 @@ Kiro 原生支援 subagent 委派：主 Agent 用 `Use the "<name>" subagent to 
 delivery:
   contract_id: "TASK-042"
   by: "blender-team"
+  status: "delivered"        # delivered | partial | blocked（必填，見下方規則）
   outputs: ["shared/models/character_hero_01.fbx"]
   acceptance:
     - { criteria: "poly ≤ 8000", status: "pass" }
@@ -148,5 +149,20 @@ delivery:
   next: "交 unity-team 匯入，import scale 0.01"
   notes: ""
 ```
+
+**Delivery Manifest 的誠實規則（所有 agent 一律遵守）**
+
+Delivery Manifest 是給下游與 Producer 判斷「能不能往下走」的依據，寫成假成功會讓整條 Pipeline 建立在不存在的產出上。因此：
+
+1. **`status` 必填**，三種值的定義：
+   - `delivered`：Contract 要求的產出**實際存在**於 `outputs` 列出的路徑
+   - `partial`：部分產出存在（`outputs` 只列真的存在的檔案，缺的寫進 `known_issues`）
+   - `blocked`：**沒有產出**（工具連不上、缺 Power、缺上游素材、需要使用者決策）
+2. **`acceptance` 只能對實際存在的產出評斷**。產出不存在就不要列 `pass`——沒有東西可以通過驗收。`blocked` 時 `acceptance` 應為空，或每項標 `status: "not-evaluated"`。
+3. **`outputs` 只列真的寫出來的檔案**。不要把「計畫要產出的路徑」當成 outputs。
+4. **不要用「替代產出」充當交付**。工具不可用時產出一份流程說明文件、規劃文件或範例，**不等於**完成了原本的 Contract：這種情況 `status: "blocked"`，並在 `notes` 說明你改為提供了什麼、以及原任務仍待完成。若那份替代產出對使用者沒有明確價值，就不要寫檔案，直接回報 blocker。
+5. **`blocked` 時要在 `notes` 寫清楚解除條件**（例如「需先啟動 Krita 並啟用 MCP 外掛」「需先安裝 `kiro-krita-accelerator` Power」），讓 Producer 知道要轉達什麼給使用者。
+
+> 這條規則來自一次實測：某個 agent 在 MCP 工具不可用的情況下，仍寫出 `acceptance` 全部 `pass` 的 Manifest，而使用者要求的實際資產從未產出。能力邊界要誠實暴露，不要用文件產出掩蓋未完成的任務。
 
 Producer 是中樞：負責把上游的 Delivery Manifest 內容填進下一個 agent 的委派 prompt，確保跨 team（含 Unity/Godot/Unreal/Cocos）都讀得到彼此的產出與資料。
