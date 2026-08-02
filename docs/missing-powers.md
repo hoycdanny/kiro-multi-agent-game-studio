@@ -1,5 +1,19 @@
 # 尚缺的 Kiro Power：建置規格
 
+> ## ✅ 這 18 個 Power 已全部完成（2026-08-03）
+>
+> 本文件原本是「尚缺 Power 的施工圖」。**18 個 Power 現已全部撰寫完成並安裝**，
+> 連同原有的 11 個，目前共 **29 個 Power 可用**。
+>
+> 現行的 Agent ↔ Power 對照表見 `.kiro/steering/global/powers-registry.md`；
+> 覆蓋率缺口分析見 README 的「覆蓋率缺口分析」章節。
+>
+> **本文件保留的價值**：它記錄了兩種 Power 型態的慣例、steering 檔案的切分方式、
+> 以及「完成一個 Power 後要在本專案改哪四個地方」的接入步驟——
+> 未來要新增 Power 時照這份走，格式才不會分裂。
+
+---
+
 > 這是 [Kiro Multi-Agent Game Studio](../README.md) 的深入文件之一。完整索引見 README 的「深入文件（Reference）」。
 
 本專案 48 個 agent 裡目前只有 11 個有 Power 支撐（對照表見 `.kiro/steering/global/powers-registry.md`）。其餘角色的知識還寫在自己的 prompt 裡——**這是本專案已證實會出問題的形態**：`unity-team` 曾累積 7 處實際不存在的 `manage_*` action，其中「連線自檢先讀 `project_info`」還是基於一個根本不該假設存在的 resource。

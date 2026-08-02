@@ -4,7 +4,7 @@
 
 > ⚠️ **本文件的定位：只講「怎麼接上 MCP」，不講「工具怎麼用」。**
 >
-> 本專案有 11 個 Agent 的領域知識來自對應的 **Kiro Power**（見 README「領域知識層：Kiro Powers」與 `.kiro/steering/global/powers-registry.md`）。**工具的精確名稱、參數與正確操作順序，一律以對應 Power 的 `POWER.md` / `steering/` 為權威來源**——那些內容對真實連線驗證過且持續更新，本文件內任何工具清單都只是概念性參考，可能落後。
+> 本專案有 33 個 Agent 的領域知識來自對應的 **Kiro Power**（共 29 個）（見 README「領域知識層：Kiro Powers」與 `.kiro/steering/global/powers-registry.md`）。**工具的精確名稱、參數與正確操作順序，一律以對應 Power 的 `POWER.md` / `steering/` 為權威來源**——那些內容對真實連線驗證過且持續更新，本文件內任何工具清單都只是概念性參考，可能落後。
 >
 > 若工具呼叫回傳 `Unknown action` 或參數驗證錯誤，**以錯誤訊息列出的合法值為最高權威**，其次才是 Power 文件。
 

@@ -47,6 +47,10 @@ Producer 接手後串起的環節：**設計規格 → 貼圖生成 → 3D 建�
 
 只想先看它怎麼運作、不裝任何引擎也行——先讀下面的「快速摘要」與「架構總覽」。想實際接 Blender / ComfyUI / 引擎，再看下方「深入文件（Reference）」。
 
+> **想知道 48 個 Agent 實際怎麼調度、該對誰說話、卡住時怎麼救？**
+> 讀 **[docs/orchestration-guide.md](docs/orchestration-guide.md)**——那是使用者視角的操作手冊，含三個完整情境走查與已知限制。
+> 這份 README 說明「這個專案是什麼」，調度指南說明「你要怎麼用它」。
+
 > 遇到不熟悉的術語，可參考下一節的術語對照表。
 
 ## 術語對照表
@@ -187,34 +191,105 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 
 > ⚠️ 標記的兩個 server 是本次接入 Power 時新增的需求。`.kiro/settings/mcp.json` 受 IDE 權限規則保護、無法由 Agent 自動寫入，**必須你手動貼上設定**，否則 `audio-team`（音樂路徑）與 `krita-team` 會在連線自檢時停下並回報缺件。
 
-### 領域知識層：Kiro Powers（11 個 Agent 的專業知識來源）
+### 領域知識層：Kiro Powers（29 個 Power，33 個 Agent 的專業知識來源）
 
 本專案採**兩層架構**：Agent 是**組織層**（誰做、何時做、用什麼 Contract 交付給誰），[Kiro Power](https://kiro.dev/docs/powers/) 是**領域知識層**（這個工具／領域實際上怎麼正確做）。
 
-11 個 Agent 的領域知識**不在 agent prompt 裡**，而在對應的 Power——那些知識對真實工具連線驗證過、且獨立於本 repo 持續更新：
+**29 個 Power 全部已安裝且有內容，325 份 steering、約 4.9 MB。** 48 個 Agent 中有 33 個掛了對應 Power，其餘 15 個是協調與整合角色，刻意不掛（理由見下方）。
 
-| Agent | Power（GitHub `hoycdanny/…`） | steering 檔數 |
-|-------|------------------------------|--------------|
-| `unity-team` | `kiro-unity-accelerator` | 15 |
-| `godot-team` | `kiro-godot-accelerator` | 13 |
-| `unreal-team` | `kiro-unreal-accelerator` | 11 |
-| `cocos-team` | `kiro-cocos-accelerator` | 14 |
-| `comfyui-team`、`vfx-artist` | `kiro-comfyui-accelerator` | 11 |
-| `krita-team` | `kiro-krita-accelerator` | 13 |
-| `audio-team` | `kiro-ableton-accelerator` | 11 |
-| `slot-game-expert` | `kiro-slot-game-expert` | 12 |
-| `fish-game-expert` | `kiro-fish-game-expert` | 16 |
-| `wallet-systems-expert` | `kiro-gaming-wallet-expert` | 10 |
+#### 引擎與工具型（Accelerator，12 個 Agent）
 
-對照表、磁碟路徑規則與使用紀律見 `.kiro/steering/global/powers-registry.md`（`inclusion: always`，所有 Agent 自動載入）。
+這類 Power 對應一個真實的 MCP server，知識是對實際連線驗證過的。
 
-**為什麼要這樣分**：agent prompt 裡手抄的工具細節會過時。整合前 `unity-team.md` 就有 7 處已失效的 API（`manage_asset(list)`、`manage_editor(action:"build")`、`manage_graphics(get_rendering_stats)` 等，Power 已標明這些 action 不存在），其中「連線自檢先讀 `project_info`」這一步本身就基於一個 Power 明確說「不要假設存在」的 resource。這些手抄內容已全部移除，改為指向 Power。
+| Agent | Power | steering | 這個 Power 解決什麼 |
+|-------|-------|:--------:|-------------------|
+| `unity-team` | `kiro-unity-accelerator` | 15 | 場景／資產／Build／效能／架構／平台相容 |
+| `godot-team` | `kiro-godot-accelerator` | 13 | 場景架構／GDScript／Signal／TileMap／Export |
+| `unreal-team` | `kiro-unreal-accelerator` | 11 | 關卡／Blueprint／材質／GAS／UE5 功能 |
+| `cocos-team` | `kiro-cocos-accelerator` | 14 | 場景／節點元件／Prefab／跨平台 Build |
+| `blender-team` | `kiro-blender-accelerator` | 15 | 建模／UV／材質／匯出。**軸向與色彩空間是最常靜默出錯的環節** |
+| `animator` | 同上 | — | 讀 `rigging-and-skinning.md`／`animation-authoring.md` |
+| `technical-artist` | 同上 | — | 讀 `collider-and-lod.md`／`performance-and-limits.md` |
+| `comfyui-team` | `kiro-comfyui-accelerator` | 11 | 模型選型／prompt／sampler／ControlNet／放大／VRAM |
+| `vfx-artist` | 同上 | — | 特效素材向（與 `comfyui-team` 共用） |
+| `krita-team` | `kiro-krita-accelerator` | 13 | 畫布／筆刷／圖層／選取遮罩／構圖／匯出 |
+| `audio-team` | `kiro-ableton-accelerator` | 11 | 編曲／混音／樂理／鼓組律動／曲風 playbook |
+| `ui-ux-team` | `figma`（Kiro 官方推薦） | 3 | 讀取版面／萃取 Design Token／Code Connect／design system 規則 |
 
-**三個必須知道的邊界**：
+#### 遊戲類型 Domain Expert（Knowledge Base，13 個 Agent）
 
-1. **Power 是全機安裝、不隨 repo 走**（在 `~/.kiro/powers/`）。clone 這個 repo 不會帶來知識層，需另外從 Powers 面板安裝。
+純知識、無 MCP server。這類 Power 的價值在於**把設計問題變成可計算的數學**，而不是給通用建議。
+
+| Agent | Power | steering | 這個 Power 的技術核心 |
+|-------|-------|:--------:|---------------------|
+| `slot-game-expert` | `kiro-slot-game-expert` | 12 | 數學模型／RNG／認證／司法管轄區矩陣／負責任遊戲 |
+| `fish-game-expert` | `kiro-fish-game-expert` | 16 | 命中判定 RNG／賠付／多人公平性／控分紅線／認證 |
+| `rpg-systems-expert` | `kiro-rpg-systems-expert` | 11 | 傷害公式三類的極端值分析、掉落長尾（P90 = 2.3 倍期望）、技能樹 trap 判定 |
+| `shooter-expert` | `kiro-shooter-expert` | 10 | **TTK 斷崖**（HP 100 下傷害 34 需 3 發、33 需 4 發，TTK 差 33%）、後座力模型、武器支配性檢定 |
+| `card-game-expert` | `kiro-card-game-expert` | 10 | 超幾何抽牌機率表、power creep 量化偵測、HHI meta 多樣性、關鍵字交互 `C(n,2)` |
+| `puzzle-match3-expert` | `kiro-puzzle-match3-expert` | 11 | 可解性三層（第三層數學上不可證）、board 生成拒絕率、通關率敏感度差 37 倍 |
+| `platformer-expert` | `kiro-platformer-expert` | 10 | 跳躍物理反推（`g = 2h/t²`）、輸入寬容三機制、gating 死鎖圖檢測 |
+| `rhythm-expert` | `kiro-rhythm-expert` | 10 | 音訊時間軸權威（frame 計時 3 分鐘累積 1 秒）、audio 與 input offset 必須分離 |
+| `strategy-expert` | `kiro-strategy-expert` | 10 | 四子類型核心約束、相剋矩陣失衡檢定、塔防波次與收入耦合、AI 難度公平性 |
+| `simulation-expert` | `kiro-simulation-expert` | 10 | 生產鏈與供需收斂、資源閉環、長期崩壞偵測 |
+| `roguelike-expert` | `kiro-roguelike-expert` | 9 | 程序生成正確性、種子架構、build synergy 上限、meta 進度平衡 |
+| `narrative-adventure-expert` | `kiro-narrative-adventure-expert` | 14 | 分支結構型態與維護成本、旗標設計、可達性與死路驗證 |
+| `mmo-expert` | `kiro-mmo-netcode-expert` | 11 | **scope 分級 T1–T4**（多數說要做 MMO 的專案其實需要 T2）、頻寬容量模型、延遲補償取捨 |
+
+#### 跨領域專業（Knowledge Base，8 個 Agent）
+
+| Agent | Power | steering | 技術核心 |
+|-------|-------|:--------:|---------|
+| `economy-designer` | `kiro-economy-balancing-expert` | 13 | 貨幣分層／sink-source 閉環／抽卡期望成本與 pity 數學／進度曲線 |
+| `balance-tester` | 同上 | — | 讀 `simulation-methodology.md`：樣本量反推 `n ≥ (1.96σ/ε)²`、收斂判斷、RNG stream 分流 |
+| `compliance-release` | `kiro-game-compliance-expert` | 14 | 分級／隱私／送審／商店素材／揭露義務。**含 45 類「會過期的斷言清單」** |
+| `wallet-systems-expert` | `kiro-gaming-wallet-expert` | 10 | API／DB schema／幂等與鎖／對帳／可觀測性／金流合規 |
+| `systems-programmer` | `kiro-game-systems-expert` | 9 | 存檔封套與遷移鏈（逐版 `N-1` vs 捷徑 `N(N-1)/2`）／atomic write 步驟順序／事件風暴 `f^d` |
+| `localization-team` | `kiro-i18n-expert` | 10 | 字串串接為何無解／CJK 禁則／RTL 鏡像／字型 subset 與豆腐塊 |
+| `devops-team` | `kiro-game-devops-expert` | 9 | 四引擎 headless build／**產物驗證八項**（exit code 0 有七種失敗形態）／版本號／Git LFS |
+| `usability-tester` | `kiro-usability-expert` | 8 | 五級證據等級／新手引導審查／卡關點分析／playtest 設計 |
+
+完整對照表、磁碟路徑規則與使用紀律見 `.kiro/steering/global/powers-registry.md`（`inclusion: always`，所有 Agent 自動載入）。
+
+#### 為什麼有 15 個 Agent 刻意不掛 Power
+
+這是設計決策，不是缺漏：
+
+| Agent | 為什麼不需要 |
+|-------|------------|
+| `producer`、`creative-director` | 調度與願景是本專案的組織知識，不屬於任何領域 |
+| 5 個 Lead（`design`／`domain`／`art`／`tech`／`qa`） | **價值來自跨 Specialist 的取捨判斷**。給 Lead 掛 Power 會讓它偏向那個領域，而選型時的中立性正是它存在的理由 |
+| `game-designer` | GDD 整合角色，領域知識分散在 13 個 Domain Expert Power 裡 |
+| `level-designer` | 關卡設計知識已分佈在 platformer／strategy／puzzle／roguelike 各自的 Power |
+| `ui-programmer` | UI 綁定的做法由各引擎 Power 覆蓋 |
+| `functional-tester` | 功能測試方法依專案而異；CI 執行面在 devops Power |
+| `performance-tester` | 效能量測依各引擎 profiler 而異，知識在各引擎 Power 的效能章節 |
+| `narrative-designer` | 敘事**系統結構**在 narrative-adventure Power；本角色產出的是**內容** |
+| `combat-designer` | 戰鬥數值在 shooter／rpg Power；本角色服務的是沒有專屬 Power 的類型 |
+| `marketing-team` | 純文字產出，無工具依賴 |
+
+#### 三個必須知道的邊界
+
+1. **Power 是全機安裝、不隨 repo 走**（在 `~/.kiro/powers/`）。clone 這個 repo 不會帶來知識層。
 2. **缺 Power 時 Agent 會誠實停下**並回報安裝來源，不會憑印象操作工具、也不會靜默降級。
-3. **Power 內含的 `hooks/`（preToolUse，強迫先讀 steering）在本專案不生效**——依官方文件 subagent 不觸發 Hooks，而本專案 Pipeline 全走 subagent 委派。steering-first 紀律靠 prompt 自律，沒有機制強制。
+3. **Power 內含的 `hooks/`（preToolUse，強迫先讀 steering）在本專案不生效**——依官方文件 subagent 不觸發 Hooks，而本專案 Pipeline 全走 subagent 委派。**Steering-First 紀律靠 prompt 自律，沒有機制強制**，這正是 `unity-team` 當初累積 7 處失效 API 的同一個成因。
+
+#### Power 內容的信心等級（引用前必讀）
+
+Knowledge Base 型 Power 普遍用三級標記，Agent 應照實轉述：
+
+| 等級 | 意義 | 佔比感受 |
+|------|------|---------|
+| `HIGH` | 可用數學推導或有明文標準（公式、組合數學、Unicode／CLDR 規則、POSIX 語意） | 數學部分幾乎全是 |
+| `MEDIUM` | 廣泛採用的設計慣例，非唯一解。轉述時要一併說「什麼前提改了建議會變」 | 參數選擇多屬此類 |
+| `UNVERIFIED` | 來自訓練資料的產業數字，未查證且隨時間變動 | **佔比不小**，見下 |
+
+**`UNVERIFIED` 集中在四類**，引用時必須明說需要使用者用自家數據校準：
+
+- 所有「業界平均」（留存率、ARPPU、常見 TTK 區間、coyote time 毫秒數、受測人數建議）
+- 所有法規細節（分級問卷、平台政策、機率公示義務——`kiro-game-compliance-expert` 的 `UNVERIFIED` 是刻意佔多數的）
+- 所有引擎端行為（各 Power 沒有連線可驗證引擎的匯入設定與 API）
+- 所有平台延遲與硬體規格數字
 
 ### 架構聲明：知識庫在 repo 外，本 repo 只存路由
 
@@ -225,46 +300,32 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 | **本 repo** | **路由與組織**：哪個 agent 對應哪個 Power、該讀哪個 steering 檔名、什麼時機讀、缺件時怎麼回報 | `.kiro/` |
 | **Kiro Power** | **知識本身**：那個 steering 檔案實際寫了什麼 | `~/.kiro/powers/installed/`（全機安裝，repo 外） |
 
-可驗證的事實：129 份 Power steering 全部在 repo 外；repo 內對 Power 知識內容的字串搜尋零命中（測過 `Redlock`、`euler_ancestral`、`GPU Resident Drawer`、`krita_select_by_alpha` 等各 Power 獨有字串）；repo 內僅 15 個檔案提到 Power 路徑，內容都是引用而非複製。
+可驗證的事實：325 份 Power steering 全部在 repo 外；repo 內對 Power 知識內容的字串搜尋零命中（測過 `Redlock`、`euler_ancestral`、`GPU Resident Drawer`、`krita_select_by_alpha` 等各 Power 獨有字串）；repo 內提到 Power 的檔案內容都是**引用路徑與檔名**，而非複製內容。
 
 **為什麼不把知識放進來**：Power 的知識對真實工具連線驗證過，且獨立於本專案持續更新。複製進 repo 就會產生第二份會過時的副本——本專案已經因此吃過一次教訓（見上方那 7 處失效的 Unity API）。
 
-**代價（誠實聲明）**：這讓本 repo **不是自足的**。clone 下來，那 11 個 agent 的知識層是空的，需要另外從 Powers 面板安裝。目前沒有可機器檢查的 manifest 或 setup 腳本，只有文件說明。
+**代價（誠實聲明）**：這讓本 repo **不是自足的**。clone 下來，33 個 agent 的知識層是空的，需要另外從 Powers 面板安裝 29 個 Power。目前沒有可機器檢查的 manifest 或 setup 腳本，只有文件說明與 `powers-registry.md` 的對照表。
 
-### 尚缺的 Power（18 個 repo 已建立骨架，內容待撰寫）
+### 覆蓋率缺口分析（2026-08-03 實測）
 
-目前 48 個 agent 裡只有 11 個有 Power 支撐。其餘角色的知識還寫在自己的 prompt 裡——**這正是本專案已證實會出問題的形態**（`unity-team` 曾有 7 處失效 API）。
+**已驗證的事實**：29 個 Power 全部有 agent 引用（零孤兒）；33/48 個 agent 掛 Power；所有 steering 檔名對磁碟核對過（無虛構檔名）。
 
-以下 18 個 repo **已建立並含完整 README 建置規格 + `POWER.md` 骨架 + 全部 steering 佔位檔**（每份標明該寫什麼）。點進任一個 repo，它的 README 就是那個 Power 的施工圖。
+以下是**目前沒有 Power 覆蓋、且值得考慮補的四個缺口**。這不是待辦清單，是誠實的覆蓋率盤點——每一項都說明現在誰在頂替、以及不補的代價：
 
-| 優先 | Power repo | 受益 agent | steering | 為什麼值得 |
-|------|-----------|-----------|:--------:|-----------|
-| **P1** | [`kiro-blender-accelerator`](https://github.com/hoycdanny/kiro-blender-accelerator) | `blender-team`、`animator`、`technical-artist` | 14 | 3 個 agent 共用 blender-mcp 卻零 Power 支撐，是最大缺口 |
-| **P1** | [`kiro-economy-balancing-expert`](https://github.com/hoycdanny/kiro-economy-balancing-expert) | `economy-designer`、`balance-tester` | 13 | repo 原本是空的，補起來成本最低 |
-| **P1** | [`kiro-game-compliance-expert`](https://github.com/hoycdanny/kiro-game-compliance-expert) | `compliance-release` | 14 | 分級與隱私法規有大量可驗證官方來源，錯誤代價高 |
-| P2 | [`kiro-mmo-netcode-expert`](https://github.com/hoycdanny/kiro-mmo-netcode-expert) | `mmo-expert` | 11 | 伺服器權威／同步／延遲補償，極容易寫錯 |
-| P2 | [`kiro-rpg-systems-expert`](https://github.com/hoycdanny/kiro-rpg-systems-expert) | `rpg-systems-expert` | 11 | 成長曲線／傷害公式／掉落機率，純數學可驗證 |
-| P2 | [`kiro-card-game-expert`](https://github.com/hoycdanny/kiro-card-game-expert) | `card-game-expert` | 10 | 資源曲線／power creep 基準／combo 平衡 |
-| P2 | [`kiro-puzzle-match3-expert`](https://github.com/hoycdanny/kiro-puzzle-match3-expert) | `puzzle-match3-expert` | 10 | board 可解性證明、組合數學 |
-| P2 | [`kiro-rhythm-expert`](https://github.com/hoycdanny/kiro-rhythm-expert) | `rhythm-expert` | 10 | 判定窗、audio/input offset 校正 |
-| P2 | [`kiro-platformer-expert`](https://github.com/hoycdanny/kiro-platformer-expert) | `platformer-expert` | 10 | 跳躍物理、coyote time、jump buffer 參數 |
-| P2 | [`kiro-shooter-expert`](https://github.com/hoycdanny/kiro-shooter-expert) | `shooter-expert` | 10 | TTK／後座力／擴散／命中判定模型 |
-| P2 | [`kiro-strategy-expert`](https://github.com/hoycdanny/kiro-strategy-expert) | `strategy-expert` | 10 | 兵種相剋矩陣、塔防波次曲線 |
-| P2 | [`kiro-simulation-expert`](https://github.com/hoycdanny/kiro-simulation-expert) | `simulation-expert` | 10 | 生產鏈、供需收斂 |
-| P2 | [`kiro-roguelike-expert`](https://github.com/hoycdanny/kiro-roguelike-expert) | `roguelike-expert` | 9 | 程序生成、build synergy 平衡 |
-| P2 | [`kiro-narrative-adventure-expert`](https://github.com/hoycdanny/kiro-narrative-adventure-expert) | `narrative-adventure-expert` | 11 | 分支結構、旗標管理 |
-| P3 | [`kiro-game-systems-expert`](https://github.com/hoycdanny/kiro-game-systems-expert) | `systems-programmer` | 9 | 存檔版本遷移、資源生命週期、事件系統模式 |
-| P3 | [`kiro-i18n-expert`](https://github.com/hoycdanny/kiro-i18n-expert) | `localization-team` | 10 | CJK 斷行、RTL 鏡像、字型 subset |
-| P3 | [`kiro-game-devops-expert`](https://github.com/hoycdanny/kiro-game-devops-expert) | `devops-team` | 9 | 四引擎 headless build CLI、產物驗證 |
-| P3 | [`kiro-usability-expert`](https://github.com/hoycdanny/kiro-usability-expert) | `usability-tester` | 8 | 新手引導評估框架、卡關點分析 |
+| 缺口 | 受影響 agent | 現在誰頂替 | 不補的代價 |
+|------|------------|-----------|-----------|
+| **跨引擎 profiling 方法論** | `performance-tester` | 各引擎 Power 的效能章節（分散、只有該引擎視角） | 效能數字有變異性，沒有方法論容易「優化了錯的東西」而看不出來。缺的是：該量什麼、frame budget 歸因、量測的統計有效性、平台專屬陷阱 |
+| **格鬥／動作遊戲的近戰戰鬥** | `combat-designer` | 自身 prompt。shooter Power 只覆蓋射擊、rpg Power 只覆蓋數值 | frame data、hitbox/hurtbox、input buffer 與 cancel 窗、連段設計、hitstop 這些**沒有任何 Power 覆蓋**。13 類 Domain Expert 裡沒有格鬥類 |
+| **敘事內容撰寫與工具** | `narrative-designer` | 自身 prompt。narrative-adventure Power 覆蓋的是**系統結構**不是內容 | Ink／Yarn／Twine 的語法與慣例、World Bible 結構、對話撰寫工藝，目前只能靠基礎模型知識 |
+| **商店轉換與預告片結構** | `marketing-team` | 自身 prompt | 商店頁轉換要素、預告片 shot list 結構、press kit 組成，屬可累積的工藝知識 |
 
-只有 `kiro-blender-accelerator` 是 **Guided MCP** 型態（含 `mcp.json`，驅動 `blender-mcp`），其餘 17 個都是 **Knowledge Base** 型態。
+**同時盤點出的類型覆蓋缺口**：13 類 Domain Expert 沒有涵蓋 **格鬥、賽車、體育、恐怖、派對遊戲**。其中格鬥的機制最獨特（frame data 是一整套獨立學問），其餘四類目前由既有 expert 部分服務。要不要補取決於你實際會做什麼類型——**不建議為了覆蓋率而補**，48 個 agent 已經是需要謹慎管理的規模。
 
-**每一個 Power 的詳細建置規格**（受益 agent、Power 類型、建議 steering 檔案清單與各檔內容、驗證來源、完成後要在本專案改哪裡）見 **[docs/missing-powers.md](docs/missing-powers.md)**，或直接看該 repo 自己的 README。
+**判斷是否值得補一個 Power 的標準**（本專案的實測經驗）：
 
-> **建議不要一次補 11 個 Domain Expert**，只補你實際會做的類型。一個沒有 Power 的 Domain Expert 價值接近零（內容不超過基礎模型已知範圍，卻佔 Agent Selector 位置與 context），但補一個就多一條能真正上線的類型線。
-
-**刻意不需要 Power 的角色**：`producer`、`creative-director`、5 個 Lead、`game-designer`、`level-designer`、`narrative-designer`、`combat-designer`、`marketing-team`、`functional-tester`、`performance-tester`。它們是流程與組織角色，「領域知識」就是本專案的組織規範本身（`contracts.md` / `advisory-mode.md` / `bug-severity.md` / `milestones.md`）——外包到 Power 反而會把專案的組織規則散到 repo 之外。`performance-tester` 的 profiling 知識已在各引擎 Power 內，不必重複。
+1. **內容會不會超過基礎模型已知範圍？** 若一份 Power 寫出來的東西大語言模型本來就知道，它的價值接近零——只是把同樣的知識搬到另一個檔案。有價值的是**具體數字與推導**（例如 TTK 斷崖的臨界點清單）、**可驗證的 API 事實**（例如 Blender 5.x 已移除 `action.fcurves`）、**當前法規與日期**。
+2. **錯誤的代價高不高？** 存檔遷移做錯會丟玩家進度、合規做錯會下架——這類優先。
+3. **知識會不會過時？** 會過時的（工具 API、法規）更該放 Power，因為 Power 能獨立更新；不會過時的（數學）放哪都行。
 
 ### 端到端流程範例：「請幫我用 Unity 開發一款老虎機」
 
@@ -334,7 +395,7 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 - 支援 4 種遊戲引擎（Unity、Godot、Unreal Engine、Cocos Creator），Producer 依你的指定自動分派給對應 Team
 - 各遊戲類型分門別類有專屬 Domain Expert：老虎機（`slot-game-expert`）、魚機（`fish-game-expert`）、射擊（`shooter-expert`）、多人/MMORPG（`mmo-expert`）、RPG（`rpg-systems-expert`）、卡牌（`card-game-expert`）、三消/解謎（`puzzle-match3-expert`）、平台/metroidvania（`platformer-expert`）、roguelike（`roguelike-expert`）、策略/RTS/塔防（`strategy-expert`）、模擬經營/生存（`simulation-expert`）、音樂節奏（`rhythm-expert`）、敘事/視覺小說（`narrative-adventure-expert`）；其餘類型（競速/格鬥/體育…）走通用 `game-designer`
 - 完整團隊 48 個 Agent 全部已建立：戰略層 Creative Director、Producer、5 個 Lead（Design/Domain/Art/Tech/QA，Art Lead 已涵蓋原願景 Audio Lead 職責）、13 類遊戲類型專家（歸 Domain Lead）、Level/Narrative/Combat Designer（歸 Design Lead）、其餘設計、美術/手繪精修/動畫/音訊/VFX/Technical Artist、4 引擎 + Systems/UI Programmer + DevOps + 錢包金流、功能/數值/效能/可用性 4 條 QA、上架合規 + 行銷公關
-- 其中 11 個 Agent 的領域知識已外接到對應的 **Kiro Power**（4 引擎 + ComfyUI/Krita/Ableton + slot/fish/wallet），agent prompt 只留組織與交付紀律，見「領域知識層：Kiro Powers」
+- 其中 **33 個 Agent** 的領域知識已外接到 **29 個 Kiro Power**（4 引擎 + Blender/ComfyUI/Krita/Ableton/Figma + 13 類遊戲類型 + 經濟/合規/錢包/核心系統/i18n/DevOps/可用性），agent prompt 只留組織與交付紀律；其餘 15 個是協調角色，刻意不掛。見「領域知識層：Kiro Powers」
 - 所有設計規範存在 `.kiro/steering/` 裡，Agent 會自動參照（`inclusion: always` 的檔案每次對話都會載入）
 
 ---
@@ -355,7 +416,8 @@ Kiro **原生支援 subagent 委派**（見 [官方 Subagents 文件](https://ki
 ### 深入文件（`docs/`）
 
 - [MCP 整合詳解](docs/mcp-integrations.md) — Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub / Ableton / Krita 十條 MCP 的安裝與設定
-- [尚缺的 Power：建置規格](docs/missing-powers.md) — 18 個尚缺 Power 的完整建置規格：受益 agent、Power 型態、建議 steering 檔案清單與各檔內容、驗證來源、接入步驟
+- [Power 建置規格（歷史文件）](docs/missing-powers.md) — 18 個 Power 從零建置時的規格：Power 型態慣例、steering 檔案清單與各檔職責、驗證來源、接入步驟。**這 18 個已全部完成**，本文件保留作為未來新增 Power 的範本
+- [調度指南](docs/orchestration-guide.md) — **使用者視角的操作手冊**：三種入口、五個 Lead 各能替你決定什麼、三個完整情境走查、檔案地圖、卡住時的排查表、五條已知限制
 - [Agent 與角色](docs/agents-and-roles.md) — Slot Game Expert 詳解、遊戲類型 Domain Expert 一覽、團隊角色與職責、Agent 定義格式、模型指派
 - [架構與流程](docs/architecture-and-process.md) — 工具鏈資料流、開發流程、通訊協定、治理機制、端到端 Demo、擴展指南
 - [參考資料](docs/reference.md) — 成本估算、錯誤處理與退化策略、設計依據、共享知識庫、專案檔案結構
@@ -457,7 +519,19 @@ Producer 透過 Kiro 原生 subagent 委派自動呼叫對應 Specialist，不�
 
 > 不需要同時裝四個引擎，只需要裝你實際要用的那個。Producer 會依你的需求分派到對應引擎 Team。
 
-### 目前實際配置（Creative Director + Producer + 5 Lead（Design/Domain/Art/Tech/QA） + 20 設計/類型 Team（含 Level/Narrative/Combat Designer） + 7 美術 Team（含 rig/動畫、音訊、VFX、TA、手繪精修） + 8 引擎 Team（含 Systems/UI Programmer、DevOps、錢包金流） + 4 QA（功能/數值/效能/可用性） + 法遵上架 + 行銷公關，共 48 個）
+### 目前實際配置（48 個 Agent × 29 個 Power）
+
+| Layer | 數量 | 組成 |
+|-------|:----:|------|
+| L0 戰略 | 2 | `creative-director`（願景守門）、`producer`（調度中樞） |
+| L2 Lead | 5 | `design` / `domain` / `art` / `tech` / `qa`——**中介調度者兼品質守門，刻意不掛 Power** |
+| L3 設計／類型 | 20 | 7 個核心設計職能 + 13 類遊戲類型 Domain Expert |
+| L3 美術／聲音 | 7 | Blender、ComfyUI、Krita、Animator、Audio、VFX、Technical Artist |
+| L3 引擎／工程 | 8 | 4 引擎 Team + Systems/UI Programmer、DevOps、錢包金流 |
+| L3 QA | 4 | 功能 / 數值 / 效能 / 可用性 |
+| L3 發行 | 2 | 法遵上架、行銷公關 |
+
+其中 **33 個掛 Power**（知識在 repo 外、獨立更新），**15 個是協調與整合角色**（知識即本專案的組織規範）。
 
 ```
 .kiro/agents/
@@ -531,12 +605,58 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #    - Cocos Creator：安裝 cocos-mcp-server 外掛，擴展 → Cocos MCP Server → 啟動
 
 #    - Figma：預設用官方 Remote MCP Server（首次於 Kiro 完成 OAuth 授權即可，見「Figma MCP 整合詳解」）
-# 5. 安裝領域知識層（Kiro Powers）：Kiro → Powers 面板 → 安裝需要的 Power
-#    來源 https://github.com/hoycdanny/<power 名稱>，對照表見 .kiro/steering/global/powers-registry.md
+# 5. 安裝領域知識層（Kiro Powers）：Kiro → Powers 面板 → Add custom power
+#    來源 https://github.com/hoycdanny/<power 名稱>（figma 除外，它在官方推薦清單裡）
+#    完整清單見下方「安裝哪些 Power」；對照表見 .kiro/steering/global/powers-registry.md
 #    未安裝時對應 Agent 會誠實回報缺件，不會憑印象操作工具
 
 # 6. 用 Kiro IDE 開啟專案 → Agent Selector 會列出已建立的 48 個 Agent
 ```
+
+#### 安裝哪些 Power
+
+**不需要一次裝完 29 個。** 只裝你這次會用到的——沒裝的 Power，對應 Agent 會誠實回報缺件而不是憑印象亂做。
+
+**最小可用組合**（做任何遊戲都建議裝）：
+
+```
+kiro-<你的引擎>-accelerator     unity / godot / unreal / cocos 選一
+kiro-comfyui-accelerator        2D 素材生成（幾乎必用）
+kiro-economy-balancing-expert   經濟數值 + balance-tester 的模擬方法論
+kiro-game-compliance-expert     要上架就需要
+```
+
+**依需求追加**：
+
+| 你要做什麼 | 加裝 |
+|-----------|------|
+| 3D 模型／動畫 | `kiro-blender-accelerator` |
+| 手繪精修 UI／sprite | `kiro-krita-accelerator` |
+| 遊戲配樂 | `kiro-ableton-accelerator` |
+| Figma 設計稿轉引擎 UI | `figma`（官方推薦清單，非 hoycdanny） |
+| 老虎機／魚機 | `kiro-slot-game-expert` / `kiro-fish-game-expert` |
+| 錢包金流後端 | `kiro-gaming-wallet-expert` |
+| RPG／射擊／卡牌／三消／平台／節奏／策略／模擬／roguelike／敘事冒險 | 對應的 `kiro-<類型>-expert`（見上方 Domain Expert 表） |
+| 多人連線 | `kiro-mmo-netcode-expert`（**先看它的 T1–T4 scope 分級，多數專案不需要真 MMO**） |
+| 存檔系統／資源管理 | `kiro-game-systems-expert` |
+| 多語系 | `kiro-i18n-expert` |
+| CI 自動出包 | `kiro-game-devops-expert` |
+| 可用性評估 | `kiro-usability-expert` |
+
+**驗證安裝結果**：
+
+```bash
+# 應列出你已安裝的 Power
+ls ~/.kiro/powers/installed/
+
+# 檢查某個 Power 的 steering 是否完整（以 blender 為例）
+ls ~/.kiro/powers/installed/kiro-blender-accelerator/steering/
+
+# templates/ 只存在於 repos/，installed/ 沒有
+ls ~/.kiro/powers/repos/kiro-blender-accelerator/templates/
+```
+
+若 Agent 回報「找不到 `<power>` 的 steering」，先用上面第一條指令確認它在不在 `installed/`。
 
 ### 使用方式
 
@@ -560,7 +680,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 | 文件 | 內容 |
 |------|------|
 | [docs/mcp-integrations.md](docs/mcp-integrations.md) | 十條 MCP（Blender / ComfyUI / Unity / Godot / Unreal / Cocos / Figma / GitHub / Ableton / Krita）整合與設定詳解 |
-| [docs/missing-powers.md](docs/missing-powers.md) | **尚缺的 18 個 Kiro Power 建置規格**：兩種 Power 型態的慣例、每個 Power 的受益 agent／steering 檔案清單／驗證來源／接入步驟、完成度檢查清單 |
+| [docs/orchestration-guide.md](docs/orchestration-guide.md) | **使用者視角的操作手冊**：三種入口（Producer／Lead／Specialist）與適用時機、五個 Lead 各能替你決定什麼、三個完整情境走查、檔案地圖、卡住時的症狀對照表、五條已知限制 |
+| [docs/missing-powers.md](docs/missing-powers.md) | **Power 建置規格（18 個已全部完成）**：兩種 Power 型態的慣例、steering 檔案切分方式、驗證來源、接入步驟、完成度檢查清單。保留作為未來新增 Power 的範本 |
 | [docs/agents-and-roles.md](docs/agents-and-roles.md) | Slot Game Expert 詳解、遊戲類型 Domain Expert 一覽、團隊角色與職責、Agent 定義格式、模型指派 |
 | [docs/architecture-and-process.md](docs/architecture-and-process.md) | 工具鏈與資料流、開發流程、Agent 間通訊協定、治理機制、端到端 Demo、漸進式擴展指南 |
 | [docs/reference.md](docs/reference.md) | 成本估算、錯誤處理與退化策略、設計依據、共享知識庫、專案檔案結構 |
