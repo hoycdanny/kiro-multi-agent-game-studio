@@ -55,11 +55,34 @@ Power repo 都在 GitHub `hoycdanny/<power 名稱>`（缺件時據此告知使�
 
 **沒有對應 Power 的 agent**（其餘 37 個，含 `producer`、5 個 Lead、其他設計／QA／發行角色）照原本的 prompt 運作，不需要也不應該去找 Power。
 
-### 尚未可用的 Power
+### 尚未可用的 Power（18 個，骨架已建立但**內容尚未撰寫**）
 
-| Power | 狀態 |
-|-------|------|
-| `kiro-economy-balancing-expert` | repo 目前是空的（沒有 `steering/`）。`economy-designer` 與 `balance-tester` **暫時不要引用它**，維持自身 prompt 的知識；等它有內容再併入上表。 |
+以下 18 個 Power 的 GitHub repo 已存在，且含 README 建置規格、`POWER.md` 骨架與全部 steering 佔位檔——**但 steering 內容都還是 TODO**。
+
+**對 agent 的意思**：這些 Power **現在不要引用**。即使安裝了它們，`steering/` 裡也只有「待撰寫」的佔位內容，讀了不會得到任何領域知識。對應 agent 一律**維持自身 prompt 的知識運作**，不要因為 repo 存在就宣稱有 Power 支撐。
+
+| Power | 受益 agent |
+|-------|-----------|
+| `kiro-blender-accelerator` | `blender-team`、`animator`、`technical-artist` |
+| `kiro-economy-balancing-expert` | `economy-designer`、`balance-tester` |
+| `kiro-game-compliance-expert` | `compliance-release` |
+| `kiro-mmo-netcode-expert` | `mmo-expert` |
+| `kiro-rpg-systems-expert` | `rpg-systems-expert` |
+| `kiro-card-game-expert` | `card-game-expert` |
+| `kiro-puzzle-match3-expert` | `puzzle-match3-expert` |
+| `kiro-rhythm-expert` | `rhythm-expert` |
+| `kiro-platformer-expert` | `platformer-expert` |
+| `kiro-shooter-expert` | `shooter-expert` |
+| `kiro-strategy-expert` | `strategy-expert` |
+| `kiro-simulation-expert` | `simulation-expert` |
+| `kiro-roguelike-expert` | `roguelike-expert` |
+| `kiro-narrative-adventure-expert` | `narrative-adventure-expert` |
+| `kiro-game-systems-expert` | `systems-programmer` |
+| `kiro-i18n-expert` | `localization-team` |
+| `kiro-game-devops-expert` | `devops-team` |
+| `kiro-usability-expert` | `usability-tester` |
+
+某個 Power 的內容寫完後，才把它從這張表移到上面的「Agent ↔ Power 對照表」，並依 `docs/missing-powers.md` 的「接入步驟」改對應 agent 的 `.md`。建置規格見各 repo 的 README 或 `docs/missing-powers.md`。
 
 ## 使用紀律
 

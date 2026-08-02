@@ -8,6 +8,35 @@
 
 ---
 
+## 18 個 repo 已建立（骨架階段）
+
+每個 repo 都已含 **README.md（該 repo 的建置規格，自足可讀）** + `POWER.md` 骨架 + 全部 steering 佔位檔（每份標明該寫什麼）+ MIT LICENSE。**內容尚未撰寫**——打開 repo 的 README 就是那個 Power 的施工圖。
+
+| Power | 型態 | 受益 agent | steering 份數 |
+|-------|------|-----------|--------------|
+| [`kiro-blender-accelerator`](https://github.com/hoycdanny/kiro-blender-accelerator) | Guided MCP | `blender-team`、`animator`、`technical-artist` | 14 |
+| [`kiro-economy-balancing-expert`](https://github.com/hoycdanny/kiro-economy-balancing-expert) | Knowledge | `economy-designer`、`balance-tester` | 13 |
+| [`kiro-game-compliance-expert`](https://github.com/hoycdanny/kiro-game-compliance-expert) | Knowledge | `compliance-release` | 14 |
+| [`kiro-mmo-netcode-expert`](https://github.com/hoycdanny/kiro-mmo-netcode-expert) | Knowledge | `mmo-expert` | 11 |
+| [`kiro-rpg-systems-expert`](https://github.com/hoycdanny/kiro-rpg-systems-expert) | Knowledge | `rpg-systems-expert` | 11 |
+| [`kiro-narrative-adventure-expert`](https://github.com/hoycdanny/kiro-narrative-adventure-expert) | Knowledge | `narrative-adventure-expert` | 11 |
+| [`kiro-card-game-expert`](https://github.com/hoycdanny/kiro-card-game-expert) | Knowledge | `card-game-expert` | 10 |
+| [`kiro-puzzle-match3-expert`](https://github.com/hoycdanny/kiro-puzzle-match3-expert) | Knowledge | `puzzle-match3-expert` | 10 |
+| [`kiro-rhythm-expert`](https://github.com/hoycdanny/kiro-rhythm-expert) | Knowledge | `rhythm-expert` | 10 |
+| [`kiro-platformer-expert`](https://github.com/hoycdanny/kiro-platformer-expert) | Knowledge | `platformer-expert` | 10 |
+| [`kiro-shooter-expert`](https://github.com/hoycdanny/kiro-shooter-expert) | Knowledge | `shooter-expert` | 10 |
+| [`kiro-strategy-expert`](https://github.com/hoycdanny/kiro-strategy-expert) | Knowledge | `strategy-expert` | 10 |
+| [`kiro-simulation-expert`](https://github.com/hoycdanny/kiro-simulation-expert) | Knowledge | `simulation-expert` | 10 |
+| [`kiro-i18n-expert`](https://github.com/hoycdanny/kiro-i18n-expert) | Knowledge | `localization-team` | 10 |
+| [`kiro-roguelike-expert`](https://github.com/hoycdanny/kiro-roguelike-expert) | Knowledge | `roguelike-expert` | 9 |
+| [`kiro-game-systems-expert`](https://github.com/hoycdanny/kiro-game-systems-expert) | Knowledge | `systems-programmer` | 9 |
+| [`kiro-game-devops-expert`](https://github.com/hoycdanny/kiro-game-devops-expert) | Knowledge | `devops-team` | 9 |
+| [`kiro-usability-expert`](https://github.com/hoycdanny/kiro-usability-expert) | Knowledge | `usability-tester` | 8 |
+
+> `kiro-economy-balancing-expert` 原本已存在但是空的，現已推入同一套骨架。
+
+---
+
 ## 先讀：兩種 Power 型態
 
 從既有 11 個 Power 觀察到的分野，新建時照同一套慣例走，維護才不會分裂：

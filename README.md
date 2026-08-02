@@ -231,32 +231,36 @@ Producer 偵測遊戲類型後，把設計端**分門別類**路由到對應的 
 
 **代價（誠實聲明）**：這讓本 repo **不是自足的**。clone 下來，那 11 個 agent 的知識層是空的，需要另外從 Powers 面板安裝。目前沒有可機器檢查的 manifest 或 setup 腳本，只有文件說明。
 
-### 尚缺的 Power（18 個，歡迎補齊）
+### 尚缺的 Power（18 個 repo 已建立骨架，內容待撰寫）
 
 目前 48 個 agent 裡只有 11 個有 Power 支撐。其餘角色的知識還寫在自己的 prompt 裡——**這正是本專案已證實會出問題的形態**（`unity-team` 曾有 7 處失效 API）。
 
-| 優先 | 建議 Power 名稱 | 受益 agent | 為什麼值得 |
-|------|---------------|-----------|-----------|
-| **P1** | `kiro-blender-accelerator` | `blender-team`、`animator`、`technical-artist` | 3 個 agent 共用 blender-mcp 卻零 Power 支撐，是最大缺口 |
-| **P1** | `kiro-economy-balancing-expert` | `economy-designer`、`balance-tester` | repo 已存在但是空的，補起來成本最低 |
-| **P1** | `kiro-game-compliance-expert` | `compliance-release` | 分級與隱私法規有大量可驗證官方來源，錯誤代價高 |
-| P2 | `kiro-mmo-netcode-expert` | `mmo-expert` | 伺服器權威／同步／延遲補償，極容易寫錯 |
-| P2 | `kiro-rpg-systems-expert` | `rpg-systems-expert` | 成長曲線／傷害公式／掉落機率，純數學可驗證 |
-| P2 | `kiro-card-game-expert` | `card-game-expert` | 資源曲線／power creep 基準／combo 平衡 |
-| P2 | `kiro-puzzle-match3-expert` | `puzzle-match3-expert` | board 可解性證明、組合數學 |
-| P2 | `kiro-rhythm-expert` | `rhythm-expert` | 判定窗、audio/input offset 校正 |
-| P2 | `kiro-platformer-expert` | `platformer-expert` | 跳躍物理、coyote time、jump buffer 參數 |
-| P2 | `kiro-shooter-expert` | `shooter-expert` | TTK／後座力／擴散／命中判定模型 |
-| P2 | `kiro-strategy-expert` | `strategy-expert` | 兵種相剋矩陣、塔防波次曲線 |
-| P2 | `kiro-simulation-expert` | `simulation-expert` | 生產鏈、供需收斂 |
-| P2 | `kiro-roguelike-expert` | `roguelike-expert` | 程序生成、build synergy 平衡 |
-| P2 | `kiro-narrative-adventure-expert` | `narrative-adventure-expert` | 分支結構、旗標管理 |
-| P3 | `kiro-game-systems-expert` | `systems-programmer` | 存檔版本遷移、資源生命週期、事件系統模式 |
-| P3 | `kiro-i18n-expert` | `localization-team` | CJK 斷行、RTL 鏡像、字型 subset |
-| P3 | `kiro-game-devops-expert` | `devops-team` | 四引擎 headless build CLI、產物驗證 |
-| P3 | `kiro-usability-expert` | `usability-tester` | 新手引導評估框架、卡關點分析 |
+以下 18 個 repo **已建立並含完整 README 建置規格 + `POWER.md` 骨架 + 全部 steering 佔位檔**（每份標明該寫什麼）。點進任一個 repo，它的 README 就是那個 Power 的施工圖。
 
-**每一個 Power 的詳細建置規格**（受益 agent、Power 類型、建議 steering 檔案清單與各檔內容、驗證來源、完成後要在本專案改哪裡）見 **[docs/missing-powers.md](docs/missing-powers.md)**。
+| 優先 | Power repo | 受益 agent | steering | 為什麼值得 |
+|------|-----------|-----------|:--------:|-----------|
+| **P1** | [`kiro-blender-accelerator`](https://github.com/hoycdanny/kiro-blender-accelerator) | `blender-team`、`animator`、`technical-artist` | 14 | 3 個 agent 共用 blender-mcp 卻零 Power 支撐，是最大缺口 |
+| **P1** | [`kiro-economy-balancing-expert`](https://github.com/hoycdanny/kiro-economy-balancing-expert) | `economy-designer`、`balance-tester` | 13 | repo 原本是空的，補起來成本最低 |
+| **P1** | [`kiro-game-compliance-expert`](https://github.com/hoycdanny/kiro-game-compliance-expert) | `compliance-release` | 14 | 分級與隱私法規有大量可驗證官方來源，錯誤代價高 |
+| P2 | [`kiro-mmo-netcode-expert`](https://github.com/hoycdanny/kiro-mmo-netcode-expert) | `mmo-expert` | 11 | 伺服器權威／同步／延遲補償，極容易寫錯 |
+| P2 | [`kiro-rpg-systems-expert`](https://github.com/hoycdanny/kiro-rpg-systems-expert) | `rpg-systems-expert` | 11 | 成長曲線／傷害公式／掉落機率，純數學可驗證 |
+| P2 | [`kiro-card-game-expert`](https://github.com/hoycdanny/kiro-card-game-expert) | `card-game-expert` | 10 | 資源曲線／power creep 基準／combo 平衡 |
+| P2 | [`kiro-puzzle-match3-expert`](https://github.com/hoycdanny/kiro-puzzle-match3-expert) | `puzzle-match3-expert` | 10 | board 可解性證明、組合數學 |
+| P2 | [`kiro-rhythm-expert`](https://github.com/hoycdanny/kiro-rhythm-expert) | `rhythm-expert` | 10 | 判定窗、audio/input offset 校正 |
+| P2 | [`kiro-platformer-expert`](https://github.com/hoycdanny/kiro-platformer-expert) | `platformer-expert` | 10 | 跳躍物理、coyote time、jump buffer 參數 |
+| P2 | [`kiro-shooter-expert`](https://github.com/hoycdanny/kiro-shooter-expert) | `shooter-expert` | 10 | TTK／後座力／擴散／命中判定模型 |
+| P2 | [`kiro-strategy-expert`](https://github.com/hoycdanny/kiro-strategy-expert) | `strategy-expert` | 10 | 兵種相剋矩陣、塔防波次曲線 |
+| P2 | [`kiro-simulation-expert`](https://github.com/hoycdanny/kiro-simulation-expert) | `simulation-expert` | 10 | 生產鏈、供需收斂 |
+| P2 | [`kiro-roguelike-expert`](https://github.com/hoycdanny/kiro-roguelike-expert) | `roguelike-expert` | 9 | 程序生成、build synergy 平衡 |
+| P2 | [`kiro-narrative-adventure-expert`](https://github.com/hoycdanny/kiro-narrative-adventure-expert) | `narrative-adventure-expert` | 11 | 分支結構、旗標管理 |
+| P3 | [`kiro-game-systems-expert`](https://github.com/hoycdanny/kiro-game-systems-expert) | `systems-programmer` | 9 | 存檔版本遷移、資源生命週期、事件系統模式 |
+| P3 | [`kiro-i18n-expert`](https://github.com/hoycdanny/kiro-i18n-expert) | `localization-team` | 10 | CJK 斷行、RTL 鏡像、字型 subset |
+| P3 | [`kiro-game-devops-expert`](https://github.com/hoycdanny/kiro-game-devops-expert) | `devops-team` | 9 | 四引擎 headless build CLI、產物驗證 |
+| P3 | [`kiro-usability-expert`](https://github.com/hoycdanny/kiro-usability-expert) | `usability-tester` | 8 | 新手引導評估框架、卡關點分析 |
+
+只有 `kiro-blender-accelerator` 是 **Guided MCP** 型態（含 `mcp.json`，驅動 `blender-mcp`），其餘 17 個都是 **Knowledge Base** 型態。
+
+**每一個 Power 的詳細建置規格**（受益 agent、Power 類型、建議 steering 檔案清單與各檔內容、驗證來源、完成後要在本專案改哪裡）見 **[docs/missing-powers.md](docs/missing-powers.md)**，或直接看該 repo 自己的 README。
 
 > **建議不要一次補 11 個 Domain Expert**，只補你實際會做的類型。一個沒有 Power 的 Domain Expert 價值接近零（內容不超過基礎模型已知範圍，卻佔 Agent Selector 位置與 context），但補一個就多一條能真正上線的類型線。
 
