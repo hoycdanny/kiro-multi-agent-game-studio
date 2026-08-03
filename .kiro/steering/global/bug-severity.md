@@ -17,7 +17,7 @@ inclusion: always
 | **S3 / Minor** | 次要 | 局部功能異常、僅在少見情境觸發、有明顯 workaround、不影響核心體驗 | 特定裝置上圖示模糊、極端數值輸入才會出現的排版跑掉 |
 | **S4 / Trivial** | 瑕疵 | 錯字、像素級對齊誤差、不影響任何功能的視覺瑕疵 | 說明文字有錯字、圖示邊緣 1px 沒對齊 |
 
-## 處理時限與 Release 門檻（對應 `docs/architecture-and-process.md` 的 Release Review Gate）
+## 處理時限與 Release 門檻（對應根目錄 `README.md`「Development Process」的 Release Review Gate）
 
 | 等級 | 是否阻擋里程碑 / release | 建議處理時限 |
 |------|------------------------|-------------|

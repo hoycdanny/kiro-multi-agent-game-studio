@@ -10,7 +10,7 @@ inclusion: always
 
 ## 階段總覽
 
-對應 `docs/architecture-and-process.md` 的「功能開發生命週期」：
+對應根目錄 `README.md`「Development Process」章節的遊戲生命週期：
 
 ```
 Concept ──── Prototype ──── Vertical Slice ──── Alpha ─── Beta ─── Gold
