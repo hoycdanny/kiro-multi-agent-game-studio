@@ -142,8 +142,9 @@ Power 內對「這個工具做不到什麼」的聲明（例如 blender Power �
 | 任務 | 主 Power | 借用 Power |
 |------|---------|-----------|
 | 射擊遊戲的連線命中判定 | `kiro-shooter-expert`（TTK／彈道） | `kiro-mmo-netcode-expert`（`latency-compensation.md`） |
-| 卡牌／三消的抽卡變現 | 對應類型 Power（遊戲平衡） | `kiro-economy-balancing-expert`（`gacha-and-lootbox.md`） |
+| 任何類型的抽卡／轉蛋變現（卡牌／三消／RPG） | 對應類型 Power（遊戲平衡） | `kiro-economy-balancing-expert`（`gacha-and-lootbox.md`） |
 | 任何類型的模擬驗證 | 對應類型 Power（模擬情境與判準） | `kiro-economy-balancing-expert`（`simulation-methodology.md` 通用方法論） |
+| 局內資源產出與消耗的閉環（三消步數、模擬經營物資） | 對應類型 Power（局內規則） | `kiro-economy-balancing-expert`（`sink-source-modeling.md`） |
 | 老虎機／魚機的送審 | 對應 casino Power（數學與 RNG） | `kiro-game-compliance-expert`（牌照與文件流程） |
 | 節奏遊戲的音樂本身 | `kiro-rhythm-expert`（判定與譜面） | `kiro-ableton-accelerator`（編曲混音） |
 
@@ -155,3 +156,4 @@ Power 內對「這個工具做不到什麼」的聲明（例如 blender Power �
 | 2026-07-31 | 18 個新 Power repo 建立骨架；全部標記為尚未可用 | producer |
 | 2026-08-03 | **14 個 Power 完成內容並安裝，總計 25 個可用**；對照表依 Accelerator／Domain Expert／跨領域重新分組；新增信心等級轉述紀律與跨 Power 分工表；尚未可用縮減為 4 個（`game-systems`／`i18n`／`game-devops`／`usability`） | producer |
 | 2026-08-03 | **最後 4 個 Power 完成並安裝，總計 29 個、全部可用**；「尚未可用」章節清空；33 個 agent 掛 Power，15 個協調角色刻意不掛 | producer |
+| 2026-08-03 | 對磁碟核對 agent prompt 引用的 **376 個 steering 檔名，零虛構**；跨 Power 分工表補上實際存在但先前未列的兩個借用（RPG 的抽卡、局內 sink-source） | producer |
